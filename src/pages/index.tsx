@@ -17,7 +17,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
 	return (
 		<>
-			<VStack w="full" pt="20">
+			<VStack w="full" pt="20" color='white'>
 				<Flex gap="" w="full" pl="20" textAlign="start">
 					<Flex
 						w="full"
