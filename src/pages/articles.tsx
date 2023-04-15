@@ -3,7 +3,7 @@ import {
   VStack,
   Flex,
   Text,
-  chakra,
+  Image,
   Grid,
   GridItem,
   Button,
@@ -11,9 +11,18 @@ import {
   Icon,
   HStack,
   Link,
+  Box,
+  chakra,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import React from "react";
 import { FiSearch } from "react-icons/fi";
+import {
+  RiThumbUpLine,
+  RiMessage3Line,
+  RiShareForwardFill,
+  RiFullscreenLine,
+} from "react-icons/ri";
 
 export const Services = () => {
   return (
@@ -89,6 +98,49 @@ export const Services = () => {
               </Button>
             </HStack>
           </Flex>
+          {/* <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="10px" p="10"> */}
+          <Flex direction="row" w="full" p="10">
+            <Image
+              src="./bg.svg"
+              alt="bg"
+              rounded="2xl"
+              w="30%"
+              overflow="hidden"
+            />
+            <Flex
+              bg="#46273d"
+              cursor="pointer"
+              h="198px"
+              ml="-10"
+              px="4"
+              borderRightRadius="2xl"
+              direction="column"
+            >
+              <VStack gap="1" py="4" w="full" h="inherit">
+                <Heading fontSize="20" color="white" minH="30px" w="full">
+                  The Plisters
+                </Heading>
+                <Text fontWeight="300" color="white">
+                  Miscreants stand <br /> against politician <br /> overlords in
+                  post- <br /> apocalyptic world.
+                </Text>
+              </VStack>
+
+              <Flex
+                gap="3"
+                alignItems="center"
+                pb="5"
+                justifyContent="space-between"
+              >
+                <Icon as={RiThumbUpLine} />
+
+                <Icon as={RiMessage3Line} />
+
+                <Icon as={RiShareForwardFill} />
+              </Flex>
+            </Flex>
+          </Flex>
+          {/* </SimpleGrid> */}
         </GridItem>
       </Grid>
     </VStack>
