@@ -1,3 +1,4 @@
+import { contractAbi, contractAddress } from "@/Data/contractDetails";
 import { Questions, quest } from "../../Data/realQuestions";
 import {
   Box,
@@ -16,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useAccount, useContract, useSigner, useProvider } from "wagmi";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 const QuizPage = ({ data }: any) => {
@@ -24,6 +26,7 @@ const QuizPage = ({ data }: any) => {
   const [timeLeft, setTimeLeft] = useState(600);
   const [score, setScore] = useState(0);
   const category = Number(router.query.quiz);
+  const { isConnected, address } = useAccount();
   const [checked, setChecked] = useState("none");
   const [questionNumber, setQuestionNumber] = useState(1);
   const [startQuiz, setStartQuiz] = useState(false);
@@ -36,80 +39,89 @@ const QuizPage = ({ data }: any) => {
   const [timeUsed, setTimeUsed] = useState("");
   const [questions, setQuestions] = useState<quest>(data);
 
-  useEffect(() => {
-    const dataOne = window.localStorage.getItem("QUESTIONS");
-    if (dataOne !== null) {
-      setQuestions(JSON.parse(dataOne));
-    }
+  const provider = useProvider();
+  const { data: signer, isError, isLoading } = useSigner();
 
-    // const dataTwo = window.localStorage.getItem("TIME_USED");
-    // if (dataTwo !== null) {
-    //   setTimeUsed(JSON.parse(dataTwo));
-    // }
-    // const dataThree = window.localStorage.getItem("ANSWERS");
-    // if (dataThree !== null) {
-    //   setAnswers(JSON.parse(dataThree));
-    // }
-    // const dataFour = window.localStorage.getItem("BTN_TEXT");
-    // if (dataFour !== null) {
-    // 	setButtonTest(JSON.parse(dataFour));
-    // }
-    // const dataFive = window.localStorage.getItem("DISABLE_NEXT");
-    // if (dataFive !== null) {
-    // 	setDisableNext(JSON.parse(dataFive));
-    // }
-    // const dataSix = window.localStorage.getItem("REVIEW_ANS");
-    // if (dataSix !== null) {
-    //   setRealAnswers(JSON.parse(dataSix));
-    // }
-    const dataSeven = window.localStorage.getItem("END_QUIZ");
-    if (dataSeven !== null) {
-      setEndQuiz(JSON.parse(dataSeven));
-    }
-    const dataEight = window.localStorage.getItem("START_QUIZ");
-    if (dataEight !== null) {
-      console.log("rvmvmkov", JSON.parse(dataEight));
-      setStartQuiz(JSON.parse(dataEight));
-    }
-    // const dataNine = window.localStorage.getItem("QUESTION_NO");
-    // if (dataNine !== null) {
-    // 	setQuestionNumber(JSON.parse(dataNine));
-    // }
-    // const dataTen = window.localStorage.getItem("CHECKED");
-    // if (dataTen !== null) {
-    // 	setChecked(JSON.parse(dataTen));
-    // }
-    // const data = window.localStorage.getItem("TIME_LEFT");
-    // if (data !== null) {
-    // 	setTimeLeft(JSON.parse(data));
-    // }
-  }, []);
+  const contract = useContract({
+    address: contractAddress,
+    abi: contractAbi,
+    signerOrProvider: signer,
+  });
 
-  useEffect(() => {
-    window.localStorage.setItem("QUESTIONS", JSON.stringify(questions));
-    // window.localStorage.setItem("TIME_USED", JSON.stringify(timeUsed));
-    // window.localStorage.setItem("ANSWERS", JSON.stringify(answers));
-    // window.localStorage.setItem("BTN_TEXT", JSON.stringify(buttonText));
-    // window.localStorage.setItem("DISABLE_NEXT", JSON.stringify(disableNext));
-    // window.localStorage.setItem("REVIEW_ANS", JSON.stringify(reviewAnswers));
-    window.localStorage.setItem("END_QUIZ", JSON.stringify(endQuiz));
-    window.localStorage.setItem("START_QUIZ", JSON.stringify(startQuiz));
-    // window.localStorage.setItem("QUESTION_NO", JSON.stringify(questionNumber));
-    // window.localStorage.setItem("CHECKED", JSON.stringify(checked));
-    // window.localStorage.setItem("TIME_LEFT", JSON.stringify(timeLeft));
-  }, [
-    questions,
-    // timeUsed,
-    // answers,
-    // buttonText,
-    // disableNext,
-    // reviewAnswers,
-    endQuiz,
-    startQuiz,
-    // questionNumber,
-    // checked,
-    // timeLeft,
-  ]);
+  // useEffect(() => {
+  //   const dataOne = window.localStorage.getItem("QUESTIONS");
+  //   if (dataOne !== null) {
+  //     setQuestions(JSON.parse(dataOne));
+  //   }
+
+  //   // const dataTwo = window.localStorage.getItem("TIME_USED");
+  //   // if (dataTwo !== null) {
+  //   //   setTimeUsed(JSON.parse(dataTwo));
+  //   // }
+  //   // const dataThree = window.localStorage.getItem("ANSWERS");
+  //   // if (dataThree !== null) {
+  //   //   setAnswers(JSON.parse(dataThree));
+  //   // }
+  //   // const dataFour = window.localStorage.getItem("BTN_TEXT");
+  //   // if (dataFour !== null) {
+  //   // 	setButtonTest(JSON.parse(dataFour));
+  //   // }
+  //   // const dataFive = window.localStorage.getItem("DISABLE_NEXT");
+  //   // if (dataFive !== null) {
+  //   // 	setDisableNext(JSON.parse(dataFive));
+  //   // }
+  //   // const dataSix = window.localStorage.getItem("REVIEW_ANS");
+  //   // if (dataSix !== null) {
+  //   //   setRealAnswers(JSON.parse(dataSix));
+  //   // }
+  //   const dataSeven = window.localStorage.getItem("END_QUIZ");
+  //   if (dataSeven !== null) {
+  //     setEndQuiz(JSON.parse(dataSeven));
+  //   }
+  //   const dataEight = window.localStorage.getItem("START_QUIZ");
+  //   if (dataEight !== null) {
+  //     console.log("rvmvmkov", JSON.parse(dataEight));
+  //     setStartQuiz(JSON.parse(dataEight));
+  //   }
+  //   // const dataNine = window.localStorage.getItem("QUESTION_NO");
+  //   // if (dataNine !== null) {
+  //   // 	setQuestionNumber(JSON.parse(dataNine));
+  //   // }
+  //   // const dataTen = window.localStorage.getItem("CHECKED");
+  //   // if (dataTen !== null) {
+  //   // 	setChecked(JSON.parse(dataTen));
+  //   // }
+  //   // const data = window.localStorage.getItem("TIME_LEFT");
+  //   // if (data !== null) {
+  //   // 	setTimeLeft(JSON.parse(data));
+  //   // }
+  // }, []);
+
+  // useEffect(() => {
+  //   window.localStorage.setItem("QUESTIONS", JSON.stringify(questions));
+  //   // window.localStorage.setItem("TIME_USED", JSON.stringify(timeUsed));
+  //   // window.localStorage.setItem("ANSWERS", JSON.stringify(answers));
+  //   // window.localStorage.setItem("BTN_TEXT", JSON.stringify(buttonText));
+  //   // window.localStorage.setItem("DISABLE_NEXT", JSON.stringify(disableNext));
+  //   // window.localStorage.setItem("REVIEW_ANS", JSON.stringify(reviewAnswers));
+  //   window.localStorage.setItem("END_QUIZ", JSON.stringify(endQuiz));
+  //   window.localStorage.setItem("START_QUIZ", JSON.stringify(startQuiz));
+  //   // window.localStorage.setItem("QUESTION_NO", JSON.stringify(questionNumber));
+  //   // window.localStorage.setItem("CHECKED", JSON.stringify(checked));
+  //   // window.localStorage.setItem("TIME_LEFT", JSON.stringify(timeLeft));
+  // }, [
+  //   questions,
+  //   // timeUsed,
+  //   // answers,
+  //   // buttonText,
+  //   // disableNext,
+  //   // reviewAnswers,
+  //   endQuiz,
+  //   startQuiz,
+  //   // questionNumber,
+  //   // checked,
+  //   // timeLeft,
+  // ]);
 
   const options = ["A", "B", "C", "D"];
 
@@ -198,6 +210,37 @@ const QuizPage = ({ data }: any) => {
     } else if (RealAnswers[i] !== answers[i] && id === answers[i]) {
       return "red.300";
     }
+  };
+
+  const getReward = async () => {
+    if (!address) {
+      toast({
+        title: "Wallet Not Connected.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+    const hasALreadyCollected = await contract?.hasCollected(
+      address?.toString()
+    );
+    hasALreadyCollected.wait();
+    if (hasALreadyCollected) {
+      toast({
+        title: "You have collected before.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+    const collectMumbai = await contract?.collect();
+    collectMumbai.wait();
+    toast({
+      title: "You have successfully gotten 0.5 Mumbai tokens",
+      status: "warning",
+      duration: 2000,
+      isClosable: true,
+    });
   };
 
   const Checked = (i: number, id: string) => {
@@ -400,14 +443,37 @@ const QuizPage = ({ data }: any) => {
                   <b>{score} </b>
                 </HStack>
                 <HStack w="full" justifyContent="space-between" fontSize="md">
-                  <Text>IQ Reward:</Text>
-                  <b>{questionNumber}</b>
+                  <Text>Mumbai Reward:</Text>
+                  <b>{score > 4 ? 0.5 : 0}</b>
                 </HStack>
                 <HStack w="full" justifyContent="space-between" fontSize="md">
                   <Text>Percentage:</Text>
                   <b>{(score / 10) * 100} %</b>
                 </HStack>
-                <Flex w="full" alignItems="center" justifyContent="center">
+                <Flex
+                  w="full"
+                  alignItems="center"
+                  direction="column"
+                  gap="3"
+                  justifyContent="center"
+                >
+                  {score > 4 && (
+                    <Button
+                      py="2"
+                      // cursor={!address ? "no-drop" : "pointer"}
+                      fontSize="lg"
+                      bg="gray.200"
+                      rounded="lg"
+                      px="4"
+                      disabled={true}
+                      color="green.500"
+                      fontWeight="medium"
+                      _hover={{ color: "gray.200", bg: "green.500" }}
+                      onClick={() => getReward()}
+                    >
+                      Collect Your Rewards
+                    </Button>
+                  )}
                   <chakra.div
                     py="2"
                     cursor="pointer"

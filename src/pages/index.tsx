@@ -65,7 +65,7 @@ export default function Home() {
         </Flex>
       </VStack>
       <Services />
-      <Footer />
+     
     </>
   );
 }
