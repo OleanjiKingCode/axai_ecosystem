@@ -16,7 +16,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAccount, useContract, useSigner, useProvider } from "wagmi";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -48,80 +48,90 @@ const QuizPage = ({ data }: any) => {
     signerOrProvider: signer,
   });
 
-  // useEffect(() => {
-  //   const dataOne = window.localStorage.getItem("QUESTIONS");
-  //   if (dataOne !== null) {
-  //     setQuestions(JSON.parse(dataOne));
-  //   }
+  const initialRender = useRef(true);
 
-  //   // const dataTwo = window.localStorage.getItem("TIME_USED");
-  //   // if (dataTwo !== null) {
-  //   //   setTimeUsed(JSON.parse(dataTwo));
-  //   // }
-  //   // const dataThree = window.localStorage.getItem("ANSWERS");
-  //   // if (dataThree !== null) {
-  //   //   setAnswers(JSON.parse(dataThree));
-  //   // }
-  //   // const dataFour = window.localStorage.getItem("BTN_TEXT");
-  //   // if (dataFour !== null) {
-  //   // 	setButtonTest(JSON.parse(dataFour));
-  //   // }
-  //   // const dataFive = window.localStorage.getItem("DISABLE_NEXT");
-  //   // if (dataFive !== null) {
-  //   // 	setDisableNext(JSON.parse(dataFive));
-  //   // }
-  //   // const dataSix = window.localStorage.getItem("REVIEW_ANS");
-  //   // if (dataSix !== null) {
-  //   //   setRealAnswers(JSON.parse(dataSix));
-  //   // }
-  //   const dataSeven = window.localStorage.getItem("END_QUIZ");
-  //   if (dataSeven !== null) {
-  //     setEndQuiz(JSON.parse(dataSeven));
-  //   }
-  //   const dataEight = window.localStorage.getItem("START_QUIZ");
-  //   if (dataEight !== null) {
-  //     console.log("rvmvmkov", JSON.parse(dataEight));
-  //     setStartQuiz(JSON.parse(dataEight));
-  //   }
-  //   // const dataNine = window.localStorage.getItem("QUESTION_NO");
-  //   // if (dataNine !== null) {
-  //   // 	setQuestionNumber(JSON.parse(dataNine));
-  //   // }
-  //   // const dataTen = window.localStorage.getItem("CHECKED");
-  //   // if (dataTen !== null) {
-  //   // 	setChecked(JSON.parse(dataTen));
-  //   // }
-  //   // const data = window.localStorage.getItem("TIME_LEFT");
-  //   // if (data !== null) {
-  //   // 	setTimeLeft(JSON.parse(data));
-  //   // }
-  // }, []);
+  useEffect(() => {
+    const dataOne = window.localStorage.getItem("QUESTIONS");
+    if (dataOne !== null) {
+      setQuestions(JSON.parse(dataOne));
+    }
 
-  // useEffect(() => {
-  //   window.localStorage.setItem("QUESTIONS", JSON.stringify(questions));
-  //   // window.localStorage.setItem("TIME_USED", JSON.stringify(timeUsed));
-  //   // window.localStorage.setItem("ANSWERS", JSON.stringify(answers));
-  //   // window.localStorage.setItem("BTN_TEXT", JSON.stringify(buttonText));
-  //   // window.localStorage.setItem("DISABLE_NEXT", JSON.stringify(disableNext));
-  //   // window.localStorage.setItem("REVIEW_ANS", JSON.stringify(reviewAnswers));
-  //   window.localStorage.setItem("END_QUIZ", JSON.stringify(endQuiz));
-  //   window.localStorage.setItem("START_QUIZ", JSON.stringify(startQuiz));
-  //   // window.localStorage.setItem("QUESTION_NO", JSON.stringify(questionNumber));
-  //   // window.localStorage.setItem("CHECKED", JSON.stringify(checked));
-  //   // window.localStorage.setItem("TIME_LEFT", JSON.stringify(timeLeft));
-  // }, [
-  //   questions,
-  //   // timeUsed,
-  //   // answers,
-  //   // buttonText,
-  //   // disableNext,
-  //   // reviewAnswers,
-  //   endQuiz,
-  //   startQuiz,
-  //   // questionNumber,
-  //   // checked,
-  //   // timeLeft,
-  // ]);
+    const dataTwo = window.localStorage.getItem("TIME_USED");
+    if (dataTwo !== null) {
+      setTimeUsed(JSON.parse(dataTwo));
+    }
+    const dataThree = window.localStorage.getItem("ANSWERS");
+    if (dataThree !== null) {
+      setAnswers(JSON.parse(dataThree));
+    }
+    const dataFour = window.localStorage.getItem("BTN_TEXT");
+    if (dataFour !== null) {
+      setButtonTest(JSON.parse(dataFour));
+    }
+    const dataFive = window.localStorage.getItem("DISABLE_NEXT");
+    if (dataFive !== null) {
+      setDisableNext(JSON.parse(dataFive));
+    }
+    const dataSix = window.localStorage.getItem("REVIEW_ANS");
+    if (dataSix !== null) {
+      setReviewAnswers(JSON.parse(dataSix));
+    }
+    const dataSeven = window.localStorage.getItem("END_QUIZ");
+    if (dataSeven !== null) {
+      setEndQuiz(JSON.parse(dataSeven));
+    }
+    const dataEight = window.localStorage.getItem("START_QUIZ");
+    if (dataEight !== null) {
+      setStartQuiz(JSON.parse(dataEight));
+    }
+    const dataNine = window.localStorage.getItem("QUESTION_NO");
+    if (dataNine !== null) {
+      setQuestionNumber(JSON.parse(dataNine));
+    }
+    const dataTen = window.localStorage.getItem("CHECKED");
+    if (dataTen !== null) {
+      setChecked(JSON.parse(dataTen));
+    }
+    const data = window.localStorage.getItem("TIME_LEFT");
+    if (data !== null) {
+      setTimeLeft(JSON.parse(data));
+    }
+    const real = window.localStorage.getItem("REAL_ANS");
+    if (real !== null) {
+      setRealAnswers(JSON.parse(real));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    window.localStorage.setItem("QUESTIONS", JSON.stringify(questions));
+    window.localStorage.setItem("TIME_USED", JSON.stringify(timeUsed));
+    window.localStorage.setItem("ANSWERS", JSON.stringify(answers));
+    window.localStorage.setItem("BTN_TEXT", JSON.stringify(buttonText));
+    window.localStorage.setItem("DISABLE_NEXT", JSON.stringify(disableNext));
+    window.localStorage.setItem("REVIEW_ANS", JSON.stringify(reviewAnswers));
+    window.localStorage.setItem("REAL_ANS", JSON.stringify(RealAnswers));
+    window.localStorage.setItem("END_QUIZ", JSON.stringify(endQuiz));
+    window.localStorage.setItem("START_QUIZ", JSON.stringify(startQuiz));
+    window.localStorage.setItem("QUESTION_NO", JSON.stringify(questionNumber));
+    window.localStorage.setItem("CHECKED", JSON.stringify(checked));
+    window.localStorage.setItem("TIME_LEFT", JSON.stringify(timeLeft));
+  }, [
+    questions,
+    timeUsed,
+    answers,
+    buttonText,
+    disableNext,
+    reviewAnswers,
+    endQuiz,
+    startQuiz,
+    questionNumber,
+    checked,
+    timeLeft,
+  ]);
 
   const options = ["A", "B", "C", "D"];
 
@@ -178,7 +188,6 @@ const QuizPage = ({ data }: any) => {
       ///we send in the data for the answers and get the results
       setEndQuiz(true);
       setQuestionNumber(1);
-      console.log(questionNumber);
       const count = RealAnswers.reduce((acc, val, index) => {
         if (val === answers[index]) {
           acc += 1;
@@ -581,7 +590,6 @@ export default QuizPage;
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const getServerSideProps = async (context: any) => {
   const id = context.params?.quiz;
-  console.log("yoooo", Questions.length, id, Questions[0]);
   const data = Questions[id - 1].questions[0];
   return {
     props: {
