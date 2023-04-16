@@ -224,7 +224,7 @@ const QuizPage = ({ data }: any) => {
     const hasALreadyCollected = await contract?.hasCollected(
       address?.toString()
     );
-    hasALreadyCollected.wait();
+
     if (hasALreadyCollected) {
       toast({
         title: "You have collected before.",
@@ -237,7 +237,7 @@ const QuizPage = ({ data }: any) => {
     collectMumbai.wait();
     toast({
       title: "You have successfully gotten 0.5 Mumbai tokens",
-      status: "warning",
+      status: "success",
       duration: 2000,
       isClosable: true,
     });

@@ -186,7 +186,7 @@ const Bit = () => {
               generation of rebels to rise up and fight for what is right.
             </Text>
           </chakra.div>
-          <Button bg='gray.200'>
+          <Button bg='gray.700'>
             {" "}
             <Link href="/quizs/1">Take Quiz</Link>
           </Button>

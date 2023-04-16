@@ -10,6 +10,7 @@ import {
   Input,
   Icon,
   HStack,
+  Link,
 } from "@chakra-ui/react";
 import React from "react";
 import { FiSearch } from "react-icons/fi";
@@ -19,7 +20,6 @@ import {
   RiShareForwardFill,
   RiFullscreenLine,
 } from "react-icons/ri";
-import Link from "next/link";
 
 export const Services = () => {
   return (
@@ -89,63 +89,63 @@ export const Services = () => {
               />
             </Flex>
             <HStack w="full" gap="4">
-              <Button bg='gray.700'>Create New Article</Button>
-              <Button bg='gray.700'>
+              <Button>Create New Article</Button>
+              <Button>
                 <Link href="/quizs/1">Take Random Quiz</Link>
               </Button>
             </HStack>
           </Flex>
+          {/* <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="10px" p="10"> */}
           <Flex direction="column" w="full" p="10">
-            <Link href="./articles/1">
-              <Flex w="full" gap="0" _hover={{ textDecoration: "none" }}>
-                <Image
-                  src="./bg.svg"
-                  alt="bg"
-                  rounded="2xl"
-                  w="30%"
-                  overflow="hidden"
-                />
+            <Flex w="full" gap="0">
+              <Image
+                src="./bg.svg"
+                alt="bg"
+                rounded="2xl"
+                w="30%"
+                overflow="hidden"
+              />
+              <Flex
+                bg="#46273d"
+                cursor="pointer"
+                h="198px"
+                ml="-10"
+                px="4"
+                borderRightRadius="2xl"
+                direction="column"
+              >
+                <VStack gap="1" py="4" w="full" h="inherit">
+                  <Heading fontSize="20" color="white" minH="30px" w="full">
+                    The Plisters
+                  </Heading>
+                  <Text fontWeight="300" color="white">
+                    Miscreants stand <br /> against politician <br /> overlords
+                    in post- <br /> apocalyptic world.
+                  </Text>
+                </VStack>
+
                 <Flex
-                  bg="#46273d"
-                  cursor="pointer"
-                  h="198px"
-                  ml="-10"
-                  px="4"
-                  borderRightRadius="2xl"
-                  direction="column"
+                  gap="3"
+                  alignItems="center"
+                  pb="5"
+                  justifyContent="space-between"
                 >
-                  <VStack gap="1" py="4" w="full" h="inherit">
-                    <Heading fontSize="20" color="white" minH="30px" w="full">
-                      The Plisters
-                    </Heading>
-                    <Text fontWeight="300" color="white">
-                      Miscreants stand <br /> against politician <br />{" "}
-                      overlords in post- <br /> apocalyptic world.
-                    </Text>
-                  </VStack>
+                  <Icon as={RiThumbUpLine} />
 
-                  <Flex
-                    gap="3"
-                    alignItems="center"
-                    pb="5"
-                    justifyContent="space-between"
-                  >
-                    <Icon as={RiThumbUpLine} />
+                  <Icon as={RiMessage3Line} />
 
-                    <Icon as={RiMessage3Line} />
-
-                    <Icon as={RiShareForwardFill} />
-                  </Flex>
+                  <Icon as={RiShareForwardFill} />
                 </Flex>
               </Flex>
-              <HStack gap="3" px="5">
-                <Text py="2">⚪ Oleanji</Text>
-                <Text py="2">
-                  The Plisters - <i>Pilot EP0-1</i>
-                </Text>
-              </HStack>
-            </Link>
+            </Flex>
+            <HStack gap="3" px="5">
+              <Text py="2">⚪ Oleanji</Text>
+              <Text py="2">
+                The Plisters - <i>Pilot EP0-1</i>
+              </Text>
+            </HStack>
           </Flex>
+          {/* </SimpleGrid> */}
         </GridItem>
       </Grid>
     </VStack>
