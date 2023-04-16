@@ -89,8 +89,8 @@ export const Services = () => {
               />
             </Flex>
             <HStack w="full" gap="4">
-              <Button>Create New Article</Button>
-              <Button>
+              <Button bg='gray.200'>Create New Article</Button>
+              <Button bg='gray.200'>
                 <Link href="/quizs/1">Take Random Quiz</Link>
               </Button>
             </HStack>
