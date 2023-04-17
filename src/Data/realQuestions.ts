@@ -17,11 +17,13 @@ export type answers = {
   scripts: answerScripts[];
   exam_id: string;
 };
+
 export type answerScripts = {
   id: number;
   question: string;
   selectedAnswer: string;
 };
+
 export const Questions: Quiz = [
   {
     id: "the_plisters",
@@ -158,3 +160,4 @@ export const Questions: Quiz = [
     ],
   },
 ];
+

@@ -18,6 +18,8 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
 import { useAccount, useContract, useSigner, useProvider } from "wagmi";
+import { config } from "@/Data/config";
+import { RiInformationFill } from "react-icons/ri";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 const QuizPage = ({ data }: any) => {
@@ -259,8 +261,20 @@ const QuizPage = ({ data }: any) => {
   };
 
   const FinishQuiz = () => {
-    window.localStorage.clear();
-    router.push("./articles");
+    window.localStorage.removeItem("QUESTIONS");
+    window.localStorage.removeItem("TIME_USED");
+    window.localStorage.removeItem("ANSWERS");
+    window.localStorage.removeItem("BTN_TEXT");
+    window.localStorage.removeItem("DISABLE_NEXT");
+    window.localStorage.removeItem("REVIEW_ANS");
+    window.localStorage.removeItem("REAL_ANS");
+    window.localStorage.removeItem("END_QUIZ");
+    window.localStorage.removeItem("START_QUIZ");
+    window.localStorage.removeItem("QUESTION_NO");
+    window.localStorage.removeItem("CHECKED");
+    window.localStorage.removeItem("TIME_LEFT");
+    window.localStorage.removeItem("SCORE");
+    router.push(`${config.BASE_URL}/articles`);
   };
   const Checked = (i: number, id: string) => {
     if (RealAnswers[i] === answers[i] && id === RealAnswers[i]) {
@@ -338,9 +352,12 @@ const QuizPage = ({ data }: any) => {
         <Stack order={{ base: 1, lg: 0 }} px="10" w="full" gap="2" pb="5">
           {!startQuiz && !endQuiz && (
             <>
-              <Text fontSize={{ base: "md", lg: "lg" }} fontWeight="medium">
-                Instructions
-              </Text>
+              <HStack>
+                <RiInformationFill color="#9b6706" fontSize={20} />{" "}
+                <Text fontSize={{ base: "md", lg: "lg" }} fontWeight="medium">
+                  Instructions
+                </Text>
+              </HStack>
 
               <OrderedList>
                 <ListItem py="1">

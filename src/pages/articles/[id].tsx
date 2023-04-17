@@ -48,7 +48,7 @@ const Bit = () => {
   const [markBit, setMarkBit] = useState("");
 
   return (
-    <Grid h="full" templateColumns="repeat(7, 1fr)" pt="5" gap={4}>
+    <Grid h="full" templateColumns="repeat(7, 1fr)" py="5" gap={4}>
       <GridItem
         colSpan={1}
         py="40"
@@ -186,7 +186,7 @@ const Bit = () => {
               generation of rebels to rise up and fight for what is right.
             </Text>
           </chakra.div>
-          <Button bg='gray.700'>
+          <Button bg="gray.700">
             {" "}
             <Link href="/quizs/1">Take Quiz</Link>
           </Button>

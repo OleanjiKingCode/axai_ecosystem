@@ -19,6 +19,7 @@ import {
   RiShareForwardFill,
   RiFullscreenLine,
 } from "react-icons/ri";
+import { RxPlus } from "react-icons/rx";
 import Link from "next/link";
 
 export const Services = () => {
@@ -46,12 +47,18 @@ export const Services = () => {
       </Flex>
 
       <Grid minH="inherit" templateColumns="repeat(5, 1fr)" gap={4} w="full">
-        <GridItem colSpan={1} borderRightWidth="1px" borderTopWidth="1px" />
+        <GridItem
+          colSpan={1}
+          borderRightWidth="1px"
+          borderTopWidth="1px"
+          borderColor="whiteAlpha.300"
+        />
         <GridItem
           colSpan={4}
           borderLeftWidth="1px"
           w="full"
           borderTopWidth="1px"
+          borderColor="whiteAlpha.300"
         >
           <Flex
             w="full"
@@ -89,61 +96,70 @@ export const Services = () => {
               />
             </Flex>
             <HStack w="full" gap="4">
-              <Button bg='gray.700'>Create New Article</Button>
-              <Button bg='gray.700'>
+              <Button bg="gray.700">Create New Article</Button>
+              <Button bg="gray.700">
                 <Link href="/quizs/1">Take Random Quiz</Link>
               </Button>
             </HStack>
           </Flex>
-          <Flex direction="column" w="full" p="10">
+          <Flex direction="column" w="full" p="3">
             <Link href="./articles/1">
-              <Flex w="full" gap="0" _hover={{ textDecoration: "none" }}>
+              <Flex
+                w="30%"
+                gap="0"
+                direction="column"
+                _hover={{ textDecoration: "none" }}
+              >
                 <Image
                   src="./bg.svg"
                   alt="bg"
-                  rounded="2xl"
-                  w="30%"
+                  borderTopRadius="2xl"
+                  w="full"
                   overflow="hidden"
                 />
-                <Flex
+                <VStack
                   bg="#46273d"
                   cursor="pointer"
-                  h="198px"
-                  ml="-10"
+                  py="3"
                   px="4"
-                  borderRightRadius="2xl"
+                  borderBottomRadius="2xl"
                   direction="column"
                 >
-                  <VStack gap="1" py="4" w="full" h="inherit">
-                    <Heading fontSize="20" color="white" minH="30px" w="full">
-                      The Plisters
-                    </Heading>
-                    <Text fontWeight="300" color="white">
-                      Miscreants stand <br /> against politician <br />{" "}
-                      overlords in post- <br /> apocalyptic world.
-                    </Text>
-                  </VStack>
-
-                  <Flex
+                  <Heading fontSize="20" color="white" minH="30px" w="full">
+                    EP-01 <i>The Pilot </i>
+                  </Heading>
+                  <Text w="full">⚪ Oleanji</Text>
+                  <HStack
+                    w="full"
                     gap="3"
                     alignItems="center"
-                    pb="5"
                     justifyContent="space-between"
                   >
-                    <Icon as={RiThumbUpLine} />
-
-                    <Icon as={RiMessage3Line} />
-
-                    <Icon as={RiShareForwardFill} />
-                  </Flex>
-                </Flex>
+                    <Button
+                      bg="transparent"
+                      border="1px"
+                      borderColor="#230a1b "
+                      leftIcon={<RiThumbUpLine />}
+                    >
+                      204
+                    </Button>
+                    <Button
+                      bg="transparent"
+                      border="1px"
+                      borderColor="#230a1b "
+                      leftIcon={<RiMessage3Line />}
+                    >
+                      4
+                    </Button>
+                    <Button bg="transparent" border="1px" borderColor="#230a1b">
+                      <Icon as={RiShareForwardFill} />
+                    </Button>
+                    <Button bg="transparent" border="1px" borderColor="#230a1b">
+                      <Icon as={RxPlus} />
+                    </Button>
+                  </HStack>
+                </VStack>
               </Flex>
-              <HStack gap="3" px="5">
-                <Text py="2">⚪ Oleanji</Text>
-                <Text py="2">
-                  The Plisters - <i>Pilot EP0-1</i>
-                </Text>
-              </HStack>
             </Link>
           </Flex>
         </GridItem>
