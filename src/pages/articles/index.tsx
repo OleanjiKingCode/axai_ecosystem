@@ -17,7 +17,6 @@ import {
   RiThumbUpLine,
   RiMessage3Line,
   RiShareForwardFill,
-  RiFullscreenLine,
 } from "react-icons/ri";
 import { RxPlus } from "react-icons/rx";
 import Link from "next/link";
