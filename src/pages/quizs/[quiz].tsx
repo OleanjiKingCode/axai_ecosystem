@@ -100,6 +100,10 @@ const QuizPage = ({ data }: any) => {
     if (real !== null) {
       setRealAnswers(JSON.parse(real));
     }
+    const score_ = window.localStorage.getItem("SCORE");
+    if (score_ !== null) {
+      setScore(JSON.parse(score_));
+    }
   }, []);
 
   useEffect(() => {
@@ -119,6 +123,7 @@ const QuizPage = ({ data }: any) => {
     window.localStorage.setItem("QUESTION_NO", JSON.stringify(questionNumber));
     window.localStorage.setItem("CHECKED", JSON.stringify(checked));
     window.localStorage.setItem("TIME_LEFT", JSON.stringify(timeLeft));
+    window.localStorage.setItem("SCORE", JSON.stringify(score));
   }, [
     questions,
     timeUsed,
@@ -131,6 +136,7 @@ const QuizPage = ({ data }: any) => {
     questionNumber,
     checked,
     timeLeft,
+    score,
   ]);
 
   const options = ["A", "B", "C", "D"];
@@ -252,6 +258,10 @@ const QuizPage = ({ data }: any) => {
     });
   };
 
+  const FinishQuiz = () => {
+    window.localStorage.clear();
+    router.push("./articles");
+  };
   const Checked = (i: number, id: string) => {
     if (RealAnswers[i] === answers[i] && id === RealAnswers[i]) {
       return true;
@@ -497,6 +507,15 @@ const QuizPage = ({ data }: any) => {
                   >
                     Review Your Answers
                   </chakra.div>
+                  <Button
+                    bg="orange.500"
+                    color="white"
+                    _hover={{ bg: "orange.200", color: "black" }}
+                    alignSelf="flex-end"
+                    onClick={FinishQuiz}
+                  >
+                    Finish Quiz
+                  </Button>
                 </Flex>
               </VStack>
             </Flex>
