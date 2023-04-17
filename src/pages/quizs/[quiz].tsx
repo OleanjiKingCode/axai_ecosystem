@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
-import { useAccount, useContract, useSigner, useProvider } from "wagmi";
+import { useAccount, useContract, useSigner } from "wagmi";
 import { config } from "@/Data/config";
 import { RiInformationFill } from "react-icons/ri";
 
@@ -41,7 +41,6 @@ const QuizPage = ({ data }: any) => {
   const [timeUsed, setTimeUsed] = useState("");
   const [questions, setQuestions] = useState<quest>(data);
 
-  const provider = useProvider();
   const { data: signer, isError, isLoading } = useSigner();
 
   const contract = useContract({
