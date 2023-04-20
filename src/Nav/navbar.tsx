@@ -15,13 +15,17 @@ import NextLink from "next/link";
 import { useNetwork, useAccount } from "wagmi";
 import ProfileSubMenu from "./ProfileSubMenu";
 import WalletConnect from "./WalletConnect";
-import { NetworkNotification } from "./NetworkNotification";
+import { NetworkNotification, SignInWithLens } from "./NetworkNotification";
 import { utils } from "ethers";
 import { RiMenu3Fill } from "react-icons/ri";
+import useLensUser from "@/lib/auth/useLensUser";
+import useLogin from "@/lib/auth/useLogin";
 
 export const Navbar = () => {
   const [openWalletConnect, setOpenWalletConnect] = useState<boolean>(false);
   const { chain } = useNetwork();
+  const { isSignedInQuery, profileQuery } = useLensUser();
+  const { mutate: requestLogin } = useLogin();
 
   const NETWORK_DATA = [
     {
@@ -42,9 +46,14 @@ export const Navbar = () => {
     onOpen: onOpenSwitch,
     onClose: onCloseSwitch,
   } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     CheckNetwork();
+    if (isUserConnected && !isSignedInQuery.data) {
+      console.log("fhxdhfd");
+      onOpen();
+    }
   }, [isUserConnected, currentNetwork]);
 
   const CheckNetwork = () => {
@@ -52,6 +61,8 @@ export const Navbar = () => {
       onOpenSwitch();
     }
   };
+
+
 
   return (
     <VStack bg="#17171a" color="#ffd17cff">
@@ -165,6 +176,7 @@ export const Navbar = () => {
         isOpen={openWalletConnect}
       />
       <NetworkNotification isOpen={isOpenSwitch} onClose={onCloseSwitch} />
+      <SignInWithLens isOpen={isOpen} onClose={onClose} />
     </VStack>
   );
 };

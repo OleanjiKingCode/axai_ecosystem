@@ -19,6 +19,7 @@ import { AppProps } from "next/app";
 import { Navbar } from "@/Nav/navbar";
 import { Roboto } from "next/font/google";
 import { StrictMode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "@/components/footer";
 
 const roboto = Roboto({
@@ -51,15 +52,19 @@ const wagmiClient = createClient({
   provider,
 });
 
+const queryClient = new QueryClient();
+
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <chakra.div className={roboto.className}>
       <ChakraProvider resetCSS>
         <WagmiConfig client={wagmiClient}>
-          <chakra.div w="full" minH="100vh" bg="#17171a" color="white">
-            <Navbar />
-            <Component {...pageProps} />
-          </chakra.div>
+          <QueryClientProvider client={queryClient}>
+            <chakra.div w="full" minH="100vh" bg="#17171a" color="white">
+              <Navbar />
+              <Component {...pageProps} />
+            </chakra.div>
+          </QueryClientProvider>
           <Footer />
         </WagmiConfig>
       </ChakraProvider>
