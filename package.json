@@ -27,6 +27,19 @@
     "react-keyboard-event-handler": "^1.5.4",
     "rome": "^12.0.0",
     "typescript": "5.0.3",
-    "wagmi": "^0.12.10"
+    "wagmi": "^0.12.10",
+    "@next/font": "13.0.7",
+    "@tanstack/react-query": "^4.20.4",
+    "graphql": "^16.6.0",
+    "omit-deep": "^0.3.0",
+    "uuidv4": "^6.2.13"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.16.1",
+    "@graphql-codegen/fragment-matcher": "^3.3.3",
+    "@graphql-codegen/typescript": "^2.8.5",
+    "@graphql-codegen/typescript-operations": "^2.5.10",
+    "@graphql-codegen/typescript-react-query": "^4.0.6",
+    "@types/omit-deep": "^0.3.0"
   }
 }

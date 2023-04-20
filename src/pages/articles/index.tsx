@@ -23,7 +23,7 @@ import Link from "next/link";
 
 export const Services = () => {
   return (
-    <VStack w="full" gap="5" px="5" minH="89vh">
+    <VStack w="full" gap="3" px="5" minH="89vh">
       <Flex
         w="full"
         alignItems="start"
@@ -32,7 +32,7 @@ export const Services = () => {
         px="28"
         textAlign="center"
       >
-        <Heading py="5" color="#ffeeb9" w="full">
+        <Heading py="3" color="#ffeeb9" w="full">
           Articles
         </Heading>
         <Text>
@@ -95,20 +95,30 @@ export const Services = () => {
               />
             </Flex>
             <HStack w="full" gap="4">
-              <Button bg="gray.700">Create New Article</Button>
-              <Button bg="gray.700">
+              <Button
+                bg="gray.700"
+                fontWeight="500"
+                _hover={{ bg: "gray.800" }}
+              >
+                <Link href="./articles/new">Create New Article</Link>
+              </Button>
+              <Button
+                bg="gray.700"
+                fontWeight="500"
+                _hover={{ bg: "gray.800" }}
+              >
                 <Link href="/quizs/1">Take Random Quiz</Link>
               </Button>
             </HStack>
           </Flex>
           <Flex direction="column" w="full" p="3">
-            <Link href="./articles/1">
-              <Flex
-                w="30%"
-                gap="0"
-                direction="column"
-                _hover={{ textDecoration: "none" }}
-              >
+            <Flex
+              w="30%"
+              gap="0"
+              direction="column"
+              _hover={{ textDecoration: "none" }}
+            >
+              <Link href="./articles/1">
                 <Image
                   src="./bg.svg"
                   alt="bg"
@@ -116,50 +126,61 @@ export const Services = () => {
                   w="full"
                   overflow="hidden"
                 />
-                <VStack
-                  bg="#46273d"
-                  cursor="pointer"
-                  py="3"
-                  px="4"
-                  borderBottomRadius="2xl"
-                  direction="column"
+              </Link>
+              <VStack
+                bg="#46273d"
+                cursor="pointer"
+                py="3"
+                px="4"
+                borderBottomRadius="2xl"
+                direction="column"
+              >
+                <Heading fontSize="18" color="white" w="full">
+                  <Link href="./articles/1">
+                    EP-01 <i>The Pilot </i>{" "}
+                  </Link>
+                </Heading>
+
+                <Text w="full">⚪ Oleanji</Text>
+                <HStack
+                  w="full"
+                  gap="3"
+                  alignItems="center"
+                  justifyContent="space-between"
                 >
-                  <Heading fontSize="20" color="white" minH="30px" w="full">
-                    EP-01 <i>The Pilot </i>
-                  </Heading>
-                  <Text w="full">⚪ Oleanji</Text>
-                  <HStack
-                    w="full"
-                    gap="3"
-                    alignItems="center"
-                    justifyContent="space-between"
+                  <Button
+                    bg="whiteAlpha.100"
+                    border="none"
+                    leftIcon={<RiThumbUpLine />}
+                    _hover={{ bg: "whiteAlpha.200" }}
                   >
-                    <Button
-                      bg="transparent"
-                      border="1px"
-                      borderColor="#230a1b "
-                      leftIcon={<RiThumbUpLine />}
-                    >
-                      204
-                    </Button>
-                    <Button
-                      bg="transparent"
-                      border="1px"
-                      borderColor="#230a1b "
-                      leftIcon={<RiMessage3Line />}
-                    >
-                      4
-                    </Button>
-                    <Button bg="transparent" border="1px" borderColor="#230a1b">
-                      <Icon as={RiShareForwardFill} />
-                    </Button>
-                    <Button bg="transparent" border="1px" borderColor="#230a1b">
-                      <Icon as={RxPlus} />
-                    </Button>
-                  </HStack>
-                </VStack>
-              </Flex>
-            </Link>
+                    204
+                  </Button>
+                  <Button
+                    bg="whiteAlpha.100"
+                    border="none"
+                    leftIcon={<RiMessage3Line />}
+                    _hover={{ bg: "whiteAlpha.200" }}
+                  >
+                    4
+                  </Button>
+                  <Button
+                    bg="whiteAlpha.100"
+                    border="none"
+                    _hover={{ bg: "whiteAlpha.200" }}
+                  >
+                    <Icon as={RiShareForwardFill} />
+                  </Button>
+                  <Button
+                    bg="whiteAlpha.100"
+                    border="none"
+                    _hover={{ bg: "whiteAlpha.200" }}
+                  >
+                    <Icon as={RxPlus} />
+                  </Button>
+                </HStack>
+              </VStack>
+            </Flex>
           </Flex>
         </GridItem>
       </Grid>

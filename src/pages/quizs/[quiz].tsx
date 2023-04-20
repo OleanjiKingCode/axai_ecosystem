@@ -273,7 +273,7 @@ const QuizPage = ({ data }: any) => {
     window.localStorage.removeItem("CHECKED");
     window.localStorage.removeItem("TIME_LEFT");
     window.localStorage.removeItem("SCORE");
-    router.push(`${config.BASE_URL}/articles`);
+    router.push("/articles");
   };
   const Checked = (i: number, id: string) => {
     if (RealAnswers[i] === answers[i] && id === RealAnswers[i]) {

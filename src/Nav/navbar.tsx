@@ -59,7 +59,7 @@ export const Navbar = () => {
         boxSize="full"
         align="center"
         gap="2.5"
-        py="15px"
+        py="5px"
         px={{ base: "4", lg: "10" }}
         fontSize="sm"
         justifyContent="space-between"
@@ -83,7 +83,7 @@ export const Navbar = () => {
               Articles
             </Text>
           </NextLink>
-          <NextLink href="/" passHref>
+          <NextLink href="/games" passHref>
             <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
               Games
             </Text>

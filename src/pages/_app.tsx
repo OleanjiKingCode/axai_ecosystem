@@ -23,7 +23,7 @@ import Footer from "@/components/footer";
 
 const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["700"],
+  weight: ["500"],
   display: "swap",
 });
 
@@ -59,8 +59,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           <chakra.div w="full" minH="100vh" bg="#17171a" color="white">
             <Navbar />
             <Component {...pageProps} />
-            <Footer />
           </chakra.div>
+          <Footer />
         </WagmiConfig>
       </ChakraProvider>
     </chakra.div>
