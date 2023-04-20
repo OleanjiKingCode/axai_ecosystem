@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { useSDK, useStorageUpload } from "@thirdweb-dev/react";
 import {
   PublicationMainFocus,
   useCreatePostTypedDataMutation,
