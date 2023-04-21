@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useSDK, useStorageUpload } from "@thirdweb-dev/react";
 import {
   PublicationMainFocus,
   useCreatePostTypedDataMutation,
@@ -53,7 +54,6 @@ export function useCreatePost() {
       name: title,
       attributes: [],
       tags: [],
-      appId: "banji-app",
     };
 
     const postMetadataIpfsUrl = (

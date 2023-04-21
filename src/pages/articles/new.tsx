@@ -40,11 +40,20 @@ import {
   RiMoreLine,
 } from "react-icons/ri";
 import Link from "next/link";
+import { useCreatePost } from "@/lib/useCreatePost";
+import { LENS_CONTRACT_ADDRESS, LENS_CONTRACT_ABI } from "@/const/contracts";
+import { ethers, Signer } from "ethers";
 
 const NewArticle = () => {
   const [viewing, setViewing] = useState<string>("");
   const [value, setValue] = useState("");
 
+  const [image, setImage] = useState<File | null>(null);
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+
+  const { mutateAsync: createPost } = useCreatePost();
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleInputChange = (e: any) => {
     const inputValue = e.target.value;
@@ -54,7 +63,7 @@ const NewArticle = () => {
   const OnFileChange = (e: any) => {
     try {
       const file = e.target.files[0];
-
+      setImage(file);
       if (file) {
         const image = URL.createObjectURL(file);
         setViewing(image);
@@ -144,6 +153,7 @@ const NewArticle = () => {
               px={3}
               border="none"
               borderRadius="md"
+              onChange={(e) => setTitle(e.target.value)}
             />
 
             <Input
@@ -157,15 +167,32 @@ const NewArticle = () => {
               borderColor="gray.300"
               borderRadius="md"
               border="none"
+              onChange={(e) => setDescription(e.target.value)}
             />
 
             <Textarea
               w="full"
               placeholder="In the year 3248, the world had become a post-apocalyptic..."
-              value={value}
-              onChange={handleInputChange}
               rows={17}
+              onChange={(e) => setContent(e.target.value)}
             />
+            <Button
+              onClick={async () => {
+                if (!image) return;
+
+                return await createPost({
+                  image,
+                  title,
+                  description,
+                  content,
+                });
+              }}
+              bg="gray.600"
+              fontWeight="500"
+              _hover={{ bg: "gray.800" }}
+            >
+              Create Post
+            </Button>
           </VStack>
         </GridItem>
         <GridItem

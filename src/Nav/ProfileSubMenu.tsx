@@ -21,11 +21,11 @@ import {
   RiUserFill,
 } from "react-icons/ri";
 import shortenAccount from "../utils/shortenAccount";
-import { useAccount, useDisconnect } from "wagmi";
 import { FaChevronDown } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import { CheckIcon } from "@chakra-ui/icons";
 import useLensUser from "@/lib/auth/useLensUser";
+import { useAddress } from "@thirdweb-dev/react";
 
 type SubMenuItemProps = {
   label: string;
@@ -53,20 +53,21 @@ const SubMenuItem = (props: SubMenuItemProps) => {
 };
 
 const ProfileSubMenu = () => {
-  const { address, connector } = useAccount();
-  const { disconnect } = useDisconnect();
-  const logout = () => {
-    disconnect();
-  };
+	const address = useAddress(); // Detect the connected address
+//   	const { disconnect } = useDisconnect();
 
-  const { isSignedInQuery, profileQuery } = useLensUser();
+//   const logout = () => {
+//     disconnect();
+//   };
 
-  const ipfsToWebLink = (ipfsLink: string) => {
-    const hash = ipfsLink.replace("ipfs://", "");
+  const { profileQuery } = useLensUser();
+
+  const ipfsToWebLink = (ipfsLink: string | undefined) => {
+    const hash = ipfsLink?.replace("ipfs://", "");
     return `https://ipfs.io/ipfs/${hash}`;
   };
   const profileImage = ipfsToWebLink(
-    profileQuery.data?.defaultProfile?.picture?.original?.url
+    profileQuery.data?.defaultProfile?.picture?.original?.url ?? ""
   );
   const { hasCopied, onCopy: copyAddress } = useClipboard(address as string);
 
@@ -113,9 +114,6 @@ const ProfileSubMenu = () => {
               <Text fontWeight="bold" maxW="110px" noOfLines={1}>
                 {profileQuery?.data?.defaultProfile?.handle}
               </Text>
-              <Text color="dimmedText" fontWeight="semibold">
-                {connector?.name}
-              </Text>
             </Flex>
           </Flex>
         </chakra.div>
@@ -130,17 +128,17 @@ const ProfileSubMenu = () => {
           })}
         />
         <SubMenuItem
-          label="View on Etherscan"
+          label="View on PolyScan"
           action={() =>
-            window.open(`https://etherscan.io/address/${address}`, "_blank")
+            window.open(`https://polyscan.io/address/${address}`, "_blank")
           }
           icon={RiExternalLinkLine}
         />
-        <SubMenuItem
+        {/* <SubMenuItem
           label="Disconnect"
           action={logout}
           icon={RiLogoutBoxLine}
-        />
+        /> */}
       </PopoverContent>
     </Popover>
   );

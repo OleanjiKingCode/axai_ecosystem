@@ -12,9 +12,9 @@ import React from "react";
 import { FocusableElement } from "@chakra-ui/utils";
 import { RiErrorWarningFill, RiCloseLine } from "react-icons/ri";
 import { utils } from "ethers";
-import { useSwitchNetwork } from "wagmi";
 import useLogin from "@/lib/auth/useLogin";
 import useLensUser from "@/lib/auth/useLensUser";
+import { ChainId, useNetwork } from "@thirdweb-dev/react";
 
 export const NetworkNotification = ({
   onClose,
@@ -24,21 +24,10 @@ export const NetworkNotification = ({
   onClose: () => void;
 }) => {
   const cancelRef = React.useRef<FocusableElement>(null);
-
-  const NETWORK_DATA = {
-    name: "Polygon",
-    chainId: utils.hexValue(1),
-    chainNoHex: 80001,
-    chainName: "Polygon Mumbai Testnet",
-    nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
-    rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
-    blockExplorerUrls: ["https://mumbai.polygonscan.com"],
-  };
-  const { chainNoHex } = NETWORK_DATA;
-  const { switchNetwork, isSuccess } = useSwitchNetwork();
+  const [, switchNetwork] = useNetwork();
 
   const handleNetworkSwitch = () => {
-    if (switchNetwork) switchNetwork(chainNoHex);
+    switchNetwork?.(ChainId.Polygon);
     onClose();
   };
 
@@ -75,8 +64,8 @@ export const NetworkNotification = ({
           </Flex>
           <Text mt="6" w="90%" lineHeight="2">
             Your wallet is currently connected to an unsupported network. To
-            continue with Polygon Mumbai, Switch the network in your wallet to
-            Polygon Mumbai Testnet.
+            continue with Polygon Mainnet, Switch the network in your wallet to
+            Polygon Mainnet.
           </Text>
           <Text mt="6" w="90%" lineHeight="2">
             Switch wallet if unable to change wallet network.
@@ -113,7 +102,7 @@ export const SignInWithLens = ({
   const cancelRef = React.useRef<FocusableElement>(null);
   const { mutate: requestLogin } = useLogin();
   const { isSignedInQuery, profileQuery } = useLensUser();
-  
+
   const handleSignIn = () => {
     requestLogin();
     if (isSignedInQuery.data) {

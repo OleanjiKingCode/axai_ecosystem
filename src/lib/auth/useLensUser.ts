@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { useAddress } from "@thirdweb-dev/react";
 import { readAccessToken } from "./helpers";
-
 import { useDefaultProfileQuery } from "../../graphql/generated";
-import { useAccount } from "wagmi";
 
 export default function useLensUser() {
   // 1. Make a react query for the local storage Key
-  const { address, isConnected } = useAccount();
+  const address = useAddress();
 
   const localStorageQuery = useQuery(
     ["lens-user", address],
@@ -26,6 +25,8 @@ export default function useLensUser() {
       enabled: !!address,
     }
   );
+
+  console.log(profileQuery.data?.defaultProfile);
 
   return {
     // Contains information about both the local storage

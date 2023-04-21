@@ -10,11 +10,14 @@ import {
   VStack,
   Image,
 } from "@chakra-ui/react";
+import {
+  ConnectWallet,
+  useAddress,
+  useNetworkMismatch,
+} from "@thirdweb-dev/react";
 import React, { useState, useEffect } from "react";
 import NextLink from "next/link";
-import { useNetwork, useAccount } from "wagmi";
 import ProfileSubMenu from "./ProfileSubMenu";
-import WalletConnect from "./WalletConnect";
 import { NetworkNotification, SignInWithLens } from "./NetworkNotification";
 import { utils } from "ethers";
 import { RiMenu3Fill } from "react-icons/ri";
@@ -23,46 +26,31 @@ import useLogin from "@/lib/auth/useLogin";
 
 export const Navbar = () => {
   const [openWalletConnect, setOpenWalletConnect] = useState<boolean>(false);
-  const { chain } = useNetwork();
   const { isSignedInQuery, profileQuery } = useLensUser();
   const { mutate: requestLogin } = useLogin();
+  const address = useAddress(); // Detect the connected address
 
-  const NETWORK_DATA = [
-    {
-      name: "Polygon",
-      chainId: utils.hexValue(1),
-      chainNoHex: 80001,
-      chainName: "Polygon Mumbai Testnet",
-      nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
-      rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
-      blockExplorerUrls: ["https://mumbai.polygonscan.com"],
-    },
-  ];
-  const [currentNetwork, setCurrentNetwork] = useState(NETWORK_DATA[0]);
   const [dropdown, setDropdown] = useState(false);
-  const { isConnected: isUserConnected } = useAccount();
   const {
     isOpen: isOpenSwitch,
     onOpen: onOpenSwitch,
     onClose: onCloseSwitch,
   } = useDisclosure();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isOnWrongNetwork = useNetworkMismatch();
 
   useEffect(() => {
     CheckNetwork();
-    if (isUserConnected && !isSignedInQuery.data) {
-      console.log("fhxdhfd");
+    if (address && !isSignedInQuery.data && !profileQuery) {
       onOpen();
     }
-  }, [isUserConnected, currentNetwork]);
+  }, [address]);
 
   const CheckNetwork = () => {
-    if (isUserConnected && chain?.id !== currentNetwork.chainNoHex) {
+    if (address && isOnWrongNetwork) {
       onOpenSwitch();
     }
   };
-
-
 
   return (
     <VStack bg="#17171a" color="#ffd17cff">
@@ -111,10 +99,9 @@ export const Navbar = () => {
             </Text>
           </NextLink>
 
-          {!isUserConnected ? (
+          {!address ? (
             <Button
               size="sm"
-              onClick={() => setOpenWalletConnect(true)}
               fontSize="sm"
               px="4"
               fontWeight="medium"
@@ -127,7 +114,7 @@ export const Navbar = () => {
                 borderColor: "#ffd17cff",
               }}
             >
-              Connect Wallet
+              <ConnectWallet />
             </Button>
           ) : (
             <ProfileSubMenu />
@@ -152,7 +139,7 @@ export const Navbar = () => {
         fontSize="md"
         textAlign="center"
       >
-        {!isUserConnected ? (
+        {!address ? (
           <Button
             size="sm"
             onClick={() => setOpenWalletConnect(true)}
@@ -171,10 +158,6 @@ export const Navbar = () => {
         )}
       </Flex>
 
-      <WalletConnect
-        onClose={() => setOpenWalletConnect(false)}
-        isOpen={openWalletConnect}
-      />
       <NetworkNotification isOpen={isOpenSwitch} onClose={onCloseSwitch} />
       <SignInWithLens isOpen={isOpen} onClose={onClose} />
     </VStack>

@@ -1,14 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAddress, useSDK } from "@thirdweb-dev/react";
 import { useAuthenticateMutation } from "../../graphql/generated";
 import generateChallenge from "./generateChallenge";
 import { setAccessToken } from "./helpers";
-import { useAccount, useProvider, useSigner } from "wagmi";
 
 export default function useLogin() {
-  const { address } = useAccount();
+  const address = useAddress();
+  const sdk = useSDK();
   const { mutateAsync: sendSignedMessage } = useAuthenticateMutation();
   const client = useQueryClient();
-  const { data: signer, isError, isLoading } = useSigner();
+
   // 1. Write the actual async function
   async function login() {
     if (!address) return;
@@ -17,7 +18,7 @@ export default function useLogin() {
     const { challenge } = await generateChallenge(address);
 
     // 2. Sign the challenge with the user's wallet
-    const signature = await signer?.signMessage(challenge.text);
+    const signature = await sdk?.wallet.sign(challenge.text);
 
     // 3. Send the signed challenge to the Lens API
     const { authenticate } = await sendSignedMessage({

@@ -17,9 +17,9 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
-import { useAccount, useContract, useSigner } from "wagmi";
 import { config } from "@/Data/config";
 import { RiInformationFill } from "react-icons/ri";
+import { useAddress } from "@thirdweb-dev/react";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 const QuizPage = ({ data }: any) => {
@@ -28,7 +28,7 @@ const QuizPage = ({ data }: any) => {
   const [timeLeft, setTimeLeft] = useState(600);
   const [score, setScore] = useState(0);
   const category = Number(router.query.quiz);
-  const { isConnected, address } = useAccount();
+  const  address  = useAddress();
   const [checked, setChecked] = useState("none");
   const [questionNumber, setQuestionNumber] = useState(1);
   const [startQuiz, setStartQuiz] = useState(false);
