@@ -32,10 +32,8 @@ export function useCreatePost() {
     description,
     content,
   }: CreatePostArgs) {
-    
-
     await loginUser();
-    
+
     const imageIpfsUrl = (await uploadToIpfs({ data: [image] }))[0];
     const postMetadata = {
       version: "2.0.0",
@@ -55,7 +53,7 @@ export function useCreatePost() {
 
     const postMetadataIpfsUrl = (
       await uploadToIpfs({ data: [postMetadata] })
-    )[0]
+    )[0];
     const typedData = await requestTypedData({
       request: {
         collectModule: {

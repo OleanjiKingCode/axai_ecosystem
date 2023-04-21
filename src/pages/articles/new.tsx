@@ -1,49 +1,17 @@
 import {
   Box,
   Flex,
-  Heading,
-  Tag,
-  chakra,
-  VStack,
-  HStack,
-  Icon,
-  TagLabel,
   Text,
   Image,
-  useToast,
   Input,
   Grid,
   GridItem,
   Button,
-  ListItem,
-  OrderedList,
-  Circle,
   Textarea,
-  List,
-  ListIcon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  PopoverArrow,
-  useDisclosure,
   Spinner,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import {
-  RiThumbUpLine,
-  RiThumbUpFill,
-  RiMessage3Line,
-  RiBookmarkFill,
-  RiFileCopyFill,
-  RiShareLine,
-  RiBookmarkLine,
-  RiMoreLine,
-} from "react-icons/ri";
-import Link from "next/link";
-import { useCreatePost } from "@/lib/useCreatePost";
-import { LENS_CONTRACT_ADDRESS, LENS_CONTRACT_ABI } from "@/const/contracts";
-import { ethers, Signer } from "ethers";
+import { useRouter } from "next/router";
 
 const NewArticle = () => {
   const [viewing, setViewing] = useState<string>("");
@@ -53,6 +21,7 @@ const NewArticle = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const router = useRouter();
 
   const { mutateAsync: createPost } = useCreatePost();
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -84,6 +53,7 @@ const NewArticle = () => {
       content,
     });
     setLoading(false);
+    router.push("/articles");
   };
 
   return (
