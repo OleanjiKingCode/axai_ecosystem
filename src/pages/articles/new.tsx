@@ -9,9 +9,11 @@ import {
   Button,
   Textarea,
   Spinner,
+  VStack,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useCreatePost } from "@/lib/useCreatePost";
 
 const NewArticle = () => {
   const [viewing, setViewing] = useState<string>("");
@@ -22,7 +24,6 @@ const NewArticle = () => {
   const [description, setDescription] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const router = useRouter();
-
   const { mutateAsync: createPost } = useCreatePost();
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleInputChange = (e: any) => {
