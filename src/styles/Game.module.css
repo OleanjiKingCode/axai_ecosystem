@@ -21,4 +21,20 @@
     background-color: #000;
     bottom: 0;
   }
+
+  .connectWallet {
+    font-size: "16px";
+    font-weight: "bold";
+    color: "#8f7c63";
+    background-color: "transparent";
+    border: "white 1px solid";
+    padding: "10px";
+    border-radius: "10px";
+    transition: "background-color 0.3s ease";
+  }
+
+  .connectWallet:hover {
+    background-color: "#ccc";
+  color: "#fff";
+  }
   

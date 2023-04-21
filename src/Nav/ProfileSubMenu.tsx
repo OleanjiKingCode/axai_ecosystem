@@ -12,7 +12,6 @@ import {
   chakra,
   ComponentWithAs,
   Icon,
-  Image,
 } from "@chakra-ui/react";
 import {
   RiLogoutBoxLine,
@@ -25,7 +24,7 @@ import { FaChevronDown } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import { CheckIcon } from "@chakra-ui/icons";
 import useLensUser from "@/lib/auth/useLensUser";
-import { useAddress } from "@thirdweb-dev/react";
+import { useAddress, useDisconnect } from "@thirdweb-dev/react";
 
 type SubMenuItemProps = {
   label: string;
@@ -53,12 +52,8 @@ const SubMenuItem = (props: SubMenuItemProps) => {
 };
 
 const ProfileSubMenu = () => {
-	const address = useAddress(); // Detect the connected address
-//   	const { disconnect } = useDisconnect();
-
-//   const logout = () => {
-//     disconnect();
-//   };
+  const address = useAddress(); // Detect the connected address
+  const disconnect = useDisconnect();
 
   const { profileQuery } = useLensUser();
 
@@ -134,11 +129,11 @@ const ProfileSubMenu = () => {
           }
           icon={RiExternalLinkLine}
         />
-        {/* <SubMenuItem
+        <SubMenuItem
           label="Disconnect"
-          action={logout}
+          action={disconnect}
           icon={RiLogoutBoxLine}
-        /> */}
+        />
       </PopoverContent>
     </Popover>
   );

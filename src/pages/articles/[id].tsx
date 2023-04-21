@@ -127,9 +127,9 @@ const Bit = () => {
               group of miscreants known as the Plisters had had enough. <br />{" "}
               <br />
               Jayla, the leader of the Plisters, was a charismatic and fearless
-              woman who had seen enough of the politicians' tyranny. She was
-              driven by a fierce sense of justice and an unshakable belief in
-              the power of collective action. With her piercing gaze and
+              woman who had seen enough of the politicians&apos; tyranny. She
+              was driven by a fierce sense of justice and an unshakable belief
+              in the power of collective action. With her piercing gaze and
               commanding presence, she inspired loyalty and respect from
               everyone who followed her.
               <br /> <br />
@@ -148,10 +148,11 @@ const Bit = () => {
               the politicians. It was a risky mission, with a high chance of
               failure. But Jayla and her team were determined to see it through.
               <br /> <br />
-              They spent weeks planning and preparing, studying the facility's
-              layout, and training for combat. On the day of the mission, they
-              donned their armor and set out under cover of darkness. They moved
-              swiftly and silently, taking out guards and avoiding detection.
+              They spent weeks planning and preparing, studying the
+              facility&apos;s layout, and training for combat. On the day of the
+              mission, they donned their armor and set out under cover of
+              darkness. They moved swiftly and silently, taking out guards and
+              avoiding detection.
               <br /> <br />
               Once inside, they quickly located the cache of supplies and began
               loading it onto their trucks. But just as they were about to make

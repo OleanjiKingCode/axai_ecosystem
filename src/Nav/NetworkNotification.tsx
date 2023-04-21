@@ -123,15 +123,8 @@ export const SignInWithLens = ({
       <AlertDialogContent bg="#d5a03d">
         <Box p={8}>
           <Flex>
-            <Icon
-              cursor="pointer"
-              fontSize="3xl"
-              fontWeight={600}
-              as={RiErrorWarningFill}
-              mr={5}
-            />
             <Text flex="1" fontSize="xl" fontWeight="black">
-              Switch Network
+              Sign In With Lens
             </Text>
             <Icon
               cursor="pointer"
@@ -141,14 +134,7 @@ export const SignInWithLens = ({
               onClick={() => onClose()}
             />
           </Flex>
-          <Text mt="6" w="90%" lineHeight="2">
-            Your wallet is currently connected to an unsupported network. To
-            continue with Polygon Mumbai, Switch the network in your wallet to
-            Polygon Mumbai Testnet.
-          </Text>
-          <Text mt="6" w="90%" lineHeight="2">
-            Switch wallet if unable to change wallet network.
-          </Text>
+
           <Flex mt="6">
             <Text
               onClick={() => onClose()}
@@ -162,7 +148,7 @@ export const SignInWithLens = ({
               Dismiss
             </Text>
             <Button onClick={handleSignIn} variant="outline">
-              Switch Network
+              Sign In
             </Button>
           </Flex>
         </Box>

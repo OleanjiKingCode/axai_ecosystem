@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useSDK, useStorageUpload } from "@thirdweb-dev/react";
+import { useSDK, useSigner, useStorageUpload } from "@thirdweb-dev/react";
 import {
   PublicationMainFocus,
   useCreatePostTypedDataMutation,
@@ -9,6 +9,7 @@ import { signTypedDataWithOmmittedTypename, splitSignature } from "./helpers";
 import { v4 as uuidv4 } from "uuid";
 import { LENS_CONTRACT_ABI, LENS_CONTRACT_ADDRESS } from "../const/contracts";
 import useLogin from "./auth/useLogin";
+import { ethers } from "ethers";
 
 type CreatePostArgs = {
   image: File;
@@ -23,6 +24,7 @@ export function useCreatePost() {
   const { profileQuery } = useLensUser();
   const sdk = useSDK();
   const { mutateAsync: loginUser } = useLogin();
+  const signer = useSigner();
 
   async function createPost({
     image,
@@ -30,17 +32,11 @@ export function useCreatePost() {
     description,
     content,
   }: CreatePostArgs) {
-    console.log("createPost", image, title, description, content);
-    // 0. Login
+    
+
     await loginUser();
-
-    // 0. Upload the image to IPFS
+    
     const imageIpfsUrl = (await uploadToIpfs({ data: [image] }))[0];
-
-    console.log("imageIpfsUrl", imageIpfsUrl);
-
-    // 0B) Upload the actual content to IPFS
-    // This is going to be a Object which contains the image field as well
     const postMetadata = {
       version: "2.0.0",
       mainContentFocus: PublicationMainFocus.TextOnly,
@@ -54,15 +50,12 @@ export function useCreatePost() {
       name: title,
       attributes: [],
       tags: [],
+      appId: "banji-app",
     };
 
     const postMetadataIpfsUrl = (
       await uploadToIpfs({ data: [postMetadata] })
-    )[0];
-
-    console.log("postMetadataIpfsUrl", postMetadataIpfsUrl);
-
-    // 1. Ask Lens to give us the typed data
+    )[0]
     const typedData = await requestTypedData({
       request: {
         collectModule: {
@@ -79,10 +72,7 @@ export function useCreatePost() {
     });
 
     const { domain, types, value } = typedData.createPostTypedData.typedData;
-
     if (!sdk) return;
-
-    // 2. Sign the typed data
     const signature = await signTypedDataWithOmmittedTypename(
       sdk,
       domain,
@@ -92,13 +82,6 @@ export function useCreatePost() {
 
     const { v, r, s } = splitSignature(signature.signature);
 
-    // 3. Use the signed typed data to send the transaction to the smart contract
-    const lensHubContract = await sdk.getContractFromAbi(
-      LENS_CONTRACT_ADDRESS,
-      LENS_CONTRACT_ABI
-    );
-
-    // Destructure the stuff we need out of the typedData.value field
     const {
       collectModule,
       collectModuleInitData,
@@ -109,22 +92,30 @@ export function useCreatePost() {
       referenceModuleInitData,
     } = typedData.createPostTypedData.typedData.value;
 
-    const result = await lensHubContract.call("postWithSig", {
-      profileId: profileId,
-      contentURI: contentURI,
-      collectModule,
-      collectModuleInitData,
-      referenceModule,
-      referenceModuleInitData,
+    const lensHub = new ethers.Contract(
+      LENS_CONTRACT_ADDRESS,
+      LENS_CONTRACT_ABI,
+      signer
+    );
+
+    const result = await lensHub.postWithSig({
+      profileId: typedData.createPostTypedData.typedData.value.profileId,
+      contentURI: typedData.createPostTypedData.typedData.value.contentURI,
+      collectModule:
+        typedData.createPostTypedData.typedData.value.collectModule,
+      collectModuleInitData:
+        typedData.createPostTypedData.typedData.value.collectModuleInitData,
+      referenceModule:
+        typedData.createPostTypedData.typedData.value.referenceModule,
+      referenceModuleInitData:
+        typedData.createPostTypedData.typedData.value.referenceModuleInitData,
       sig: {
         v,
         r,
         s,
-        deadline: deadline,
+        deadline: typedData.createPostTypedData.typedData.value.deadline,
       },
     });
-
-    console.log(result);
   }
 
   return useMutation(createPost);

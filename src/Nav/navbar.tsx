@@ -13,6 +13,7 @@ import {
 import {
   ConnectWallet,
   useAddress,
+  useChainId,
   useNetworkMismatch,
 } from "@thirdweb-dev/react";
 import React, { useState, useEffect } from "react";
@@ -29,7 +30,7 @@ export const Navbar = () => {
   const { isSignedInQuery, profileQuery } = useLensUser();
   const { mutate: requestLogin } = useLogin();
   const address = useAddress(); // Detect the connected address
-
+  const chainId = useChainId();
   const [dropdown, setDropdown] = useState(false);
   const {
     isOpen: isOpenSwitch,
@@ -40,17 +41,13 @@ export const Navbar = () => {
   const isOnWrongNetwork = useNetworkMismatch();
 
   useEffect(() => {
-    CheckNetwork();
+    if (address && isOnWrongNetwork && chainId !== 137) {
+      onOpenSwitch();
+    }
     if (address && !isSignedInQuery.data && !profileQuery) {
       onOpen();
     }
-  }, [address]);
-
-  const CheckNetwork = () => {
-    if (address && isOnWrongNetwork) {
-      onOpenSwitch();
-    }
-  };
+  }, [address, chainId, isOnWrongNetwork]);
 
   return (
     <VStack bg="#17171a" color="#ffd17cff">
@@ -100,22 +97,19 @@ export const Navbar = () => {
           </NextLink>
 
           {!address ? (
-            <Button
-              size="sm"
-              fontSize="sm"
-              px="4"
-              fontWeight="medium"
-              bg="transparent"
-              borderColor="white"
-              borderWidth="2px"
-              _hover={{
-                bg: "#ffd17cff",
-                color: "black",
-                borderColor: "#ffd17cff",
+            <ConnectWallet
+              style={{
+                fontSize: "16px",
+                fontWeight: "thin",
+                color: "#ffd17cff",
+
+                backgroundColor: "transparent",
+                border: "white 1px solid",
+                padding: "10px",
+                borderRadius: "10px",
+                transition: "background-color 0.3s ease",
               }}
-            >
-              <ConnectWallet />
-            </Button>
+            />
           ) : (
             <ProfileSubMenu />
           )}
