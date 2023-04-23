@@ -26,3 +26,8 @@ export async function signTypedDataWithOmmittedTypename(
 export function splitSignature(signature: string) {
   return ethers.utils.splitSignature(signature);
 }
+
+export const ipfsToWebLink = (ipfsLink: string | undefined) => {
+  const hash = ipfsLink?.replace("ipfs://", "");
+  return `https://ipfs.io/ipfs/${hash}`;
+};

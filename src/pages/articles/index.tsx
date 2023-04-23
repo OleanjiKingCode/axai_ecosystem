@@ -20,8 +20,30 @@ import {
 } from "react-icons/ri";
 import { RxPlus } from "react-icons/rx";
 import Link from "next/link";
+import {
+  PublicationMainFocus,
+  PublicationSortCriteria,
+  useExplorePublicationsQuery,
+  PublicationQueryRequest,
+  usePublicationsQuery,
+} from "../../graphql/generated";
+import { ipfsToWebLink } from "@/lib/helpers";
 
 export const Services = () => {
+  const { isLoading, error, data } = useExplorePublicationsQuery(
+    {
+      request: {
+        sortCriteria: PublicationSortCriteria.Latest,
+        sources: ["banji-app"],
+      },
+    },
+    {
+      // Don't refetch the user comes back
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  );
+
   return (
     <VStack w="full" gap="3" px="5" minH="89vh">
       <Flex
@@ -111,76 +133,166 @@ export const Services = () => {
               </Button>
             </HStack>
           </Flex>
-          <Flex direction="column" w="full" p="3">
-            <Flex
-              w="30%"
-              gap="0"
-              direction="column"
-              _hover={{ textDecoration: "none" }}
-            >
-              <Link href="./articles/1">
-                <Image
-                  src="./bg.svg"
-                  alt="bg"
-                  borderTopRadius="2xl"
-                  w="full"
-                  overflow="hidden"
-                />
-              </Link>
-              <VStack
-                bg="#46273d"
-                cursor="pointer"
-                py="3"
-                px="4"
-                borderBottomRadius="2xl"
+          <Flex w="full" dir="row" gap="1">
+            <Flex direction="column" w="full" py="3" px="1">
+              <Flex
+                gap="0"
                 direction="column"
+                _hover={{ textDecoration: "none" }}
               >
-                <Heading fontSize="18" color="white" w="full">
-                  <Link href="./articles/1">
-                    EP-01 <i>The Pilot </i>{" "}
-                  </Link>
-                </Heading>
-
-                <Text w="full">⚪ Oleanji</Text>
-                <HStack
-                  w="full"
-                  gap="3"
-                  alignItems="center"
-                  justifyContent="space-between"
+                <Link href="./articles/1">
+                  <Image
+                    src="./bg.svg"
+                    alt="bg"
+                    borderTopRadius="2xl"
+                    w="full"
+                    overflow="hidden"
+                  />
+                </Link>
+                <VStack
+                  bg="#46273d"
+                  cursor="pointer"
+                  py="3"
+                  px="4"
+                  borderBottomRadius="2xl"
+                  direction="column"
                 >
-                  <Button
-                    bg="whiteAlpha.100"
-                    border="none"
-                    leftIcon={<RiThumbUpLine />}
-                    _hover={{ bg: "whiteAlpha.200" }}
+                  <Heading fontSize="18" color="white" w="full">
+                    <Link href="./articles/1">
+                      EP-01 <i>The Pilot </i>{" "}
+                    </Link>
+                  </Heading>
+
+                  <Text w="full">⚪ Oleanji</Text>
+                  <HStack
+                    w="full"
+                    gap="3"
+                    alignItems="center"
+                    justifyContent="space-between"
                   >
-                    204
-                  </Button>
-                  <Button
-                    bg="whiteAlpha.100"
-                    border="none"
-                    leftIcon={<RiMessage3Line />}
-                    _hover={{ bg: "whiteAlpha.200" }}
-                  >
-                    4
-                  </Button>
-                  <Button
-                    bg="whiteAlpha.100"
-                    border="none"
-                    _hover={{ bg: "whiteAlpha.200" }}
-                  >
-                    <Icon as={RiShareForwardFill} />
-                  </Button>
-                  <Button
-                    bg="whiteAlpha.100"
-                    border="none"
-                    _hover={{ bg: "whiteAlpha.200" }}
-                  >
-                    <Icon as={RxPlus} />
-                  </Button>
-                </HStack>
-              </VStack>
+                    <Button
+                      bg="whiteAlpha.100"
+                      border="none"
+                      leftIcon={<RiThumbUpLine />}
+                      _hover={{ bg: "whiteAlpha.200" }}
+                    >
+                      204
+                    </Button>
+                    <Button
+                      bg="whiteAlpha.100"
+                      border="none"
+                      leftIcon={<RiMessage3Line />}
+                      _hover={{ bg: "whiteAlpha.200" }}
+                    >
+                      4
+                    </Button>
+                    <Button
+                      bg="whiteAlpha.100"
+                      border="none"
+                      _hover={{ bg: "whiteAlpha.200" }}
+                    >
+                      <Icon as={RiShareForwardFill} />
+                    </Button>
+                    <Button
+                      bg="whiteAlpha.100"
+                      border="none"
+                      _hover={{ bg: "whiteAlpha.200" }}
+                    >
+                      <Icon as={RxPlus} />
+                    </Button>
+                  </HStack>
+                </VStack>
+              </Flex>
             </Flex>
+            {data?.explorePublications.items.map((publication) => {
+              return (
+                <Flex
+                  direction="column"
+                  w="full"
+                  key={publication.id}
+                  py="3"
+                  minH="358px"
+                >
+                  <Flex
+                    gap="0"
+                    direction="column"
+                    _hover={{ textDecoration: "none" }}
+                  >
+                    <Link href={`./articles/${publication.id}`}>
+                      <Image
+                        src={
+                          ipfsToWebLink(publication.metadata.image) ||
+                          ipfsToWebLink(
+                            publication.metadata?.media[0]?.original.url
+                          )
+                        }
+                        alt={publication.metadata.name || ""}
+                        borderTopRadius="2xl"
+                        w="full"
+                        maxH="233px"
+                        overflow="hidden"
+                      />
+                    </Link>
+                    <VStack
+                      bg="#46273d"
+                      cursor="pointer"
+                      py="3"
+                      px="4"
+                      borderBottomRadius="2xl"
+                      direction="column"
+                    >
+                      <Heading fontSize="18" color="white" w="full">
+                        <Link href="./articles/1">
+                          {publication.metadata.name}
+                        </Link>
+                      </Heading>
+
+                      <Text w="full">
+                        ⚪{" "}
+                        {publication.profile.handle || publication.profile.name}
+                      </Text>
+                      <HStack
+                        w="full"
+                        gap="3"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <Button
+                          bg="whiteAlpha.100"
+                          border="none"
+                          leftIcon={<RiThumbUpLine />}
+                          _hover={{ bg: "whiteAlpha.200" }}
+                        >
+                          204
+                        </Button>
+                        <Button
+                          bg="whiteAlpha.100"
+                          border="none"
+                          leftIcon={<RiMessage3Line />}
+                          _hover={{ bg: "whiteAlpha.200" }}
+                        >
+                          4
+                        </Button>
+                        <Button
+                          bg="whiteAlpha.100"
+                          border="none"
+                          _hover={{ bg: "whiteAlpha.200" }}
+                        >
+                          <Icon as={RiShareForwardFill} />
+                        </Button>
+                        <Button
+                          bg="whiteAlpha.100"
+                          border="none"
+                          _hover={{ bg: "whiteAlpha.200" }}
+                        >
+                          <Icon as={RxPlus} />
+                        </Button>
+                      </HStack>
+                    </VStack>
+                  </Flex>
+                </Flex>
+              );
+            })}
           </Flex>
         </GridItem>
       </Grid>

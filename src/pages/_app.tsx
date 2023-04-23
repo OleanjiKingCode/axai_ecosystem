@@ -20,6 +20,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <chakra.div className={roboto.className}>
       <ChakraProvider resetCSS>
+        {/* @ts-ignore */}
         <ThirdwebProvider desiredChainId={desiredChainId}>
           <QueryClientProvider client={queryClient}>
             <chakra.div w="full" minH="100vh" bg="#17171a" color="white">

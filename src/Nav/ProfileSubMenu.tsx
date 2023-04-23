@@ -25,12 +25,19 @@ import { IconType } from "react-icons/lib";
 import { CheckIcon } from "@chakra-ui/icons";
 import useLensUser from "@/lib/auth/useLensUser";
 import { useAddress, useDisconnect } from "@thirdweb-dev/react";
+import { ipfsToWebLink, omitTypename } from "@/lib/helpers";
 
 type SubMenuItemProps = {
   label: string;
   action?: () => void;
   icon: IconType | ComponentWithAs<"svg">;
 } & FlexProps;
+
+type Picture = {
+  original: {
+    url: string;
+  };
+};
 
 const SubMenuItem = (props: SubMenuItemProps) => {
   const { icon, label, action, ...rest } = props;
@@ -57,11 +64,8 @@ const ProfileSubMenu = () => {
 
   const { profileQuery } = useLensUser();
 
-  const ipfsToWebLink = (ipfsLink: string | undefined) => {
-    const hash = ipfsLink?.replace("ipfs://", "");
-    return `https://ipfs.io/ipfs/${hash}`;
-  };
   const profileImage = ipfsToWebLink(
+    // @ts-ignore
     profileQuery.data?.defaultProfile?.picture?.original?.url ?? ""
   );
   const { hasCopied, onCopy: copyAddress } = useClipboard(address as string);
