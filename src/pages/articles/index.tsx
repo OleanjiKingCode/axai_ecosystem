@@ -39,12 +39,10 @@ export const Services = () => {
       },
     },
     {
-      // Don't refetch the user comes back
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
     }
   );
-  console.log(data?.explorePublications.items[1].metadata.image);
 
   return (
     <VStack w="full" gap="3" px="5" minH="89vh">

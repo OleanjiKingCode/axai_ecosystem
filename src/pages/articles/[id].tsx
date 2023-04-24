@@ -71,13 +71,12 @@ const Publication = () => {
     data: "data",
   };
   const getQuiz = async () => {
-    const lpTokenDetails = await fetchEndpointData(val, "/api/lp-token");
+    const lpTokenDetails = await fetchEndpointData(val, "/api/getarticles");
     console.log(lpTokenDetails);
   };
 
   const data = publicationData?.publication?.metadata;
   const ownerData = publicationData?.publication?.profile;
-  console.log(ownerData);
   return (
     <Grid h="full" templateColumns="repeat(8, 1fr)" py="5" gap={4} px="4">
       <GridItem
