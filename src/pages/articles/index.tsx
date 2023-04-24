@@ -41,9 +41,10 @@ export const Services = () => {
     {
       // Don't refetch the user comes back
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchOnReconnect: true,
     }
   );
+  console.log(data?.explorePublications.items[1].metadata.image);
 
   return (
     <VStack w="full" gap="3" px="5" minH="89vh">
@@ -134,84 +135,23 @@ export const Services = () => {
               </Button>
             </HStack>
           </Flex>
-          <Flex w="full" dir="row" gap="1">
-            {data ? (
+          {data ? (
+            <Grid
+              templateColumns={{
+                sm: "repeat(1, 1fr)",
+                md: "repeat(2, 1fr)",
+                lg: "repeat(3, 1fr)",
+              }}
+              gap={4}
+              px="5"
+              pb="10"
+            >
               <>
-                <Flex direction="column" w="full" py="3" px="1">
-                  <Flex
-                    gap="0"
-                    direction="column"
-                    _hover={{ textDecoration: "none" }}
-                  >
-                    <Link href="./articles/1">
-                      <Image
-                        src="./bg.svg"
-                        alt="bg"
-                        borderTopRadius="2xl"
-                        w="full"
-                        overflow="hidden"
-                      />
-                    </Link>
-                    <VStack
-                      bg="#46273d"
-                      cursor="pointer"
-                      py="3"
-                      px="4"
-                      borderBottomRadius="2xl"
-                      direction="column"
-                    >
-                      <Heading fontSize="18" color="white" w="full">
-                        <Link href="./articles/1">
-                          EP-01 <i>The Pilot </i>{" "}
-                        </Link>
-                      </Heading>
-
-                      <Text w="full">⚪ Oleanji</Text>
-                      <HStack
-                        w="full"
-                        gap="3"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <Button
-                          bg="whiteAlpha.100"
-                          border="none"
-                          leftIcon={<RiThumbUpLine />}
-                          _hover={{ bg: "whiteAlpha.200" }}
-                        >
-                          204
-                        </Button>
-                        <Button
-                          bg="whiteAlpha.100"
-                          border="none"
-                          leftIcon={<RiMessage3Line />}
-                          _hover={{ bg: "whiteAlpha.200" }}
-                        >
-                          4
-                        </Button>
-                        <Button
-                          bg="whiteAlpha.100"
-                          border="none"
-                          _hover={{ bg: "whiteAlpha.200" }}
-                        >
-                          <Icon as={RiShareForwardFill} />
-                        </Button>
-                        <Button
-                          bg="whiteAlpha.100"
-                          border="none"
-                          _hover={{ bg: "whiteAlpha.200" }}
-                        >
-                          <Icon as={RxPlus} />
-                        </Button>
-                      </HStack>
-                    </VStack>
-                  </Flex>
-                </Flex>
-
                 {data?.explorePublications.items.map((publication) => {
                   return (
-                    <Flex
-                      direction="column"
+                    <GridItem
+                      colSpan={1}
+                      rowSpan={1}
                       w="full"
                       key={publication.id}
                       py="3"
@@ -246,7 +186,7 @@ export const Services = () => {
                           direction="column"
                         >
                           <Heading fontSize="18" color="white" w="full">
-                            <Link href="./articles/1">
+                            <Link href={`./articles/${publication.id}`}>
                               {publication.metadata.name}
                             </Link>
                           </Heading>
@@ -295,14 +235,21 @@ export const Services = () => {
                           </HStack>
                         </VStack>
                       </Flex>
-                    </Flex>
+                    </GridItem>
                   );
                 })}
               </>
-            ) : (
+            </Grid>
+          ) : (
+            <Flex
+              w="full"
+              h="300px"
+              alignItems="center"
+              justifyContent="center"
+            >
               <Spinner />
-            )}
-          </Flex>
+            </Flex>
+          )}
         </GridItem>
       </Grid>
     </VStack>

@@ -41,7 +41,7 @@ import {
 import Link from "next/link";
 import { usePublicationQuery } from "@/graphql/generated";
 import { useRouter } from "next/router";
-import { ipfsToWebLink } from "@/lib/helpers";
+import { fetchEndpointData, ipfsToWebLink } from "@/lib/helpers";
 import { shortenText } from "@/utils/shortenAccount";
 
 const Publication = () => {
@@ -66,6 +66,14 @@ const Publication = () => {
       enabled: !!id,
     }
   );
+
+  const val = {
+    data: "data",
+  };
+  const getQuiz = async () => {
+    const lpTokenDetails = await fetchEndpointData(val, "/api/lp-token");
+    console.log(lpTokenDetails);
+  };
 
   const data = publicationData?.publication?.metadata;
   const ownerData = publicationData?.publication?.profile;
@@ -168,7 +176,7 @@ const Publication = () => {
           </Text>
 
           <Button
-            // onClick={createNew}
+            onClick={getQuiz}
             bg="gray.600"
             fontWeight="500"
             _hover={{ bg: "gray.800" }}
@@ -214,7 +222,7 @@ const Publication = () => {
           >
             Follow
           </Button>
-          <Text w="full">From your Page</Text>
+          <Text w="full">From Writers Page</Text>
           <Flex
             direction="column"
             w="full"

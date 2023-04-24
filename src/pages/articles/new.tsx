@@ -30,14 +30,26 @@ const NewArticle = () => {
     const inputValue = e.target.value;
     setValue(inputValue);
   };
-  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-  const OnFileChange = (e: any) => {
+  const OnFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      const file = e.target.files[0];
-      setImage(file);
-      if (file) {
-        const image = URL.createObjectURL(file);
-        setViewing(image);
+      const file = e.target.files?.[0];
+      if (file && file.name.length > 10) {
+        const newName = `${title}.jpg`;
+        const updatedFile = new File([file], newName, {
+          type: file.type,
+          lastModified: file.lastModified,
+        });
+        setImage(updatedFile);
+        if (updatedFile) {
+          const image = URL.createObjectURL(updatedFile);
+          setViewing(image);
+        }
+      } else {
+        if (file) {
+          setImage(file);
+          const image = URL.createObjectURL(file);
+          setViewing(image);
+        }
       }
     } catch (error) {
       console.log(error);

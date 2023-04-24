@@ -1,5 +1,6 @@
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { EIP712Domain } from "@thirdweb-dev/sdk/dist/declarations/src/evm/common/sign";
+import axios from "axios";
 import { ethers } from "ethers";
 import omitDeep from "omit-deep";
 
@@ -30,4 +31,21 @@ export function splitSignature(signature: string) {
 export const ipfsToWebLink = (ipfsLink: string | undefined) => {
   const hash = ipfsLink?.replace("ipfs://", "");
   return `https://ipfs.io/ipfs/${hash}`;
+};
+
+export const fetchEndpointData = async (
+  payload: {
+    [key: string]: string;
+  },
+  endpointUrl: string
+) => {
+  try {
+    const result = await axios.get(endpointUrl, {
+      params: { ...payload },
+    });
+    return result.data.response;
+  } catch (err) {
+    console.log(err);
+  }
+  return undefined;
 };
