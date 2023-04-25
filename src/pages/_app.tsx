@@ -6,6 +6,7 @@ import { Roboto } from "next/font/google";
 import { ThirdwebProvider, ChainId } from "@thirdweb-dev/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "@/components/footer";
+import { Analytics } from "@vercel/analytics/react";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <chakra.div w="full" minH="100vh" bg="#17171a" color="white">
               <Navbar />
               <Component {...pageProps} />
+              <Analytics />
             </chakra.div>
           </QueryClientProvider>
         </ThirdwebProvider>
