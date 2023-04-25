@@ -67,16 +67,21 @@ const Publication = () => {
     }
   );
 
-  const val = {
-    data: "data",
-  };
-  const getQuiz = async () => {
-    const lpTokenDetails = await fetchEndpointData(val, "/api/getarticles");
-    console.log(lpTokenDetails);
-  };
-
   const data = publicationData?.publication?.metadata;
   const ownerData = publicationData?.publication?.profile;
+  const input_text = data?.content
+  const getQuiz = async () => {
+    const response = await fetch("http://localhost:5000/quiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ input_text: input_text }),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
   return (
     <Grid h="full" templateColumns="repeat(8, 1fr)" py="5" gap={4} px="4">
       <GridItem
