@@ -11,10 +11,14 @@ import {
   Spinner,
   VStack,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useCreatePost } from "@/lib/useCreatePost";
+import { GetArticleReward } from "@/Nav/NetworkNotification";
+import { useChainId, useNetwork, useAddress } from "@thirdweb-dev/react";
+import { ChainId } from "@thirdweb-dev/sdk";
 
 const NewArticle = () => {
   const [viewing, setViewing] = useState<string>("");
@@ -27,6 +31,10 @@ const NewArticle = () => {
   const router = useRouter();
   const toast = useToast();
   const { mutateAsync: createPost } = useCreatePost();
+  const chainId = useChainId();
+  const [, switchNetwork] = useNetwork();
+  const address = useAddress();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleInputChange = (e: any) => {
     const inputValue = e.target.value;
@@ -59,25 +67,33 @@ const NewArticle = () => {
   };
 
   const createNew = async () => {
-    setLoading(true);
-    if (!image) {
-      setLoading(false);
-      toast({
-        title: "Image not attached.",
-        status: "warning",
-        duration: 2000,
-        isClosable: true,
+    try {
+      setLoading(true);
+      if (!image) {
+        setLoading(false);
+        toast({
+          title: "Image not attached.",
+          status: "warning",
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      }
+      if (address && chainId !== 137) {
+        switchNetwork?.(ChainId.Polygon);
+      }
+      const tx = await createPost({
+        image,
+        title,
+        description,
+        content,
       });
-      return;
+      setLoading(false);
+      onOpen();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
-    const tx = await createPost({
-      image,
-      title,
-      description,
-      content,
-    });
-    setLoading(false);
-    router.push("/articles");
   };
 
   return (
@@ -220,6 +236,7 @@ const NewArticle = () => {
           </VStack>
         </GridItem>
       </Grid>
+      <GetArticleReward isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 };

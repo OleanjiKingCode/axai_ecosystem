@@ -15,7 +15,13 @@ import { RiErrorWarningFill, RiCloseLine } from "react-icons/ri";
 import { ethers, utils } from "ethers";
 import useLogin from "@/lib/auth/useLogin";
 import useLensUser from "@/lib/auth/useLensUser";
-import { ChainId, useAddress, useChainId, useNetwork, useSigner } from "@thirdweb-dev/react";
+import {
+  ChainId,
+  useAddress,
+  useChainId,
+  useNetwork,
+  useSigner,
+} from "@thirdweb-dev/react";
 import { contractAbi, contractAddress } from "@/Data/contractDetails";
 import { useRouter } from "next/router";
 
@@ -141,7 +147,7 @@ export const SignInWithLens = ({
   );
 };
 
-export const getArticleReward = ({
+export const GetArticleReward = ({
   onClose,
   isOpen,
 }: {
@@ -152,12 +158,11 @@ export const getArticleReward = ({
   const signer = useSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
   const chainId = useChainId();
-  const initialRender = useRef(true);
   const [, switchNetwork] = useNetwork();
   const router = useRouter();
   const toast = useToast();
   const address = useAddress();
-  
+
   const handleGetReward = async () => {
     if (!address) {
       toast({
@@ -167,8 +172,9 @@ export const getArticleReward = ({
         isClosable: true,
       });
     }
+
     if (address && chainId !== 80001) {
-      switchNetwork?.(ChainId.Polygon);
+      switchNetwork?.(ChainId.Mumbai);
     }
     const amount = await contract?.amountCollected(address?.toString());
     const realVal = Number(ethers.utils.formatEther(amount));
