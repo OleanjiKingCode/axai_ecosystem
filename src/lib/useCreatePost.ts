@@ -48,7 +48,7 @@ export function useCreatePost() {
       name: title,
       attributes: [],
       tags: [],
-      appId: "banji-app",
+      appId: "axia-test-app",
     };
 
     const postMetadataIpfsUrl = (

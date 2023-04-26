@@ -44,7 +44,7 @@ export const Services = () => {
     {
       request: {
         sortCriteria: PublicationSortCriteria.Latest,
-        sources: ["banji-app"],
+        sources: ["banji-app", "axia-test-app"],
       },
     },
     {
@@ -52,7 +52,6 @@ export const Services = () => {
       refetchOnReconnect: true,
     }
   );
-  console.log(data?.explorePublications.items);
   data?.explorePublications.items.sort(
     (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
   );

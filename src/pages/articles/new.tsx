@@ -10,6 +10,7 @@ import {
   Textarea,
   Spinner,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -24,6 +25,7 @@ const NewArticle = () => {
   const [description, setDescription] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const router = useRouter();
+  const toast = useToast();
   const { mutateAsync: createPost } = useCreatePost();
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleInputChange = (e: any) => {
@@ -58,7 +60,16 @@ const NewArticle = () => {
 
   const createNew = async () => {
     setLoading(true);
-    if (!image) return;
+    if (!image) {
+      setLoading(false);
+      toast({
+        title: "Image not attached.",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
     const tx = await createPost({
       image,
       title,
