@@ -19,8 +19,9 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
 import { config } from "@/Data/config";
 import { RiInformationFill } from "react-icons/ri";
-import { useAddress, useSigner } from "@thirdweb-dev/react";
+import { useAddress, useChainId, useSigner } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
+import { ChainId, useNetwork } from "@thirdweb-dev/react";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 const QuizPage = ({ data }: any) => {
@@ -43,8 +44,9 @@ const QuizPage = ({ data }: any) => {
   const [questions, setQuestions] = useState<quest>(data);
   const signer = useSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-
+  const chainId = useChainId();
   const initialRender = useRef(true);
+  const [, switchNetwork] = useNetwork();
 
   useEffect(() => {
     const dataOne = window.localStorage.getItem("QUESTIONS");
@@ -232,11 +234,12 @@ const QuizPage = ({ data }: any) => {
         isClosable: true,
       });
     }
-    const hasALreadyCollected = await contract?.hasCollected(
-      address?.toString()
-    );
-
-    if (hasALreadyCollected) {
+    if (address && chainId !== 80001) {
+      switchNetwork?.(ChainId.Polygon);
+    }
+    const amount = await contract?.amountCollected(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount));
+    if (realVal >= 2) {
       toast({
         title: "You have collected before.",
         status: "warning",
@@ -247,11 +250,12 @@ const QuizPage = ({ data }: any) => {
     const collectMumbai = await contract?.collect();
     collectMumbai.wait();
     toast({
-      title: "You have successfully gotten 0.5 Mumbai tokens",
+      title: " 1 Mumbai token is on its way to you",
       status: "success",
       duration: 2000,
       isClosable: true,
     });
+    FinishQuiz();
   };
 
   const FinishQuiz = () => {
@@ -474,7 +478,7 @@ const QuizPage = ({ data }: any) => {
                 </HStack>
                 <HStack w="full" justifyContent="space-between" fontSize="md">
                   <Text>Mumbai Reward:</Text>
-                  <b>{score > 4 ? 0.5 : 0}</b>
+                  <b>{score > 4 ? 1 : 0}</b>
                 </HStack>
                 <HStack w="full" justifyContent="space-between" fontSize="md">
                   <Text>Percentage:</Text>

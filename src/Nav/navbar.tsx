@@ -41,7 +41,7 @@ export const Navbar = () => {
   const isOnWrongNetwork = useNetworkMismatch();
 
   useEffect(() => {
-    if (address && isOnWrongNetwork && chainId !== 137) {
+    if (address && chainId !== 80001 && chainId !== 137) {
       onOpenSwitch();
     }
     if (address && !isSignedInQuery.data && !profileQuery) {

@@ -69,7 +69,9 @@ const Publication = () => {
 
   const data = publicationData?.publication?.metadata;
   const ownerData = publicationData?.publication?.profile;
-  const input_text = data?.content
+
+  const input_text = data?.content.toString();
+  
   const getQuiz = async () => {
     const response = await fetch("http://localhost:5000/quiz", {
       method: "POST",

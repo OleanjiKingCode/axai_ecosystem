@@ -1,27 +1,46 @@
-export const contractAddress = "0xE0D3c61F385F7c619d697fb9706cCcD3A2652dA9";
+export const contractAddress = "0x19C59a273eBc46F1c63b7D3b74C8b82D54C20F6c";
 
 export const contractAbi = [
-	{ stateMutability: "payable", type: "fallback" },
-	{
-		inputs: [],
-		name: "collect",
-		outputs: [],
-		stateMutability: "nonpayable",
-		type: "function",
-	},
-	{
-		inputs: [{ internalType: "address", name: "", type: "address" }],
-		name: "hasCollected",
-		outputs: [{ internalType: "bool", name: "", type: "bool" }],
-		stateMutability: "view",
-		type: "function",
-	},
-	{
-		inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-		name: "withdraw",
-		outputs: [],
-		stateMutability: "nonpayable",
-		type: "function",
-	},
-	{ stateMutability: "payable", type: "receive" },
+  {
+    inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  { stateMutability: "payable", type: "fallback" },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "amountCollected",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "newAmount", type: "uint256" }],
+    name: "changeCollectAmount",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "collect",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "maxCollectAmount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  { stateMutability: "payable", type: "receive" },
 ];
