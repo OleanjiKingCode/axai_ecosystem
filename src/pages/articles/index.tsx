@@ -124,7 +124,7 @@ export const Services = () => {
               md: "repeat(2, 1fr)",
               lg: "repeat(3, 1fr)",
             }}
-            gap={4}
+            gap={14}
             pb="10"
           >
             <>
@@ -137,6 +137,7 @@ export const Services = () => {
                     key={publication.id}
                     py="3"
                     minH="358px"
+                    
                   >
                     <Flex
                       gap="0"
@@ -153,7 +154,7 @@ export const Services = () => {
                           }
                           alt={publication.metadata.name || ""}
                           borderTopRadius="2xl"
-                          w="full"
+                          w="340px"
                           minH="233px"
                           maxH="233px"
                           overflow="hidden"
