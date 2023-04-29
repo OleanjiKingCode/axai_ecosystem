@@ -30,7 +30,7 @@ export const Dex = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Card w="40%" bg="#897537">
+        <Card w="40%" bg="#897537" color="white">
           <CardHeader>
             <Heading fontSize="xl">STAKE</Heading>
           </CardHeader>
@@ -45,11 +45,11 @@ export const Dex = () => {
                   Balance: 450.00
                 </chakra.div>
               </chakra.div>
-              <Button w="full">Stake Tokens</Button>
+              <Button w="full" color="black">Stake Tokens</Button>
             </VStack>
           </CardBody>
         </Card>
-        <Card w="35%" bg="#897537">
+        <Card w="35%" bg="#897537" color="white">
           <CardHeader>
             <Heading fontSize="xl">DETAILS</Heading>
           </CardHeader>
@@ -73,7 +73,7 @@ export const Dex = () => {
                 <chakra.span fontSize="md" fontWeight="700">
                   15 Reward Tokens
                 </chakra.span>
-                <Button w="full">Claim Rewards</Button>
+                <Button w="full" color="black">Claim Rewards</Button>
               </VStack>
             </Flex>
           </CardBody>

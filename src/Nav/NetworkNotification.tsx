@@ -185,6 +185,7 @@ export const GetArticleReward = ({
         duration: 2000,
         isClosable: true,
       });
+      router.push("/articles");
     }
     const collectMumbai = await contract?.collect();
     collectMumbai.wait();

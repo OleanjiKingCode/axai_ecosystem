@@ -2,22 +2,15 @@ import {
   Box,
   Flex,
   Heading,
-  Tag,
-  chakra,
   VStack,
   HStack,
   Icon,
-  TagLabel,
   Text,
   Image,
-  useToast,
   Grid,
   GridItem,
   Button,
   ListItem,
-  OrderedList,
-  Circle,
-  Textarea,
   List,
   ListIcon,
   Popover,
@@ -25,9 +18,8 @@ import {
   PopoverContent,
   PopoverBody,
   PopoverArrow,
-  useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   RiThumbUpLine,
   RiThumbUpFill,
@@ -38,18 +30,15 @@ import {
   RiBookmarkLine,
   RiMoreLine,
 } from "react-icons/ri";
-import Link from "next/link";
 import { usePublicationQuery } from "@/graphql/generated";
 import { useRouter } from "next/router";
-import { fetchEndpointData, ipfsToWebLink } from "@/lib/helpers";
+import { ipfsToWebLink } from "@/lib/helpers";
 import { shortenText } from "@/utils/shortenAccount";
 
 const Publication = () => {
   const [Message, setMessage] = useState(0);
   const [likeLightUp, setLikeLightUp] = useState(false);
   const [markLightUp, setMarkLightUp] = useState(false);
-  const [likeAccount, setLikeAccount] = useState("");
-  const [markBit, setMarkBit] = useState("");
   const router = useRouter();
   const { id } = router.query;
   const {
@@ -71,7 +60,7 @@ const Publication = () => {
   const ownerData = publicationData?.publication?.profile;
 
   const input_text = data?.content.toString();
-  
+
   const getQuiz = async () => {
     const response = await fetch("http://localhost:5000/quiz", {
       method: "POST",

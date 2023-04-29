@@ -39,7 +39,7 @@ export const Dex = () => {
 
         <TabPanels>
           <TabPanel>
-            <Card bg="#897537">
+            <Card bg="#897537" color="white">
               <CardHeader textAlign="center">
                 <Heading size="md">Swap</Heading>
               </CardHeader>
@@ -67,12 +67,14 @@ export const Dex = () => {
                 <chakra.div mt="2" px="3" mb="10">
                   You will received 20 Mumbai tokens
                 </chakra.div>
-                <Button w="full">SWAP</Button>
+                <Button w="full" color="black">
+                  SWAP
+                </Button>
               </CardBody>
             </Card>
           </TabPanel>
           <TabPanel>
-            <Card bg="#897537">
+            <Card bg="#897537 " color="white">
               <CardHeader textAlign="center">
                 <Heading size="md">Liquidity</Heading>
               </CardHeader>
@@ -104,7 +106,9 @@ export const Dex = () => {
                   <Flex direction="column" w="full" gap="4">
                     <chakra.span pb="4">Your MLP Balance : 230</chakra.span>
                     <Input type="number" dir="rtl" py="2" rounded="lg" />
-                    <Button w="full">REMOVE</Button>
+                    <Button w="full" color="black">
+                      REMOVE
+                    </Button>
                   </Flex>
                 </HStack>
               </CardBody>

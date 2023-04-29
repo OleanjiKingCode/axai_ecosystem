@@ -15,10 +15,13 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
+import { FcLike } from "react-icons/fc";
+import { FaComments } from "react-icons/fa";
 import {
   RiThumbUpLine,
   RiMessage3Line,
   RiShareForwardFill,
+  RiLightbulbFlashFill,
 } from "react-icons/ri";
 import { RxPlus } from "react-icons/rx";
 import Link from "next/link";
@@ -44,7 +47,7 @@ export const Services = () => {
     {
       request: {
         sortCriteria: PublicationSortCriteria.Latest,
-        sources: ["banji-app", "axia-test-app"],
+        sources: ["axia-test-app", "axia-eco"],
       },
     },
     {
@@ -101,9 +104,9 @@ export const Services = () => {
               py="2"
               pl="1"
               pr="3"
-              w="full"
+              w="500px"
               fontWeight="normal"
-              color="gray.900"
+              color="white"
               outline="none"
               fontSize="sm"
             />
@@ -137,7 +140,6 @@ export const Services = () => {
                     key={publication.id}
                     py="3"
                     minH="358px"
-                    
                   >
                     <Flex
                       gap="0"
@@ -161,7 +163,7 @@ export const Services = () => {
                         />
                       </Link>
                       <VStack
-                        bg="#46273d"
+                        bg="#413921 "
                         cursor="pointer"
                         py="3"
                         px="4"
@@ -173,12 +175,23 @@ export const Services = () => {
                             {publication.metadata.name}
                           </Link>
                         </Heading>
+                        <HStack w="full">
+                          <Image
+                            boxSize="30px"
+                            objectFit="cover"
+                            src={ipfsToWebLink(
+                              // @ts-ignore
+                              publication.profile?.picture?.original?.url
+                            )}
+                            alt="Dan Abramov"
+                            borderRadius="full"
+                          />
+                          <Text w="full">
+                            {publication.profile.handle ||
+                              publication.profile.name}
+                          </Text>
+                        </HStack>
 
-                        <Text w="full">
-                          ⚪{" "}
-                          {publication.profile.handle ||
-                            publication.profile.name}
-                        </Text>
                         <HStack
                           w="full"
                           gap="3"
@@ -188,16 +201,18 @@ export const Services = () => {
                           <Button
                             bg="whiteAlpha.100"
                             border="none"
-                            leftIcon={<RiThumbUpLine />}
+                            leftIcon={<FcLike />}
                             _hover={{ bg: "whiteAlpha.200" }}
+                            px="6"
                           >
-                            204
+                            2
                           </Button>
                           <Button
                             bg="whiteAlpha.100"
                             border="none"
-                            leftIcon={<RiMessage3Line />}
+                            leftIcon={<FaComments />}
                             _hover={{ bg: "whiteAlpha.200" }}
+                            px="6"
                           >
                             4
                           </Button>
@@ -205,15 +220,9 @@ export const Services = () => {
                             bg="whiteAlpha.100"
                             border="none"
                             _hover={{ bg: "whiteAlpha.200" }}
+                            px="6"
                           >
-                            <Icon as={RiShareForwardFill} />
-                          </Button>
-                          <Button
-                            bg="whiteAlpha.100"
-                            border="none"
-                            _hover={{ bg: "whiteAlpha.200" }}
-                          >
-                            <Icon as={RxPlus} />
+                            <Icon as={RiLightbulbFlashFill} />
                           </Button>
                         </HStack>
                       </VStack>

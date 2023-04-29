@@ -48,7 +48,7 @@ export function useCreatePost() {
       name: title,
       attributes: [],
       tags: [],
-      appId: "axia-test-appp",
+      appId: "axia-eco",
     };
 
     const postMetadataIpfsUrl = (
