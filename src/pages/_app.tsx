@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "../styles/Home.module.css";
 import { chakra, ChakraProvider } from "@chakra-ui/react";
 import { AppProps } from "next/app";
 import { Navbar } from "@/Nav/navbar";
