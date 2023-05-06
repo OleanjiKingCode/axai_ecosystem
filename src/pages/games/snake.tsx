@@ -39,15 +39,22 @@ type Velocity = {
 
 export default function SnakeGame() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const leaderboardData = [
+    { name: "John", score: 100 },
+    { name: "Jane", score: 95 },
+    { name: "Alex", score: 90 },
+    // Add more users here
+  ];
+
   const cancelRef = useRef<FocusableElement>(null);
   // Canvas Settings
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasWidth = 1400;
   const canvasHeight = 600;
-  const canvasGridSize = 20;
+  const canvasGridSize = 30;
 
   // Game Settings
-  const minGameSpeed = 8;
+  const minGameSpeed = 10;
   const maxGameSpeed = 15;
 
   // Game State
@@ -372,62 +379,104 @@ export default function SnakeGame() {
   }, [previousVelocity]);
 
   return (
-    <Flex px="10%" direction="column" w="full">
-      <Flex w="full" justifyContent="space-between" alignItems="center">
-        <VStack>
-          <HStack w="full">
-            <Icon as={RiStarFill} />
-            <Text>Score: {score}</Text>
-          </HStack>
-          <HStack>
-            <Icon as={RiTrophyFill} />
-            <Text>Highscore: {highscore > score ? highscore : score} </Text>
-          </HStack>
-        </VStack>
-        {!isLost && countDown > 0 ? (
-          <Button
-            onClick={startGame}
-            w="fit"
-            py="5"
-            bg="#ffd17cff"
-            fontSize="xl"
-            borderColor="#ffd17cff"
-            borderWidth="1px"
-            _hover={{
-              color: "#ffd17cff",
-              bg: "transparent",
-            }}
-          >
-            {countDown === 4 ? "Start Game" : countDown}
-          </Button>
-        ) : (
+    <Flex
+      px="10%"
+      direction="row"
+      w="full"
+      alignItems="center"
+      justifyContent="center"
+      py="20"
+      mb="-40"
+    >
+      <VStack>
+        <Flex w="65%" justifyContent="space-between" alignItems="center">
           <VStack>
-            <p>How to Play?</p>
-            <Flex gap={2}>
-              <HStack>
-                <Kbd bg="transparent">W</Kbd>
-                <Kbd bg="transparent">A</Kbd>
-                <Kbd bg="transparent">S</Kbd>
-                <Kbd bg="transparent">D</Kbd>
-              </HStack>
-              <HStack>
-                <Icon as={RiArrowUpLine} />
-                <Icon as={RiArrowRightLine} />
-                <Icon as={RiArrowDownLine} />
-                <Icon as={RiArrowLeftLine} />
-              </HStack>
-            </Flex>
+            <HStack w="full">
+              <Icon as={RiStarFill} />
+              <Text>Score: {score}</Text>
+            </HStack>
+            <HStack>
+              <Icon as={RiTrophyFill} />
+              <Text>Highscore: {highscore > score ? highscore : score} </Text>
+            </HStack>
           </VStack>
-        )}
-      </Flex>
+          {!isLost && countDown > 0 ? (
+            <Button
+              onClick={startGame}
+              w="fit"
+              py="5"
+              bg="#ffd17cff"
+              fontSize="xl"
+              borderColor="#ffd17cff"
+              borderWidth="1px"
+              _hover={{
+                color: "#ffd17cff",
+                bg: "transparent",
+              }}
+            >
+              {countDown === 4 ? "Start Game" : countDown}
+            </Button>
+          ) : (
+            <VStack>
+              <p>How to Play?</p>
+              <Flex gap={2}>
+                <HStack>
+                  <Kbd bg="transparent">W</Kbd>
+                  <Kbd bg="transparent">A</Kbd>
+                  <Kbd bg="transparent">S</Kbd>
+                  <Kbd bg="transparent">D</Kbd>
+                </HStack>
+                <span>OR</span>
+                <HStack>
+                  <Icon as={RiArrowUpLine} />
+                  <Icon as={RiArrowRightLine} />
+                  <Icon as={RiArrowDownLine} />
+                  <Icon as={RiArrowLeftLine} />
+                </HStack>
+              </Flex>
+            </VStack>
+          )}
+        </Flex>
 
-      <canvas
-        ref={canvasRef}
-        width={canvasWidth + 2}
-        height={canvasHeight + 2}
-        className={styles.canvas}
-      />
-
+        <canvas
+          ref={canvasRef}
+          width={canvasWidth + 2}
+          height={canvasHeight + 2}
+          className={styles.canvas}
+        />
+      </VStack>
+      <Box
+        maxWidth="500px"
+        mx="auto"
+        borderWidth="1px"
+        borderRadius="lg"
+        p={4}
+        shadow="md"
+      >
+        <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          Highscore Leaderboard
+        </Text>
+        {leaderboardData.map((user, index) => (
+          <Box
+            key={index}
+            borderWidth="1px"
+            borderRadius="md"
+            p={4}
+            w="100%"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            _notFirst={{ mt: 2 }}
+          >
+            <Text fontSize="lg" fontWeight={index < 3 ? "bold" : "normal"}>
+              {`${index + 1}. ${user.name}`}
+            </Text>
+            <Text fontSize="lg" fontWeight={index < 3 ? "bold" : "normal"}>
+              {user.score}
+            </Text>
+          </Box>
+        ))}
+      </Box>
       {isLost && (
         <AlertDialog
           motionPreset="slideInBottom"

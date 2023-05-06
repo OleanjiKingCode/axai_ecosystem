@@ -18,6 +18,7 @@ import {
   PopoverContent,
   PopoverBody,
   PopoverArrow,
+  Spinner,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
@@ -29,11 +30,15 @@ import {
   RiShareLine,
   RiBookmarkLine,
   RiMoreLine,
+  RiLightbulbFlashFill,
 } from "react-icons/ri";
-import { usePublicationQuery } from "@/graphql/generated";
+import { usePublicationQuery, usePublicationsQuery } from "@/graphql/generated";
 import { useRouter } from "next/router";
 import { ipfsToWebLink } from "@/lib/helpers";
 import { shortenText } from "@/utils/shortenAccount";
+import Link from "next/link";
+import { FaComments } from "react-icons/fa";
+import { FcLike } from "react-icons/fc";
 
 const Publication = () => {
   const [Message, setMessage] = useState(0);
@@ -58,7 +63,22 @@ const Publication = () => {
 
   const data = publicationData?.publication?.metadata;
   const ownerData = publicationData?.publication?.profile;
-
+  const {
+    isLoading: isLoadingPublications,
+    data: publicationsData,
+    error: publicationsError,
+  } = usePublicationsQuery(
+    {
+      request: {
+        profileId: ownerData?.id,
+        sources: ["axia-test-app", "axia-eco"],
+      },
+    },
+    {
+      enabled: !!ownerData?.id,
+    }
+  );
+  console.log(publicationsData);
   const input_text = data?.content.toString();
 
   const getQuiz = async () => {
@@ -89,6 +109,7 @@ const Publication = () => {
               src={ipfsToWebLink(data?.image)}
               alt="Your Image"
               // w="70%"
+              rounded="xl"
             />
           </Flex>
           <HStack w="fit" gap={6}>
@@ -225,8 +246,49 @@ const Publication = () => {
             justifyContent="center"
             gap="3"
           >
-            <Box w={56} h={56} rounded="xl" bg="gray.300" />
-            <Box w={56} h={56} rounded="xl" bg="gray.300" />
+            {isLoadingPublications ? (
+              <Spinner />
+            ) : (
+              <>
+                {publicationsData?.publications.items.map((publication) => (
+                  <Box
+                    w="full"
+                    h={16}
+                    key={publication.id}
+                    fontSize="sm"
+                    color="blue.300"
+                    my="2"
+                  >
+                    <Link href={`./articles/${publication.id}`}>
+                      <Text>{publication.metadata.name}</Text>
+                    </Link>
+                    <Text
+                      color="white"
+                      opacity="90%"
+                      fontSize="xs"
+                      letterSpacing="3px"
+                    >
+                      {publication.metadata.description}
+                    </Text>
+                    <HStack
+                      justifyContent="space-between"
+                      w="full"
+                      color="white"
+                    >
+                      <Flex alignItems="center" gap="2">
+                        <Icon as={FcLike} />
+                        <Text>3</Text>
+                      </Flex>
+                      <Flex alignItems="center" gap="2">
+                        <Icon as={FaComments} />
+                        <Text>0</Text>
+                      </Flex>
+                      <Icon as={RiLightbulbFlashFill} />
+                    </HStack>
+                  </Box>
+                ))}
+              </>
+            )}
           </Flex>
         </VStack>
       </GridItem>

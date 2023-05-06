@@ -9,10 +9,10 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import React from "react";
 import { FocusableElement } from "@chakra-ui/utils";
 import { RiErrorWarningFill, RiCloseLine } from "react-icons/ri";
-import { ethers, utils } from "ethers";
+import { ethers } from "ethers";
 import useLogin from "@/lib/auth/useLogin";
 import useLensUser from "@/lib/auth/useLensUser";
 import {
@@ -91,7 +91,7 @@ export const SignInWithLens = ({
 }) => {
   const cancelRef = React.useRef<FocusableElement>(null);
   const { mutate: requestLogin } = useLogin();
-  const { isSignedInQuery, profileQuery } = useLensUser();
+  const { isSignedInQuery } = useLensUser();
 
   const handleSignIn = () => {
     requestLogin();

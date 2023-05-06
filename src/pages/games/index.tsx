@@ -1,11 +1,8 @@
 import {
-  Box,
   Button,
   Flex,
-  Heading,
   Text,
   VStack,
-  chakra,
 } from "@chakra-ui/react";
 import React from "react";
 import Lottie from "lottie-react";
@@ -13,7 +10,7 @@ import snake from "../../Data/143202-snake.json";
 import NextLink from "next/link";
 const index = () => {
   return (
-    <VStack spacing="8" w="full" px={{ base: "0", md: "5", lg: "8" }} py="6">
+    <VStack spacing="8" w="full" px={{ base: "0", md: "5", lg: "8" }} py="10">
       <Flex
         alignItems="center"
         justifyContent="center"
@@ -41,7 +38,13 @@ const index = () => {
               height: 360,
             }}
           />
-          <Button px="4" py="2" bg="#6d3d0c" color="white">
+          <Button
+            px="4"
+            py="2"
+            bg="#6d3d0c"
+            color="white"
+            _hover={{ bg: "#f9bb7b" }}
+          >
             <NextLink href="/games/snake" target="_blank" passHref>
               Play Now
             </NextLink>
