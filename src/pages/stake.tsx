@@ -10,6 +10,7 @@ import {
   chakra,
   VStack,
   Divider,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 
@@ -21,8 +22,19 @@ export const Dex = () => {
       justifyContent="center"
       direction="column"
       gap="5"
+      mt="14"
     >
-      <Heading py="10"> Stake Tokens 🪙</Heading>
+      <VStack w="full" textAlign="center">
+        <Heading py="2" fontSize="2xl">
+          {" "}
+          Stake Tokens 🪙
+        </Heading>
+        <Text w="55%">
+          Get access to all of Axia services by staking a fraction of your
+          balance. Staking is more like a subscription in axia and the minimum
+          is 7 days. Learn More.
+        </Text>
+      </VStack>
       <HStack
         w="full"
         gap="28"
@@ -32,7 +44,7 @@ export const Dex = () => {
       >
         <Card w="40%" bg="#897537" color="white">
           <CardHeader>
-            <Heading fontSize="xl">STAKE</Heading>
+            <Heading fontSize="lg">LOCK TOKENS</Heading>
           </CardHeader>
           <CardBody>
             <VStack gap="4">
@@ -45,7 +57,9 @@ export const Dex = () => {
                   Balance: 450.00
                 </chakra.div>
               </chakra.div>
-              <Button w="full" color="black">Stake Tokens</Button>
+              <Button w="full" color="black">
+                Lock
+              </Button>
             </VStack>
           </CardBody>
         </Card>
@@ -73,7 +87,9 @@ export const Dex = () => {
                 <chakra.span fontSize="md" fontWeight="700">
                   15 Reward Tokens
                 </chakra.span>
-                <Button w="full" color="black">Claim Rewards</Button>
+                <Button w="full" color="black">
+                  Claim Rewards
+                </Button>
               </VStack>
             </Flex>
           </CardBody>

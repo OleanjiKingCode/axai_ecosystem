@@ -433,7 +433,7 @@ const QuizPage = ({ data }: any) => {
                       setDisableNext(false);
                     }}
                     w="full"
-                    colorScheme="green"
+                    colorScheme="orange"
                     isChecked={checked === options[i]}
                     py={2}
                     value={item.id}
@@ -562,7 +562,7 @@ const QuizPage = ({ data }: any) => {
                 >
                   <Radio
                     color="black"
-                    colorScheme="green"
+                    colorScheme="orange"
                     py={2}
                     w="full"
                     isChecked={Checked(questionNumber - 1, options[i])}
