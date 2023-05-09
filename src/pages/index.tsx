@@ -10,12 +10,18 @@ import {
 } from "@chakra-ui/react";
 import Services from "./features";
 import Footer from "@/components/footer";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <>
+    <chakra.div>
+      <Head>
+        <title>Axia Ecosystem</title>
+        <meta name="description" content="EASTER INU" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <VStack w="full" pt="20" color="white">
         <Flex gap="" w="full" pl="20" textAlign="start">
           <Flex
@@ -50,7 +56,7 @@ export default function Home() {
             </Button>
           </Flex>
           <Flex w="full" alignItems="center" justifyContent="center" px="12">
-            <Image src="./logo.svg" alt="Logo" w="80%" />
+            <Image src="./sideLogo.svg" alt="Logo" w="80%" />
           </Flex>
         </Flex>
         <Flex
@@ -65,6 +71,6 @@ export default function Home() {
         </Flex>
       </VStack>
       <Services />
-    </>
+    </chakra.div>
   );
 }

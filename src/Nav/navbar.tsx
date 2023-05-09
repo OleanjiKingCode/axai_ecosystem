@@ -67,10 +67,10 @@ export const Navbar = () => {
             gap="3"
             w="fit"
             cursor="pointer"
-            pl="10"
-            pt="1"
+            pl="14"
+            pt="2"
           >
-            <Image alt="nameLogo" src="/axia.svg" w="30%" />
+            <Image alt="nameLogo" src="/logogo.svg" w="12%" />
           </Flex>
         </NextLink>
         <HStack gap="3">
@@ -102,9 +102,8 @@ export const Navbar = () => {
                 fontSize: "16px",
                 fontWeight: "thin",
                 color: "#ffd17cff",
-
                 backgroundColor: "transparent",
-                border: "white 1px solid",
+                border: "white 2px solid",
                 padding: "10px",
                 borderRadius: "10px",
                 transition: "background-color 0.3s ease",
