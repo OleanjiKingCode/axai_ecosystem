@@ -67,7 +67,7 @@ export default function Home() {
         >
           <Image src="./lens.svg" alt="lens-protocol" w="3%" />
           <Image src="./polygon.svg" alt="polygon" w="10%" />
-          {/* <Image src="./link.svg" alt="chainlink" w="8%" /> */}
+          <Image src="./link.svg" alt="chainlink" w="8%" />
         </Flex>
       </VStack>
       <Services />
