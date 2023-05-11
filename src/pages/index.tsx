@@ -292,9 +292,8 @@ export default function Home() {
                       >
                         <Box display="flex" flexDirection="row" w="full">
                           {options.map((option) => (
-                            <VStack>
+                            <VStack key={option.value}>
                               <Radio
-                                key={option.value}
                                 value={option.value}
                                 display="flex"
                                 flexDir="column-reverse"
