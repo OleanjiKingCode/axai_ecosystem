@@ -292,7 +292,7 @@ export default function Home() {
                       >
                         <Box display="flex" flexDirection="row" w="full">
                           {options.map((option) => (
-                            <VStack key={option.value}>
+                            <VStack key={option.value} w="full">
                               <Radio
                                 value={option.value}
                                 display="flex"
