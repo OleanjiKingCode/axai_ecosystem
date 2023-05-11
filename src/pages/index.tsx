@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import {
   Text,
   VStack,
@@ -11,7 +10,6 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Box,
@@ -19,7 +17,6 @@ import {
   FormLabel,
   Input,
   Spinner,
-  Stack,
   Radio,
   useToast,
   RadioGroup,
@@ -38,6 +35,7 @@ import axios from "axios";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { config } from "@/Data/config";
 import { userData } from "@/components/datatypes";
+import { useRouter } from "next/router";
 
 type Inputs = {
   name: string;
@@ -98,7 +96,9 @@ export default function Home() {
   const disconnect = useDisconnect();
 
   const [userData, setUserData] = useState<userData>();
+  const [btnText, setBtnText] = useState("Join Us Today");
 
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(`${config.SiteUrlLink}/api/user/${address}`);
@@ -108,13 +108,29 @@ export default function Home() {
       }
     };
     fetchData();
-  }, []);
+  }, [address]);
+
+  const frontLink = () => {
+    if (address && userData?.role) {
+      router.push("/articles");
+    } else {
+      onOpen();
+    }
+  };
+
+  useEffect(() => {
+    if (userData?.role) {
+      setBtnText("Read Great Stories");
+    } else {
+      setBtnText("Join Us Today");
+    }
+  }, [userData, address]);
 
   return (
     <chakra.div>
       <Head>
         <title>Axia Ecosystem</title>
-        <meta name="description" content="EASTER INU" />
+        <meta name="description" content="Axia Ecosystem" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <VStack w="full" pt="20" color="white">
@@ -142,13 +158,13 @@ export default function Home() {
               fontSize="xl"
               borderColor="#ffd17cff"
               borderWidth="1px"
-              onClick={onOpen}
+              onClick={frontLink}
               _hover={{
                 color: "#ffd17cff",
                 bg: "transparent",
               }}
             >
-              Join Us Today
+              {btnText}
             </Button>
           </Flex>
           <Flex w="full" alignItems="center" justifyContent="center" px="12">
