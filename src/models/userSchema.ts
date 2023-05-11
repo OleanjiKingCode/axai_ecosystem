@@ -7,10 +7,11 @@ enum Roles {
 }
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    userId: { type: String, required: true },
     email: { type: String, required: true },
     handle: { type: String, required: true },
     role: { type: Roles, required: true },
+    address: { type: String, required: true },
     games: [
       {
         id: String,

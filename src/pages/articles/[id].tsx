@@ -78,7 +78,7 @@ const Publication = () => {
       enabled: !!ownerData?.id,
     }
   );
-  console.log(publicationsData);
+  
   const input_text = data?.content.toString();
 
   const getQuiz = async () => {

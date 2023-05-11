@@ -26,7 +26,6 @@ import useLensUser from "@/lib/auth/useLensUser";
 import useLogin from "@/lib/auth/useLogin";
 
 export const Navbar = () => {
-  const [openWalletConnect, setOpenWalletConnect] = useState<boolean>(false);
   const { isSignedInQuery, profileQuery } = useLensUser();
   const { mutate: requestLogin } = useLogin();
   const address = useAddress(); // Detect the connected address
@@ -133,16 +132,18 @@ export const Navbar = () => {
         textAlign="center"
       >
         {!address ? (
-          <Button
-            size="sm"
-            onClick={() => setOpenWalletConnect(true)}
-            fontSize="sm"
-            px="4"
-            fontWeight="medium"
-            _hover={{ bg: "gray.100", color: "black" }}
-          >
-            Connect Wallet
-          </Button>
+          <ConnectWallet
+            style={{
+              fontSize: "16px",
+              fontWeight: "thin",
+              color: "#ffd17cff",
+              backgroundColor: "transparent",
+              border: "white 2px solid",
+              padding: "10px",
+              borderRadius: "10px",
+              transition: "background-color 0.3s ease",
+            }}
+          />
         ) : (
           <VStack gap={3}>
             <Text fontWeight="600">Your Wallet Details</Text>
