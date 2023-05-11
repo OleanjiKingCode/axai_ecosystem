@@ -25,14 +25,19 @@ import {
   RadioGroup,
   ModalCloseButton,
   Tooltip,
+  Icon,
+  HStack,
 } from "@chakra-ui/react";
 import Services from "./features";
 import Footer from "@/components/footer";
 import Head from "next/head";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
+import { ConnectWallet, useAddress, useDisconnect } from "@thirdweb-dev/react";
 import axios from "axios";
+import { RiLogoutBoxLine } from "react-icons/ri";
+import { config } from "@/Data/config";
+import { userData } from "@/components/datatypes";
 
 type Inputs = {
   name: string;
@@ -46,7 +51,6 @@ export default function Home() {
   const {
     handleSubmit,
     register,
-    getValues,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const toast = useToast();
@@ -91,8 +95,21 @@ export default function Home() {
       });
     }
   };
+  const disconnect = useDisconnect();
 
-  //useeffect to check if the connected address has detail in our db
+  const [userData, setUserData] = useState<userData>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`${config.SiteUrlLink}/api/user/${address}`);
+      if (response) {
+        const data = await response.json();
+        setUserData(data.user);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <chakra.div>
       <Head>
@@ -152,11 +169,12 @@ export default function Home() {
       <Services />
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalCloseButton />
+
         <ModalContent bg="#363639" pb="10px" color="white">
           <ModalHeader w="full" textAlign="center">
             Join Axia Ecosystem
           </ModalHeader>
+          <ModalCloseButton />
           <ModalBody>
             <Flex direction="column" w="full" gap="5">
               <form
@@ -184,7 +202,7 @@ export default function Home() {
                           },
                         })}
                         borderColor="#ffd17c"
-                        bg="transparent"
+                        backgroundColor="transparent !important"
                       />
                       {errors.name && (
                         <Text color="red.500" py="1">
@@ -225,15 +243,28 @@ export default function Home() {
                   <Box w="full">
                     <FormControl>
                       <FormLabel htmlFor="address">Wallet Address</FormLabel>
-                      <Input
-                        type="text"
-                        id="address"
-                        placeholder="Connect your wallet"
-                        value={address}
-                        borderColor="#ffd17c"
-                        disabled
-                        backgroundColor="transparent"
-                      />
+                      <HStack gap="2" w="full">
+                        <Input
+                          type="text"
+                          id="address"
+                          placeholder="Connect your wallet"
+                          value={address}
+                          borderColor="#ffd17c"
+                          disabled
+                          backgroundColor="transparent"
+                          w="90%"
+                        />
+                        <Icon
+                          as={RiLogoutBoxLine}
+                          boxSize="6"
+                          onClick={disconnect}
+                          cursor="pointer"
+                          bg="#ffd17c"
+                          fontSize="2xl"
+                          p="1"
+                          rounded="md"
+                        />
+                      </HStack>
                     </FormControl>
                   </Box>
                   <Box w="full">

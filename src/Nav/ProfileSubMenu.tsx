@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Divider,
@@ -26,18 +26,15 @@ import { CheckIcon } from "@chakra-ui/icons";
 import useLensUser from "@/lib/auth/useLensUser";
 import { useAddress, useDisconnect } from "@thirdweb-dev/react";
 import { ipfsToWebLink, omitTypename } from "@/lib/helpers";
+import { abbreviateName } from "@/utils/nameAbbreviator";
+import { config } from "@/Data/config";
+import { userData } from "@/components/datatypes";
 
 type SubMenuItemProps = {
   label: string;
   action?: () => void;
   icon: IconType | ComponentWithAs<"svg">;
 } & FlexProps;
-
-type Picture = {
-  original: {
-    url: string;
-  };
-};
 
 const SubMenuItem = (props: SubMenuItemProps) => {
   const { icon, label, action, ...rest } = props;
@@ -61,13 +58,24 @@ const SubMenuItem = (props: SubMenuItemProps) => {
 const ProfileSubMenu = () => {
   const address = useAddress(); // Detect the connected address
   const disconnect = useDisconnect();
-
+  const [userData, setUserData] = useState<userData>();
   const { profileQuery } = useLensUser();
 
   const profileImage = ipfsToWebLink(
     // @ts-ignore
     profileQuery.data?.defaultProfile?.picture?.original?.url ?? ""
   );
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`${config.SiteUrlLink}/api/user/${address}`);
+      if (response) {
+        const data = await response.json();
+        setUserData(data.user);
+      }
+    };
+    fetchData();
+  }, []);
+
   const { hasCopied, onCopy: copyAddress } = useClipboard(address as string);
 
   return (
@@ -83,15 +91,27 @@ const ProfileSubMenu = () => {
           fontSize="sm"
           rightIcon={<FaChevronDown />}
         >
-          <img
-            src={profileImage}
-            alt={profileQuery?.data?.defaultProfile?.name || ""}
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-            }}
-          />
+          {profileImage !== "https://ipfs.io/ipfs/" ? (
+            <img
+              src={profileImage}
+              alt={profileQuery?.data?.defaultProfile?.name || ""}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+              }}
+            />
+          ) : (
+            <Text
+              bg="#363639"
+              p="2"
+              color="#ffd17cff"
+              rounded="full"
+              fontWeight="semi-bold"
+            >
+              {abbreviateName(userData ? userData.userId : "No Name")}
+            </Text>
+          )}
           <Text pl="3"> {address && shortenAccount(address)}</Text>
         </Button>
       </PopoverTrigger>

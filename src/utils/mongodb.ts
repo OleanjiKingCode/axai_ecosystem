@@ -9,20 +9,17 @@ const connection: connection = {
 
 const connect = async () => {
   if (connection.isConnected) {
-    console.log("User is Connected to Db");
     return;
   }
 
   if (mongoose.connections.length > 0) {
     connection.isConnected = mongoose.connections[0].readyState;
     if (connection.isConnected === 1) {
-      console.log("Use previous connection");
       return;
     }
   }
   const connectURI = process.env.MONGODB_URI;
   const db = await mongoose.connect(connectURI ?? "");
-  console.log("User has a new Connection to Db");
   connection.isConnected = db.connections[0].readyState;
 };
 
