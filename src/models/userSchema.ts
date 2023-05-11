@@ -1,16 +1,11 @@
 import mongoose from "mongoose";
 
-enum Roles {
-  "Artists",
-  "Devs",
-  "Writers",
-}
 const userSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true },
     email: { type: String, required: true },
-    handle: { type: String, required: true },
-    role: { type: Roles, required: true },
+    handle: { type: String },
+    role: { type: String, required: true },
     address: { type: String, required: true },
     games: [
       {

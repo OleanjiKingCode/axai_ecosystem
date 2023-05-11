@@ -23,6 +23,8 @@ import {
   Radio,
   useToast,
   RadioGroup,
+  ModalCloseButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import Services from "./features";
 import Footer from "@/components/footer";
@@ -49,9 +51,9 @@ export default function Home() {
   } = useForm<Inputs>();
   const toast = useToast();
   const options = [
-    { value: "writer", label: "./artist.svg" },
-    { value: "gamdev", label: "./gamers.svg" },
-    { value: "artists", label: "./music.svg" },
+    { value: "writer", label: "./artist.svg", text: "Writers" },
+    { value: "gamdev", label: "./gamers.svg", text: "Game Devs" },
+    { value: "artists", label: "./music.svg", text: "Artists" },
   ];
   const [selectedValue, setSelectedValue] = useState(null);
 
@@ -63,7 +65,17 @@ export default function Home() {
     try {
       const { name, email } = data;
       const role = selectedValue;
-      await axios.post("/api/User/signup", {
+      if (!name || !email || !role || !address) {
+        toast({
+          title: `Fill in all info`,
+          description: "",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+        return;
+      }
+      await axios.post("/api/user/signup", {
         name,
         email,
         address,
@@ -140,14 +152,16 @@ export default function Home() {
       <Services />
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Join Axia Ecosystem</ModalHeader>
+        <ModalCloseButton />
+        <ModalContent bg="#363639" pb="10px" color="white">
+          <ModalHeader w="full" textAlign="center">
+            Join Axia Ecosystem
+          </ModalHeader>
           <ModalBody>
-            <Flex>
-              <Text>Create an account</Text>
+            <Flex direction="column" w="full" gap="5">
               <form
                 onSubmit={handleSubmit(submitHandler)}
-                style={{ width: "inherit" }}
+                style={{ width: "full" }}
               >
                 <Flex
                   flexDirection="column"
@@ -155,13 +169,13 @@ export default function Home() {
                   alignItems={{ md: "center" }}
                   w="full"
                 >
-                  <Box w={{ sm: "full", md: "50%" }}>
+                  <Box w="full">
                     <FormControl>
                       <FormLabel htmlFor="name">Username</FormLabel>
                       <Input
                         id="name"
                         type="text"
-                        placeholder="Enter your any name you would love to use for yourself "
+                        placeholder="Enter your any name you would love"
                         {...register("name", {
                           required: "Please enter any Username",
                           minLength: {
@@ -169,7 +183,8 @@ export default function Home() {
                             message: "Username should be more than 5 chars",
                           },
                         })}
-                        autoFocus
+                        borderColor="#ffd17c"
+                        bg="transparent"
                       />
                       {errors.name && (
                         <Text color="red.500" py="1">
@@ -178,7 +193,7 @@ export default function Home() {
                       )}
                     </FormControl>
                   </Box>
-                  <Box w={{ sm: "full", md: "50%" }}>
+                  <Box w="full">
                     <FormControl>
                       <FormLabel htmlFor="email">
                         Email{" "}
@@ -197,6 +212,8 @@ export default function Home() {
                             message: "Please enter valid email",
                           },
                         })}
+                        borderColor="#ffd17c"
+                        backgroundColor="transparent"
                       />
                       {errors.email && (
                         <Text color="red.500" py="1">
@@ -205,42 +222,59 @@ export default function Home() {
                       )}
                     </FormControl>
                   </Box>
-                  <Box w={{ sm: "full", md: "50%" }}>
+                  <Box w="full">
                     <FormControl>
                       <FormLabel htmlFor="address">Wallet Address</FormLabel>
                       <Input
                         type="text"
                         id="address"
                         placeholder="Connect your wallet"
-                        value={address && address}
+                        value={address}
+                        borderColor="#ffd17c"
+                        disabled
+                        backgroundColor="transparent"
                       />
                     </FormControl>
                   </Box>
-                  <Box w={{ sm: "full", md: "50%" }}>
+                  <Box w="full">
                     <FormControl>
-                      <FormLabel htmlFor="role">Choose Role</FormLabel>
-                      <RadioGroup onChange={handleRadioChange}>
-                        <Box display="flex" flexDirection="row">
+                      <FormLabel htmlFor="role">Choose a role:</FormLabel>
+                      <RadioGroup
+                        onChange={handleRadioChange}
+                        colorScheme="yellow"
+                      >
+                        <Box display="flex" flexDirection="row" w="full">
                           {options.map((option) => (
-                            <Radio key={option.value} value={option.value}>
-                              <Image
-                                src={option.label}
-                                alt={option.value}
-                                w="4%"
-                              />
-                            </Radio>
+                            <VStack>
+                              <Radio
+                                key={option.value}
+                                value={option.value}
+                                display="flex"
+                                flexDir="column-reverse"
+                              >
+                                <Tooltip label={option.text}>
+                                  <Image
+                                    src={option.label}
+                                    alt={option.value}
+                                    w="400px"
+                                  />
+                                </Tooltip>
+                              </Radio>
+                            </VStack>
                           ))}
                         </Box>
                       </RadioGroup>
                     </FormControl>
                   </Box>
+
                   {address ? (
                     <Button
                       type="submit"
-                      w={{ sm: "full", md: "50%" }}
-                      bg="#4ed879"
+                      w="full"
+                      bg="#ffd17cff"
                       _hover={{ bg: "gray", color: "black" }}
                       color="white"
+                      my="5"
                     >
                       <Text>
                         {isSubmitting ? (
@@ -255,12 +289,14 @@ export default function Home() {
                       style={{
                         fontSize: "16px",
                         fontWeight: "thin",
-                        color: "#ffd17cff",
-                        backgroundColor: "transparent",
-                        border: "white 2px solid",
+                        color: "white",
+                        backgroundColor: "#ffd17cff",
+                        marginTop: "25px",
+                        marginBottom: "10px",
                         padding: "10px",
                         borderRadius: "10px",
                         transition: "background-color 0.3s ease",
+                        width: "100%",
                       }}
                     />
                   )}
@@ -268,13 +304,12 @@ export default function Home() {
               </form>
             </Flex>
           </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+          {/* <ModalFooter w="full">
+            <Button colorScheme="red" mr={3} onClick={onClose}>
               Close
             </Button>
             <Button variant="ghost">Join</Button>
-          </ModalFooter>
+          </ModalFooter> */}
         </ModalContent>
       </Modal>
     </chakra.div>
