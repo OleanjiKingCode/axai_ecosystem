@@ -90,7 +90,6 @@ const Publication = () => {
       body: JSON.stringify({ input_text: input_text }),
     });
     const data = await response.json();
-    console.log(data);
   };
 
   return (

@@ -29,6 +29,7 @@ import { ipfsToWebLink, omitTypename } from "@/lib/helpers";
 import { abbreviateName } from "@/utils/nameAbbreviator";
 import { config } from "@/Data/config";
 import { userData } from "@/components/datatypes";
+import axios from "axios";
 
 type SubMenuItemProps = {
   label: string;
@@ -67,9 +68,11 @@ const ProfileSubMenu = () => {
   );
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${config.SiteUrlLink}/api/user/${address}`);
+      const response = await axios.get(
+        `${config.SiteUrlLink}/api/user/${address}`
+      );
       if (response) {
-        const data = await response.json();
+        const data = await response.data;
         setUserData(data.user);
       }
     };
