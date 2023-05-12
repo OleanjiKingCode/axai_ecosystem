@@ -165,3 +165,14 @@ const ProfileSubMenu = () => {
 };
 
 export default ProfileSubMenu;
+
+// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const getServerSideProps = async (context: any) => {
+  const id = context.params?.quiz;
+  const data = Questions[id - 1].questions[0];
+  return {
+    props: {
+      data,
+    },
+  };
+};
