@@ -24,7 +24,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<any>) => {
         await db.disConnect();
         return res.status(404).json({ msg: "User doesnt exist" });
       }
-      console.log(user);
       return res.status(200).json({
         user,
       });

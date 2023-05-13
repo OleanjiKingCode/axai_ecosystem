@@ -19,7 +19,7 @@ import {
   RiFileCopyLine,
   RiUserFill,
 } from "react-icons/ri";
-import shortenAccount from "../utils/shortenAccount";
+import shortenAccount from "../../utils/shortenAccount";
 import { FaChevronDown } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import { CheckIcon } from "@chakra-ui/icons";

@@ -16,7 +16,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useCreatePost } from "@/lib/useCreatePost";
-import { GetArticleReward } from "@/Nav/NetworkNotification";
+import { GetArticleReward } from "@/components/Nav/NetworkNotification";
 import { useChainId, useNetwork, useAddress } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 

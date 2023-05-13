@@ -1,7 +1,7 @@
 import "../styles/Home.module.css";
 import { chakra, ChakraProvider } from "@chakra-ui/react";
 import { AppProps } from "next/app";
-import { Navbar } from "@/Nav/navbar";
+import { Navbar } from "@/components/Nav/navbar";
 import { Roboto } from "next/font/google";
 import { ThirdwebProvider, ChainId } from "@thirdweb-dev/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
