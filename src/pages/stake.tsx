@@ -13,8 +13,16 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+import {
+  AXIA_TOKEN_ADDRESS,
+  AXIA_CONTRACT_ABI,
+  STAKE_REWARDS_AXIA_ABI_TOKENS,
+  STAKE_REWARDS_AXIA_TOKENS,
+  STAKING_CONTRACT,
+  STAKING_CONTRACT_ABI,
+} from "@/const/contracts";
 
-export const Dex = () => {
+export const Stake = () => {
   return (
     <Flex
       w="full"
@@ -26,7 +34,6 @@ export const Dex = () => {
     >
       <VStack w="full" textAlign="center">
         <Heading py="2" fontSize="2xl">
-          {" "}
           Stake Tokens 🪙
         </Heading>
         <Text w="55%">
@@ -99,4 +106,4 @@ export const Dex = () => {
   );
 };
 
-export default Dex;
+export default Stake;

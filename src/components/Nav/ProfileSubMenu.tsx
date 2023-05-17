@@ -57,7 +57,7 @@ const SubMenuItem = (props: SubMenuItemProps) => {
 };
 
 const ProfileSubMenu = () => {
-  const address = useAddress(); // Detect the connected address
+  const address = useAddress();
   const disconnect = useDisconnect();
   const [userData, setUserData] = useState<userData>();
   const { profileQuery } = useLensUser();
