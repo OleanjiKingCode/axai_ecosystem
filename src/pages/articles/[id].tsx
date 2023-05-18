@@ -42,6 +42,7 @@ import NextLink from "next/link";
 import { FaComments } from "react-icons/fa";
 import { FcLike } from "react-icons/fc";
 import { GrArticle } from "react-icons/gr";
+import axios from "axios";
 
 const Publication = () => {
   const [Message, setMessage] = useState(0);
@@ -83,16 +84,27 @@ const Publication = () => {
   );
 
   const input_text = data?.content.toString();
+  const extractArrayFromText = (text: string) => {
+    const startIndex = text.indexOf("[");
+    const endIndex = text.lastIndexOf("]");
+
+    if (startIndex === -1 || endIndex === -1) {
+      throw new Error("Invalid text format");
+    }
+
+    const arrayText = text.substring(startIndex, endIndex + 1);
+    // const cleanedText = arrayText.replace(/\\/g, ""); // Remove escape characters
+    const parsedArray = arrayText;
+
+    return parsedArray;
+  };
 
   const getQuiz = async () => {
-    const response = await fetch("http://localhost:5000/quiz", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ input_text: input_text }),
+    const response = await axios.post("/api/getquizs", {
+      input_text,
     });
-    const data = await response.json();
+    const data = JSON.stringify(extractArrayFromText(response.data));
+    console.log(data, typeof data);
   };
 
   return (
