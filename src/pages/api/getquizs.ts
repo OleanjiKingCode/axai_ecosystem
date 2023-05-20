@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<any>) => {
   const openai = new OpenAIApi(configuration);
 
   const templateText =
-    "generate 10 quiz questions for where each question has misleading options \nin JSON form of this type\n\ntype quest = {\n\tquestion: string;\nanswerOption:string;\n\toptions: {\n\tstring;\n\t}[];\n}[];\n\n\n";
+    "generate 10 quiz questions for where each question has misleading options among which in random is the correct answer option \nin JSON form of this type\n\ntype quest = {\n\tquestion: string;\nanswerOption:string;\n\toptions: {\n\tstring;\n\t}[];\n}[];\n\n\n";
   const prompt = templateText + input_text;
   console.log(prompt, input_text);
   const response = await openai.createCompletion({

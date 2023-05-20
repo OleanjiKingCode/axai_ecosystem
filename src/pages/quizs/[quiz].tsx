@@ -22,6 +22,10 @@ import { RiInformationFill } from "react-icons/ri";
 import { useAddress, useChainId, useSigner } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 import { ChainId, useNetwork } from "@thirdweb-dev/react";
+import { extractArrayFromText } from "@/utils/extracttext";
+import axios from "axios";
+import { usePublicationQuery, usePublicationsQuery } from "@/graphql/generated";
+import { id } from "ethers/lib/utils";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 const QuizPage = ({ data }: any) => {
@@ -47,6 +51,56 @@ const QuizPage = ({ data }: any) => {
   const chainId = useChainId();
   const initialRender = useRef(true);
   const [, switchNetwork] = useNetwork();
+
+  const {
+    isLoading: isLoadingPublication,
+    data: publicationData,
+    error: publicationError,
+  } = usePublicationQuery(
+    {
+      request: {
+        publicationId: "0x019ded-0x16",
+      },
+    },
+    {
+      enabled: true,
+    }
+  );
+
+  const encloseKeysInQuotes = (obj: any) => {
+    return JSON.parse(
+      JSON.stringify(obj, (key, value) => {
+        if (typeof key === "string") {
+          return `"${key}"`;
+        }
+        return value;
+      })
+    );
+  };
+
+  const getQuiz = async () => {
+    const data3 = publicationData?.publication?.metadata;
+    const input_text = data3?.content.toString();
+    console.log("cj");
+    if (input_text !== undefined) {
+      const response = await axios.post("/api/getquizs", {
+        input_text,
+      });
+      const anotheDD = extractArrayFromText(response.data).toString();
+      let trimmedString = anotheDD.trim();
+      trimmedString = JSON.stringify(
+        JSON.parse(trimmedString.replace(/\s+/g, " "))
+      );
+
+      const jsonString = trimmedString.replace(/(\w+):/g, '"$1":');
+
+      const json = JSON.parse(jsonString);
+      console.log(jsonString);
+    }
+  };
+  useEffect(() => {
+    getQuiz();
+  }, [publicationData]);
 
   useEffect(() => {
     const dataOne = window.localStorage.getItem("QUESTIONS");
@@ -624,6 +678,11 @@ export default QuizPage;
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const getServerSideProps = async (context: any) => {
   const id = context.params?.quiz;
+  // const response = await axios.post("/api/getquizs", {
+  //   input_text,
+  // });
+  // const datas = JSON.stringify(extractArrayFromText(response.data));
+  // console.log(datas, typeof datas);
   const data = Questions[id - 1].questions[0];
   return {
     props: {
