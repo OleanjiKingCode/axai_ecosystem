@@ -85,16 +85,6 @@ const Publication = () => {
     }
   );
 
-  const input_text = data?.content.toString();
-
-  const getQuiz = async () => {
-    const response = await axios.post("/api/getquizs", {
-      input_text,
-    });
-    const data = JSON.stringify(extractArrayFromText(response.data));
-    console.log(data, typeof data);
-  };
-
   return (
     <VStack w="full">
       <Flex
@@ -217,7 +207,7 @@ const Publication = () => {
             </Text>
 
             <Button
-              onClick={getQuiz}
+              // onClick={}
               bg="gray.600"
               fontWeight="500"
               _hover={{ bg: "gray.800" }}

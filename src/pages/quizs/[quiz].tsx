@@ -14,10 +14,20 @@ import {
   useToast,
   Flex,
   HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  useDisclosure,
+  ModalOverlay,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
 import { config } from "@/Data/config";
+
+import Loading from "../../Data/Loading.json";
+import Lottie from "lottie-react";
 import { RiInformationFill } from "react-icons/ri";
 import { useAddress, useChainId, useSigner } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
@@ -30,6 +40,7 @@ import { id } from "ethers/lib/utils";
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 const QuizPage = ({ data }: any) => {
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [timeLeft, setTimeLeft] = useState(600);
   const [score, setScore] = useState(0);
@@ -45,8 +56,9 @@ const QuizPage = ({ data }: any) => {
   const [answers, setAnswers] = useState<string[]>([]);
   const [RealAnswers, setRealAnswers] = useState<string[]>([]);
   const [timeUsed, setTimeUsed] = useState("");
-  const [questions, setQuestions] = useState<quest>(data);
-  const [aiQuestions, setAIQuestions] = useState<quest>(data);
+  const [questions, setQuestions] = useState<quest | any>();
+  const [aiQuestions, setAIQuestions] = useState<quest[]>([]);
+  const [isQuizReady, setQuizReady] = useState<boolean>(false);
   const signer = useSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
   const chainId = useChainId();
@@ -67,6 +79,32 @@ const QuizPage = ({ data }: any) => {
       enabled: true,
     }
   );
+
+  const shuffleAnswerOptions = (quizArray: any) => {
+    for (let i = 0; i < quizArray.length; i++) {
+      const options = quizArray[i].options;
+      const originalAnswer = quizArray[i].answer;
+      const randomIndex = Math.floor(Math.random() * options.length);
+
+      // Swap the original answer option with the random option
+      const temp = options[randomIndex];
+      options[randomIndex] = options[originalAnswer.charCodeAt(0) - 65];
+      options[originalAnswer.charCodeAt(0) - 65] = temp;
+
+      // Update the answer to the new position
+      quizArray[i].answer = String.fromCharCode(randomIndex + 65);
+
+      // Update the option keys
+      for (let j = 0; j < options.length; j++) {
+        const optionKey = String.fromCharCode(j + 65);
+        const optionValue = Object.values(options[j])[0];
+
+        options[j] = { [optionKey]: optionValue };
+      }
+    }
+
+    return quizArray;
+  };
 
   const convertAItextToJson = (quest: any) => {
     let transformedQuest = quest.map(
@@ -105,8 +143,10 @@ const QuizPage = ({ data }: any) => {
       const json = JSON.parse(extractArrayFromText(jsonString));
       const jsonArray = JSON.parse(json);
       const result = convertAItextToJson(jsonArray);
-      setAIQuestions(result);
-      console.log(result);
+      const rearrangedAns = shuffleAnswerOptions(result);
+      setAIQuestions(rearrangedAns);
+      setQuestions(rearrangedAns[0]);
+      setQuizReady(true);
     }
   };
 
@@ -212,16 +252,21 @@ const QuizPage = ({ data }: any) => {
   };
 
   const ContiueandNext = () => {
-    if (!startQuiz) {
-      setStartQuiz(true);
-      setButtonTest("Next");
-    } else if (startQuiz && questionNumber !== 10) {
-      nextQuestion();
-    } else if (startQuiz && questionNumber === 10) {
-      setAnswers((answers) => [...answers, checked]);
-      setRealAnswers((RealAnswers) => [...RealAnswers, questions.answer]);
-      setQuestionNumber(questionNumber + 1);
-      setTimeUsed(formatTime(600 - timeLeft));
+    if (!isQuizReady) {
+      setButtonTest("Loading...");
+      onOpen();
+    } else {
+      if (!startQuiz) {
+        setStartQuiz(true);
+        setButtonTest("Next");
+      } else if (startQuiz && questionNumber !== 10) {
+        nextQuestion();
+      } else if (startQuiz && questionNumber === 10) {
+        setAnswers((answers) => [...answers, checked]);
+        setRealAnswers((RealAnswers) => [...RealAnswers, questions.answer]);
+        setQuestionNumber(questionNumber + 1);
+        setTimeUsed(formatTime(600 - timeLeft));
+      }
     }
   };
 
@@ -232,8 +277,15 @@ const QuizPage = ({ data }: any) => {
     setChecked("none");
     setQuestionNumber(num);
     setDisableNext(true);
-    setQuestions(Questions[category - 1].questions[num - 1]);
+    setQuestions(aiQuestions[num - 1]);
   };
+
+  useEffect(() => {
+    if (isQuizReady) {
+      onClose();
+      setButtonTest("Continue");
+    }
+  }, [isQuizReady]);
 
   useEffect(() => {
     if (startQuiz && !endQuiz) {
@@ -270,9 +322,10 @@ const QuizPage = ({ data }: any) => {
 
   const ReviewNext = () => {
     if (questionNumber !== 10) {
+      console.log(questionNumber);
       const num = questionNumber + 1;
       setQuestionNumber(num);
-      setQuestions(Questions[category - 1].questions[num - 1]);
+      setQuestions(aiQuestions[num - 1]);
     } else {
       setEndQuiz(true);
       setQuestionNumber(1);
@@ -392,7 +445,7 @@ const QuizPage = ({ data }: any) => {
         >
           QUIZ -{" "}
           <chakra.span fontWeight="normal">
-            {Questions[category - 1].name}
+            {publicationData?.publication?.metadata.name}
           </chakra.span>
         </Heading>
         {startQuiz && !endQuiz && (
@@ -681,6 +734,30 @@ const QuizPage = ({ data }: any) => {
           </Button>
         </chakra.div>
       )}
+
+      <Modal
+        isCentered
+        isOpen={isOpen}
+        motionPreset="slideInBottom"
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent bg="#e9962a " color="white">
+          <ModalCloseButton />
+          <ModalBody>
+            <Lottie
+              loop={true}
+              animationData={Loading}
+              style={{
+                height: 360,
+              }}
+            />
+            <Text w="full" textAlign="center" fontWeight="500">
+              AI is generating your Quiz <br /> Please Wait
+            </Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
@@ -690,11 +767,6 @@ export default QuizPage;
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const getServerSideProps = async (context: any) => {
   const id = context.params?.quiz;
-  // const response = await axios.post("/api/getquizs", {
-  //   input_text,
-  // });
-  // const datas = JSON.stringify(extractArrayFromText(response.data));
-  // console.log(datas, typeof datas);
   const data = Questions[id - 1].questions[0];
   return {
     props: {
