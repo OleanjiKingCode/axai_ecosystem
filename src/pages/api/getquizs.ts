@@ -13,7 +13,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<any>) => {
   const templateText =
     "generate 10 quiz questions for where each question has misleading options with one randomly assigned as the correct option \nin JSON form of this type\n\ntype quest = {\n\tquestion: string;\nanswerOption:string;\n\toptions: {\n\tstring;\n\t}[];\n}[];\n\n\n";
   const prompt = templateText + input_text;
-  console.log(prompt, input_text);
   const response = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: prompt,
@@ -26,5 +25,4 @@ export default async (req: NextApiRequest, res: NextApiResponse<any>) => {
   console.log(response.data.choices[0].text);
   res.status(200).json(response.data.choices[0].text);
   return;
-  // console.log(response.data.choices[0].text);
 };

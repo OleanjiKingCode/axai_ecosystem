@@ -151,7 +151,9 @@ const QuizPage = ({ data }: any) => {
   };
 
   useEffect(() => {
-    getQuiz();
+    if (!isQuizReady) {
+      getQuiz();
+    }
   }, [publicationData]);
 
   useEffect(() => {
@@ -322,13 +324,13 @@ const QuizPage = ({ data }: any) => {
 
   const ReviewNext = () => {
     if (questionNumber !== 10) {
-      console.log(questionNumber);
       const num = questionNumber + 1;
       setQuestionNumber(num);
       setQuestions(aiQuestions[num - 1]);
     } else {
       setEndQuiz(true);
       setQuestionNumber(1);
+      setQuestions(aiQuestions[0]);
       setReviewAnswers(false);
       setStartQuiz(true);
     }
@@ -637,7 +639,7 @@ const QuizPage = ({ data }: any) => {
                     color="green.500"
                     fontWeight="medium"
                     _hover={{ color: "gray.200", bg: "green.500" }}
-                    onClick={() => setReviewAnswers(true)}
+                    onClick={ReviewNext}
                   >
                     Review Your Answers
                   </chakra.div>
