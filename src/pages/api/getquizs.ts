@@ -25,6 +25,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<any>) => {
   });
   console.log(response.data.choices[0].text);
   res.status(200).json(response.data.choices[0].text);
-
+  return;
   // console.log(response.data.choices[0].text);
 };

@@ -68,7 +68,7 @@ const ProfileSubMenu = () => {
   );
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`./api/user/${address}`);
+      const response = await axios.get(`/api/user/${address}`);
       if (response) {
         const data = await response.data;
         setUserData(data.user);

@@ -46,6 +46,7 @@ const QuizPage = ({ data }: any) => {
   const [RealAnswers, setRealAnswers] = useState<string[]>([]);
   const [timeUsed, setTimeUsed] = useState("");
   const [questions, setQuestions] = useState<quest>(data);
+  const [aiQuestions, setAIQuestions] = useState<quest>(data);
   const signer = useSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
   const chainId = useChainId();
@@ -67,37 +68,48 @@ const QuizPage = ({ data }: any) => {
     }
   );
 
-  const encloseKeysInQuotes = (obj: any) => {
-    return JSON.parse(
-      JSON.stringify(obj, (key, value) => {
-        if (typeof key === "string") {
-          return `"${key}"`;
-        }
-        return value;
-      })
-    );
-  };
+  const convertAItextToJson = (quest: any) => {
+    let transformedQuest = quest.map(
+      (
+        item: { options: string[]; question: string; answerOption: string },
+        index: number
+      ) => {
+        let transformedOptions = item.options.map((option, optionIndex) => {
+          let optionKey = String.fromCharCode(65 + optionIndex); // Convert index to character starting from 'A'
+          return { [optionKey]: option };
+        });
 
+        return {
+          id: index + 1,
+          question: item.question,
+          answer: String.fromCharCode(
+            65 + item.options.indexOf(item.answerOption)
+          ), // Convert index of answerOption to character
+          options: transformedOptions,
+        };
+      }
+    );
+
+    return transformedQuest;
+  };
   const getQuiz = async () => {
     const data3 = publicationData?.publication?.metadata;
     const input_text = data3?.content.toString();
-    console.log("cj");
     if (input_text !== undefined) {
       const response = await axios.post("/api/getquizs", {
         input_text,
       });
-      const anotheDD = extractArrayFromText(response.data).toString();
-      let trimmedString = anotheDD.trim();
-      trimmedString = JSON.stringify(
-        JSON.parse(trimmedString.replace(/\s+/g, " "))
-      );
-
+      const responseData = response.data.toString();
+      let trimmedString = responseData.trim();
       const jsonString = trimmedString.replace(/(\w+):/g, '"$1":');
-
-      const json = JSON.parse(jsonString);
-      console.log(jsonString);
+      const json = JSON.parse(extractArrayFromText(jsonString));
+      const jsonArray = JSON.parse(json);
+      const result = convertAItextToJson(jsonArray);
+      setAIQuestions(result);
+      console.log(results);
     }
   };
+
   useEffect(() => {
     getQuiz();
   }, [publicationData]);
