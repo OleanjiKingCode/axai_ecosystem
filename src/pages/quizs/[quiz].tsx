@@ -106,7 +106,7 @@ const QuizPage = ({ data }: any) => {
       const jsonArray = JSON.parse(json);
       const result = convertAItextToJson(jsonArray);
       setAIQuestions(result);
-      console.log(results);
+      console.log(result);
     }
   };
 
