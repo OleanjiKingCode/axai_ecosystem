@@ -51,7 +51,6 @@ const Publication = () => {
   const [markLightUp, setMarkLightUp] = useState(false);
   const router = useRouter();
   const { id } = router.query;
-  console.log(id);
   const {
     isLoading: isLoadingPublication,
     data: publicationData,
@@ -206,13 +205,10 @@ const Publication = () => {
               {data?.content}
             </Text>
 
-            <Button
-              // onClick={}
-              bg="gray.600"
-              fontWeight="500"
-              _hover={{ bg: "gray.800" }}
-            >
-              Take Quiz
+            <Button bg="gray.600" fontWeight="500" _hover={{ bg: "gray.800" }}>
+              <Link color="white" href={`/quizs/${id}`}>
+                Take Quiz
+              </Link>
             </Button>
           </VStack>
         </GridItem>

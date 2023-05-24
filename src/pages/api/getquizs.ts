@@ -22,7 +22,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<any>) => {
     frequency_penalty: 0,
     presence_penalty: 0,
   });
-  console.log(response.data.choices[0].text);
   res.status(200).json(response.data.choices[0].text);
   return;
 };

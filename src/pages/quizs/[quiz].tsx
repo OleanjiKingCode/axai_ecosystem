@@ -38,13 +38,14 @@ import { usePublicationQuery, usePublicationsQuery } from "@/graphql/generated";
 import { id } from "ethers/lib/utils";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
-const QuizPage = ({ data }: any) => {
+const QuizPage = () => {
   const router = useRouter();
+  const { quiz } = router.query;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [timeLeft, setTimeLeft] = useState(600);
   const [score, setScore] = useState(0);
-  const category = Number(router.query.quiz);
+
   const address = useAddress();
   const [checked, setChecked] = useState("none");
   const [questionNumber, setQuestionNumber] = useState(1);
@@ -72,11 +73,11 @@ const QuizPage = ({ data }: any) => {
   } = usePublicationQuery(
     {
       request: {
-        publicationId: "0x019ded-0x16",
+        publicationId: quiz,
       },
     },
     {
-      enabled: true,
+      enabled: !!quiz,
     }
   );
 
@@ -131,22 +132,27 @@ const QuizPage = ({ data }: any) => {
     return transformedQuest;
   };
   const getQuiz = async () => {
-    const data3 = publicationData?.publication?.metadata;
-    const input_text = data3?.content.toString();
-    if (input_text !== undefined) {
-      const response = await axios.post("/api/getquizs", {
-        input_text,
-      });
-      const responseData = response.data.toString();
-      let trimmedString = responseData.trim();
-      const jsonString = trimmedString.replace(/(\w+):/g, '"$1":');
-      const json = JSON.parse(extractArrayFromText(jsonString));
-      const jsonArray = JSON.parse(json);
-      const result = convertAItextToJson(jsonArray);
-      const rearrangedAns = shuffleAnswerOptions(result);
-      setAIQuestions(rearrangedAns);
-      setQuestions(rearrangedAns[0]);
-      setQuizReady(true);
+    try {
+      const data3 = publicationData?.publication?.metadata;
+      const input_text = data3?.content.toString();
+      if (input_text !== undefined) {
+        const response = await axios.post("/api/getquizs", {
+          input_text,
+        });
+        const responseData = response.data.toString();
+        let trimmedString = responseData.trim();
+        const jsonString = trimmedString.replace(/(\w+):/g, '"$1":');
+        const json = JSON.parse(extractArrayFromText(jsonString));
+        const jsonArray = JSON.parse(json);
+        const result = convertAItextToJson(jsonArray);
+        const rearrangedAns = shuffleAnswerOptions(result);
+        setAIQuestions(rearrangedAns);
+        setQuestions(rearrangedAns[0]);
+        setQuizReady(true);
+      }
+    } catch (error) {
+      console.log("error", error);
+      setQuizReady(false);
     }
   };
 
@@ -154,61 +160,63 @@ const QuizPage = ({ data }: any) => {
     if (!isQuizReady) {
       getQuiz();
     }
-  }, [publicationData]);
+  }, [publicationData, isQuizReady]);
 
   useEffect(() => {
-    const dataOne = window.localStorage.getItem("QUESTIONS");
-    if (dataOne !== null) {
-      setQuestions(JSON.parse(dataOne));
-    }
+    if (quiz) {
+      const dataOne = window.localStorage.getItem("QUESTIONS");
+      if (dataOne !== null) {
+        setQuestions(JSON.parse(dataOne));
+      }
 
-    const dataTwo = window.localStorage.getItem("TIME_USED");
-    if (dataTwo !== null) {
-      setTimeUsed(JSON.parse(dataTwo));
-    }
-    const dataThree = window.localStorage.getItem("ANSWERS");
-    if (dataThree !== null) {
-      setAnswers(JSON.parse(dataThree));
-    }
-    const dataFour = window.localStorage.getItem("BTN_TEXT");
-    if (dataFour !== null) {
-      setButtonTest(JSON.parse(dataFour));
-    }
-    const dataFive = window.localStorage.getItem("DISABLE_NEXT");
-    if (dataFive !== null) {
-      setDisableNext(JSON.parse(dataFive));
-    }
-    const dataSix = window.localStorage.getItem("REVIEW_ANS");
-    if (dataSix !== null) {
-      setReviewAnswers(JSON.parse(dataSix));
-    }
-    const dataSeven = window.localStorage.getItem("END_QUIZ");
-    if (dataSeven !== null) {
-      setEndQuiz(JSON.parse(dataSeven));
-    }
-    const dataEight = window.localStorage.getItem("START_QUIZ");
-    if (dataEight !== null) {
-      setStartQuiz(JSON.parse(dataEight));
-    }
-    const dataNine = window.localStorage.getItem("QUESTION_NO");
-    if (dataNine !== null) {
-      setQuestionNumber(JSON.parse(dataNine));
-    }
-    const dataTen = window.localStorage.getItem("CHECKED");
-    if (dataTen !== null) {
-      setChecked(JSON.parse(dataTen));
-    }
-    const data = window.localStorage.getItem("TIME_LEFT");
-    if (data !== null) {
-      setTimeLeft(JSON.parse(data));
-    }
-    const real = window.localStorage.getItem("REAL_ANS");
-    if (real !== null) {
-      setRealAnswers(JSON.parse(real));
-    }
-    const score_ = window.localStorage.getItem("SCORE");
-    if (score_ !== null) {
-      setScore(JSON.parse(score_));
+      const dataTwo = window.localStorage.getItem("TIME_USED");
+      if (dataTwo !== null) {
+        setTimeUsed(JSON.parse(dataTwo));
+      }
+      const dataThree = window.localStorage.getItem("ANSWERS");
+      if (dataThree !== null) {
+        setAnswers(JSON.parse(dataThree));
+      }
+      const dataFour = window.localStorage.getItem("BTN_TEXT");
+      if (dataFour !== null) {
+        setButtonTest(JSON.parse(dataFour));
+      }
+      const dataFive = window.localStorage.getItem("DISABLE_NEXT");
+      if (dataFive !== null) {
+        setDisableNext(JSON.parse(dataFive));
+      }
+      const dataSix = window.localStorage.getItem("REVIEW_ANS");
+      if (dataSix !== null) {
+        setReviewAnswers(JSON.parse(dataSix));
+      }
+      const dataSeven = window.localStorage.getItem("END_QUIZ");
+      if (dataSeven !== null) {
+        setEndQuiz(JSON.parse(dataSeven));
+      }
+      const dataEight = window.localStorage.getItem("START_QUIZ");
+      if (dataEight !== null) {
+        setStartQuiz(JSON.parse(dataEight));
+      }
+      const dataNine = window.localStorage.getItem("QUESTION_NO");
+      if (dataNine !== null) {
+        setQuestionNumber(JSON.parse(dataNine));
+      }
+      const dataTen = window.localStorage.getItem("CHECKED");
+      if (dataTen !== null) {
+        setChecked(JSON.parse(dataTen));
+      }
+      const data = window.localStorage.getItem("TIME_LEFT");
+      if (data !== null) {
+        setTimeLeft(JSON.parse(data));
+      }
+      const real = window.localStorage.getItem("REAL_ANS");
+      if (real !== null) {
+        setRealAnswers(JSON.parse(real));
+      }
+      const score_ = window.localStorage.getItem("SCORE");
+      if (score_ !== null) {
+        setScore(JSON.parse(score_));
+      }
     }
   }, []);
 
@@ -323,6 +331,7 @@ const QuizPage = ({ data }: any) => {
   }, [timeLeft, questionNumber]);
 
   const ReviewNext = () => {
+    setButtonTest("Next");
     if (questionNumber !== 10) {
       const num = questionNumber + 1;
       setQuestionNumber(num);
@@ -395,6 +404,7 @@ const QuizPage = ({ data }: any) => {
     window.localStorage.removeItem("SCORE");
     router.push("/articles");
   };
+
   const Checked = (i: number, id: string) => {
     if (RealAnswers[i] === answers[i] && id === RealAnswers[i]) {
       return true;
@@ -639,7 +649,10 @@ const QuizPage = ({ data }: any) => {
                     color="green.500"
                     fontWeight="medium"
                     _hover={{ color: "gray.200", bg: "green.500" }}
-                    onClick={ReviewNext}
+                    onClick={() => {
+                      setQuestions(aiQuestions[0]);
+                      setReviewAnswers(true);
+                    }}
                   >
                     Review Your Answers
                   </chakra.div>
@@ -765,14 +778,3 @@ const QuizPage = ({ data }: any) => {
 };
 
 export default QuizPage;
-
-// rome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const getServerSideProps = async (context: any) => {
-  const id = context.params?.quiz;
-  const data = Questions[id - 1].questions[0];
-  return {
-    props: {
-      data,
-    },
-  };
-};
