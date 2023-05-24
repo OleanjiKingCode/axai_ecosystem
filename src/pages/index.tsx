@@ -134,15 +134,29 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <VStack w="full" pt="20" color="white">
-        <Flex gap="" w="full" pl="20" textAlign="start">
+        <Flex
+          w="full"
+          pl={{ md: "20" }}
+          px={{ base: "10" }}
+          textAlign="start"
+          direction={{ base: "column-reverse", md: "row" }}
+          gap={{ base: "6" }}
+        >
           <Flex
             w="full"
             alignItems="center"
             justifyContent="center"
             direction="column"
             gap="2"
+            pb={{ base: "10" }}
           >
-            <Heading w="full" fontSize="7xl" fontWeight="bold">
+            <Heading
+              w="full"
+              fontSize={{ base: "5xl", md: "6xl", lg: "7xl" }}
+              fontWeight="bold"
+              textAlign={{ base: "center", md: "start" }}
+              pb={{ base: "30px" }}
+            >
               Engage ·<chakra.span color="#ffdda0ff">Learn</chakra.span> · Earn
             </Heading>
             <Text fontSize="lg">
@@ -177,9 +191,21 @@ export default function Home() {
           px="40px"
           justifyContent="space-between"
         >
-          <Image src="./lens.svg" alt="lens-protocol" w="3%" />
-          <Image src="./polygon.svg" alt="polygon" w="10%" />
-          <Image src="./link.svg" alt="chainlink" w="8%" />
+          <Image
+            src="./lens.svg"
+            alt="lens-protocol"
+            w={{ base: "8%", md: "7%", lg: "3%" }}
+          />
+          <Image
+            src="./polygon.svg"
+            alt="polygon"
+            w={{ base: "18%", md: "14%", lg: "10%" }}
+          />
+          <Image
+            src="./link.svg"
+            alt="chainlink"
+            w={{ base: "14%", md: "10%", lg: "8%" }}
+          />
         </Flex>
       </VStack>
       <Services />

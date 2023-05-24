@@ -54,7 +54,7 @@ export const Navbar = () => {
         boxSize="full"
         align="center"
         gap="2.5"
-        py="5px"
+        py="8px"
         px={{ base: "4", lg: "10" }}
         fontSize="sm"
         justifyContent="space-between"
@@ -66,13 +66,17 @@ export const Navbar = () => {
             gap="3"
             w="fit"
             cursor="pointer"
-            pl="14"
+            pl={{ base: "5px", md: "14" }}
             pt="2"
           >
-            <Image alt="nameLogo" src="/logogo.svg" w="12%" />
+            <Image
+              alt="nameLogo"
+              src="/logogo.svg"
+              w={{ base: "16%", md: "22%", lg: "12%" }}
+            />
           </Flex>
         </NextLink>
-        <HStack gap="3">
+        <HStack gap="3" display={{ base: "none", md: "flex" }}>
           <NextLink href="/articles" passHref>
             <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
               Articles
@@ -112,7 +116,7 @@ export const Navbar = () => {
             <ProfileSubMenu />
           )}
         </HStack>
-        <chakra.div display={{ base: "unset", lg: "none" }}>
+        <chakra.div display={{ base: "block", md: "none" }}>
           <Button
             bg="transparent"
             _hover={{ bg: "gray.800", color: "white" }}
@@ -129,8 +133,29 @@ export const Navbar = () => {
         bg="white"
         py="5"
         fontSize="md"
-        textAlign="center"
+        // textAlign="center"
       >
+        <NextLink href="/articles" passHref>
+          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+            Articles
+          </Text>
+        </NextLink>
+        <NextLink href="/games" passHref>
+          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+            Games
+          </Text>
+        </NextLink>
+
+        <NextLink href="/dex" passHref>
+          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+            Dex
+          </Text>
+        </NextLink>
+        <NextLink href="/stake" passHref>
+          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+            Stake
+          </Text>
+        </NextLink>
         {!address ? (
           <ConnectWallet
             style={{

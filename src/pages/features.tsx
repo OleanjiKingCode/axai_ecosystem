@@ -33,13 +33,30 @@ export const Services = () => {
       </Heading>
 
       <VStack w="full" px="20" gap="10">
-        <Flex w="full" gap="10" alignItems="center">
-          <Image src="./artist.svg" alt="artist" w="40%" />
-          <chakra.div w="full" textAlign="end" mt="-50">
-            <Heading w="full" py="5" color="#fff3cc">
+        <Flex
+          w="full"
+          gap={{ lg: "10" }}
+          alignItems="center"
+          direction={{ base: "column", lg: "row" }}
+        >
+          <Image
+            src="./artist.svg"
+            alt="artist"
+            w={{ base: "60%", md: "40%" }}
+          />
+          <chakra.div
+            w="full"
+            textAlign={{ base: "center", lg: "end" }}
+            mt={{ lg: "-50" }}
+          >
+            <Heading w="full" py={{ md: "5" }} color="#fff3cc">
               Content Writers
             </Heading>
-            <Text lineHeight="40px" fontSize="20px">
+            <Text
+              lineHeight="40px"
+              fontSize="20px"
+              display={{ base: "none", md: "block" }}
+            >
               We help content writers throught the use of web3 technologies to
               showcase thier work (from classic fictional stories to simple DIY
               tricks) to an engaging audience movtivated by incentive quizes.
