@@ -65,7 +65,7 @@ const Mint = () => {
         isClosable: true,
       });
     }
-    const axiaAmount = Number(ethers.utils.parseEther("200"));
+    const axiaAmount = ethers.utils.parseEther("200");
     const collectMumbai = await contract?.mint(address?.toString(), axiaAmount);
     collectMumbai.wait();
     toast({

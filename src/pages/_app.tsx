@@ -7,6 +7,7 @@ import { ThirdwebProvider, ChainId } from "@thirdweb-dev/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "@/components/footer";
 import { Analytics } from "@vercel/analytics/react";
+import { useState, useEffect } from "react";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -18,6 +19,13 @@ const desiredChainId = ChainId.Polygon;
 const queryClient = new QueryClient();
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  
+const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <></>;
   return (
     <chakra.div className={roboto.className}>
       <ChakraProvider resetCSS>

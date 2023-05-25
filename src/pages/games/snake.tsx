@@ -418,7 +418,7 @@ export default function SnakeGame() {
             </Button>
           ) : (
             <VStack>
-              <p>How to Play?</p>
+              <span>How to Play?</span>
               <Flex gap={2}>
                 <HStack>
                   <Kbd bg="transparent">W</Kbd>
@@ -500,7 +500,7 @@ export default function SnakeGame() {
                     <>
                       {" "}
                       <span>🎉 New Highscore 🎉</span>{" "}
-                      <p> You scored: {score} </p>{" "}
+                      <span> You scored: {score} </span>{" "}
                     </>
                   ) : (
                     `You scored: ${score}`

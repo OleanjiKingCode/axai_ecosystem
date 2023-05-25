@@ -74,7 +74,7 @@ export const Navbar = () => {
             <Image
               alt="nameLogo"
               src="/logogo.svg"
-              w={{ base: "16%", md: "22%", lg: "12%" }}
+              w={{ base: "25%", md: "30%", lg: "12%" }}
             />
           </Flex>
         </NextLink>
@@ -136,12 +136,6 @@ export const Navbar = () => {
       <Collapse
         startingHeight={0}
         in={dropdown}
-
-        // bg="#17171a"
-        // py="5"
-        // fontSize="md"
-        // w="50"
-        // justifyContent="center"
       >
         <NextLink href="/articles" passHref>
           <Text
