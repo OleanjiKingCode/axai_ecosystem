@@ -163,6 +163,7 @@ const QuizPage = () => {
   }, [publicationData, isQuizReady]);
 
   useEffect(() => {
+    
     if (quiz) {
       const dataOne = window.localStorage.getItem("QUESTIONS");
       if (dataOne !== null) {

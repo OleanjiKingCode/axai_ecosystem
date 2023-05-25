@@ -9,6 +9,8 @@ import {
   Icon,
   VStack,
   Image,
+  SlideFade,
+  Collapse,
 } from "@chakra-ui/react";
 import {
   ConnectWallet,
@@ -98,7 +100,11 @@ export const Navbar = () => {
               Stake
             </Text>
           </NextLink>
-
+          <NextLink href="/mint" passHref>
+            <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+              Mint
+            </Text>
+          </NextLink>
           {!address ? (
             <ConnectWallet
               style={{
@@ -127,33 +133,65 @@ export const Navbar = () => {
           </Button>
         </chakra.div>
       </Flex>
-      <Flex
-        w="full"
-        display={dropdown ? { base: "unset", lg: "none" } : "none"}
-        bg="white"
-        py="5"
-        fontSize="md"
-        // textAlign="center"
+      <Collapse
+        startingHeight={0}
+        in={dropdown}
+
+        // bg="#17171a"
+        // py="5"
+        // fontSize="md"
+        // w="50"
+        // justifyContent="center"
       >
         <NextLink href="/articles" passHref>
-          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+          <Text
+            fontWeight="normal"
+            pb="1"
+            textAlign="center"
+            fontSize={{ base: "md", md: "lg" }}
+          >
             Articles
           </Text>
         </NextLink>
         <NextLink href="/games" passHref>
-          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+          <Text
+            fontWeight="normal"
+            pb="1"
+            textAlign="center"
+            fontSize={{ base: "md", md: "lg" }}
+          >
             Games
           </Text>
         </NextLink>
 
         <NextLink href="/dex" passHref>
-          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+          <Text
+            fontWeight="normal"
+            pb="1"
+            textAlign="center"
+            fontSize={{ base: "md", md: "lg" }}
+          >
             Dex
           </Text>
         </NextLink>
         <NextLink href="/stake" passHref>
-          <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+          <Text
+            fontWeight="normal"
+            pb="1"
+            textAlign="center"
+            fontSize={{ base: "md", md: "lg" }}
+          >
             Stake
+          </Text>
+        </NextLink>
+        <NextLink href="/mint" passHref>
+          <Text
+            fontWeight="normal"
+            pb="1"
+            textAlign="center"
+            fontSize={{ base: "md", md: "lg" }}
+          >
+            Mint
           </Text>
         </NextLink>
         {!address ? (
@@ -175,7 +213,7 @@ export const Navbar = () => {
             <ProfileSubMenu />
           </VStack>
         )}
-      </Flex>
+      </Collapse>
 
       <NetworkNotification isOpen={isOpenSwitch} onClose={onCloseSwitch} />
       <SignInWithLens isOpen={isOpen} onClose={onClose} />

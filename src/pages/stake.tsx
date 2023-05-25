@@ -31,6 +31,7 @@ export const Stake = () => {
       direction="column"
       gap="5"
       mt="14"
+      pb="44"
     >
       <VStack w="full" textAlign="center">
         <Heading py="2" fontSize="2xl">

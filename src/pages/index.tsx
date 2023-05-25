@@ -133,7 +133,7 @@ export default function Home() {
         <meta name="description" content="Axia Ecosystem" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <VStack w="full" pt="20" color="white">
+      <VStack w="full" pt={{ base: "10", md: "20" }} color="white">
         <Flex
           w="full"
           pl={{ md: "20" }}
