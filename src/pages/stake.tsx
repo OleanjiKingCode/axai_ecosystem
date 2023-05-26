@@ -11,8 +11,10 @@ import {
   VStack,
   Divider,
   Text,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AXIA_TOKEN_ADDRESS,
   AXIA_CONTRACT_ABI,
@@ -21,8 +23,83 @@ import {
   STAKING_CONTRACT,
   STAKING_CONTRACT_ABI,
 } from "@/const/contracts";
+import { useAddress, useChainId, useSigner } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
 
 export const Stake = () => {
+  const signer = useSigner();
+
+  const address = useAddress();
+
+  const toast = useToast();
+
+  const chainId = useChainId();
+  const [loading, setLoading] = useState(false);
+  const [stakedBal, setStakedBal] = useState(0);
+  const [walletBal, setWalletBal] = useState(0);
+  const [rewardBal, setRewardBal] = useState(0);
+  const [lockAmount, setLockAmount] = useState("0");
+  const ogContract = new ethers.Contract(
+    AXIA_TOKEN_ADDRESS,
+    AXIA_CONTRACT_ABI,
+    signer
+  );
+
+  const stakingContract = new ethers.Contract(
+    STAKING_CONTRACT,
+    STAKING_CONTRACT_ABI,
+    signer
+  );
+
+  const rewardContract = new ethers.Contract(
+    STAKE_REWARDS_AXIA_TOKENS,
+    STAKE_REWARDS_AXIA_ABI_TOKENS,
+    signer
+  );
+  const getWalletBal = async () => {
+    const amount = await ogContract?.balanceOf(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount));
+    setWalletBal(realVal);
+  };
+
+  const getStakedBal = async () => {
+    const amount = await stakingContract?.s_balances(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount));
+    setStakedBal(realVal);
+  };
+
+  const getRewardBal = async () => {
+    const amount = await rewardContract?.balanceOf(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount));
+    setRewardBal(realVal);
+  };
+
+  const stakeTokens = async () => {
+    try {
+      if (Number(lockAmount) <= 0) {
+        toast({
+          title: "You cant stake less than 1 token",
+          status: "warning",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+      setLoading(true);
+      const tx = await stakingContract?.stake(lockAmount);
+      tx.wait();
+
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getWalletBal();
+    getStakedBal();
+    getRewardBal();
+  }, [address]);
+
   return (
     <Flex
       w="full"
@@ -60,13 +137,20 @@ export const Stake = () => {
                 Enter how many tokens you would like to stake
               </chakra.div>
               <chakra.div w="full">
-                <Input type="number" dir="rtl" rounded="lg" />
+                <Input
+                  type="number"
+                  // dir="rtl"
+                  rounded="lg"
+                  value={lockAmount}
+                  // max={walletBal}
+                  onChange={(e) => setLockAmount(e.target.value)}
+                />
                 <chakra.div w="full" textAlign="end">
-                  Balance: 450.00
+                  Balance: {walletBal}
                 </chakra.div>
               </chakra.div>
               <Button w="full" color="black">
-                Lock
+                {loading ? <Spinner /> : <Text>Lock</Text>}
               </Button>
             </VStack>
           </CardBody>
@@ -83,7 +167,7 @@ export const Stake = () => {
                   You Have Staked A Total Of :
                 </chakra.span>
                 <chakra.span fontSize="md" fontWeight="700">
-                  560 Tokens
+                  {stakedBal} Tokens
                 </chakra.span>
               </VStack>
               <Divider />
@@ -93,7 +177,7 @@ export const Stake = () => {
                   You Have Received A Total Of :
                 </chakra.span>
                 <chakra.span fontSize="md" fontWeight="700">
-                  15 Reward Tokens
+                  {rewardBal} Reward Tokens
                 </chakra.span>
                 <Button w="full" color="black">
                   Claim Rewards
