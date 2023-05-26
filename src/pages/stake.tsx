@@ -35,9 +35,11 @@ export const Stake = () => {
 
   const chainId = useChainId();
   const [loading, setLoading] = useState(false);
+  const [loadingClaim, setLoadingClaim] = useState(false);
   const [stakedBal, setStakedBal] = useState(0);
   const [walletBal, setWalletBal] = useState(0);
   const [rewardBal, setRewardBal] = useState(0);
+  const [claimableBal, setClaimabaleBal] = useState(0);
   const [lockAmount, setLockAmount] = useState("0");
   const ogContract = new ethers.Contract(
     AXIA_TOKEN_ADDRESS,
@@ -74,6 +76,13 @@ export const Stake = () => {
     setRewardBal(realVal);
   };
 
+  const getClaimableBal = async () => {
+    const amount = await stakingContract?.earned(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount)) * 1e18;
+    console.log(realVal);
+    setClaimabaleBal(realVal);
+  };
+
   const stakeTokens = async () => {
     try {
       if (Number(lockAmount) <= 0) {
@@ -85,19 +94,77 @@ export const Stake = () => {
         });
       }
       setLoading(true);
-      const tx = await stakingContract?.stake(lockAmount);
-      tx.wait();
-
+      const axiaAmount = ethers.utils.parseEther(lockAmount);
+      let tx = await ogContract.approve(STAKING_CONTRACT, axiaAmount);
+      await tx.wait();
+      tx = await stakingContract?.stake(axiaAmount);
+      await tx.wait();
+      toast({
+        title: "You have successfully staked your tokens",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
+      getWalletBal();
+      getStakedBal();
+      getRewardBal();
+      getClaimableBal();
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
+
+  const claimTokens = async () => {
+    try {
+      setLoadingClaim(true);
+      let tx = await stakingContract?.claimReward();
+      await tx.wait();
+      toast({
+        title: "You have successfully claimed your tokens",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
+      getWalletBal();
+      getStakedBal();
+      getRewardBal();
+      getClaimableBal();
+      setLoadingClaim(false);
+    } catch (error) {
+      setLoadingClaim(false);
+      console.log(error);
+    }
+  };
+
+  // const withdrawTokens = async () => {
+  //   try {
+  //     setLoadingWithdraw(true);
+  //     let tx = await stakingContract?.withdraw();
+  //     await tx.wait();
+  //     toast({
+  //       title: "You have successfully claimed your tokens",
+  //       status: "success",
+  //       duration: 4000,
+  //       isClosable: true,
+  //     });
+  //     getWalletBal();
+  //     getStakedBal();
+  //     getRewardBal();
+  //     getClaimableBal();
+  //     setLoadingWithdraw(false);
+  //   } catch (error) {
+  //     setLoadingWithdraw(false);
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     getWalletBal();
     getStakedBal();
     getRewardBal();
+    getClaimableBal();
   }, [address]);
 
   return (
@@ -142,6 +209,7 @@ export const Stake = () => {
                   // dir="rtl"
                   rounded="lg"
                   value={lockAmount}
+                  disabled={!address}
                   // max={walletBal}
                   onChange={(e) => setLockAmount(e.target.value)}
                 />
@@ -149,7 +217,7 @@ export const Stake = () => {
                   Balance: {walletBal}
                 </chakra.div>
               </chakra.div>
-              <Button w="full" color="black">
+              <Button w="full" color="black" onClick={stakeTokens}>
                 {loading ? <Spinner /> : <Text>Lock</Text>}
               </Button>
             </VStack>
@@ -179,9 +247,21 @@ export const Stake = () => {
                 <chakra.span fontSize="md" fontWeight="700">
                   {rewardBal} Reward Tokens
                 </chakra.span>
-                <Button w="full" color="black">
-                  Claim Rewards
+                <chakra.span fontSize="md">Claimable Tokens :</chakra.span>
+                <chakra.span fontSize="md" fontWeight="700">
+                  {claimableBal} Reward Tokens
+                </chakra.span>
+                <Button w="full" color="black" onClick={claimTokens}>
+                  {loadingClaim ? <Spinner /> : <Text>Claim Rewards</Text>}
                 </Button>
+
+                {/* <Button w="full" color="black" onClick={claimTokens}>
+                  {loadingClaim ? (
+                    <Spinner />
+                  ) : (
+                    <Text>Withdraw Stake Balance</Text>
+                  )}
+                </Button> */}
               </VStack>
             </Flex>
           </CardBody>
