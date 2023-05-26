@@ -36,6 +36,7 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { config } from "@/Data/config";
 import { userData } from "@/components/datatypes";
 import { useRouter } from "next/router";
+import { ethers } from "ethers";
 
 type Inputs = {
   name: string;

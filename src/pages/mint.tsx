@@ -48,7 +48,7 @@ const Mint = () => {
       toast({
         title: "Wallet Not Connected.",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
     }
@@ -61,7 +61,7 @@ const Mint = () => {
       toast({
         title: "You have minted before.",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
     }
