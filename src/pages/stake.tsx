@@ -39,7 +39,7 @@ export const Stake = () => {
   const [stakedBal, setStakedBal] = useState(0);
   const [walletBal, setWalletBal] = useState(0);
   const [rewardBal, setRewardBal] = useState(0);
-  const [claimableBal, setClaimabaleBal] = useState(0);
+  const [claimableBal, setClaimabaleBal] = useState("0");
   const [lockAmount, setLockAmount] = useState("0");
   const ogContract = new ethers.Contract(
     AXIA_TOKEN_ADDRESS,
@@ -78,7 +78,7 @@ export const Stake = () => {
 
   const getClaimableBal = async () => {
     const amount = await stakingContract?.earned(address?.toString());
-    const realVal = Number(ethers.utils.formatEther(amount)) * 1e18;
+    const realVal = (Number(amount) / 1e18).toFixed(18);
     console.log(realVal);
     setClaimabaleBal(realVal);
   };

@@ -15,22 +15,13 @@ const Footer = () => {
   return (
     <Box bg="gray.800" color="white" pt={8}>
       <Container maxW="container.lg" flexDirection="row" display="flex">
-        {/* Row 1 */}
-        <Flex
-          direction="column"
-          align="center"
-          justify="space-between"
-          mb={4}
-          w="full"
-        >
+        <Flex direction="column" justify="space-between" mb={4} w="full">
           <Box>
-            <Text fontSize="lg">Website Title</Text>
-            <Text fontSize="sm" mt={1}>
-              A little description about the website.
-            </Text>
+            <Text fontSize="lg">Axia Ecosystem</Text>
+            <Text fontSize="sm" mt={1}></Text>
           </Box>
           <Button colorScheme="blue" size="sm">
-            Button
+            Get Started
           </Button>
         </Flex>
         {/* Row 2 */}
@@ -46,15 +37,13 @@ const Footer = () => {
         <SimpleGrid columns={1} spacing={4} w="full">
           <VStack>
             <Text>Follow Us</Text>
-            <Link href="#">Facebook</Link>
             <Link href="#">Twitter</Link>
-            <Link href="#">Instagram</Link>
           </VStack>
         </SimpleGrid>
       </Container>
-      <Flex w="full" py="6" justifyContent="center">
+      <Flex w="full" pb="2" pt="10" justifyContent="center">
         <Text color="gray.200" fontWeight="thin">
-          Copyright 2023 Adebayo Olamilekan
+          &copy; Copyright 2023 Adebayo Olamilekan
         </Text>
       </Flex>
     </Box>

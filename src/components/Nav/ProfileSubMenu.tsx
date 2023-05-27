@@ -60,6 +60,7 @@ const ProfileSubMenu = () => {
   const address = useAddress();
   const disconnect = useDisconnect();
   const [userData, setUserData] = useState<userData>();
+  const [addressId, setAddressId] = useState("");
   const { profileQuery } = useLensUser();
 
   const profileImage = ipfsToWebLink(
@@ -68,14 +69,22 @@ const ProfileSubMenu = () => {
   );
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`/api/user/${address}`);
-      if (response) {
+      try {
+        const response = await axios.get(`/api/user/${address}`);
         const data = await response.data;
         setUserData(data.user);
+        setAddressId(abbreviateName(data.user.userId));
+      } catch (error: any) {
+        setAddressId("ID");
+        if (error.response && error.response.status === 404) {
+          // Handle the 404 error
+          console.log("User not found");
+          // Perform any additional actions specific to the 404 error
+        }
       }
     };
     fetchData();
-  }, []);
+  }, [address]);
 
   const { hasCopied, onCopy: copyAddress } = useClipboard(address as string);
 
@@ -110,7 +119,7 @@ const ProfileSubMenu = () => {
               rounded="full"
               fontWeight="semi-bold"
             >
-              {abbreviateName(userData ? userData.userId : "No Name")}
+              {addressId}
             </Text>
           )}
           <Text pl="3"> {address && shortenAccount(address)}</Text>

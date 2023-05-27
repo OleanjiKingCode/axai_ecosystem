@@ -133,81 +133,80 @@ export const Navbar = () => {
           </Button>
         </chakra.div>
       </Flex>
-      <Collapse
-        startingHeight={0}
-        in={dropdown}
-      >
-        <NextLink href="/articles" passHref>
-          <Text
-            fontWeight="normal"
-            pb="1"
-            textAlign="center"
-            fontSize={{ base: "md", md: "lg" }}
-          >
-            Articles
-          </Text>
-        </NextLink>
-        <NextLink href="/games" passHref>
-          <Text
-            fontWeight="normal"
-            pb="1"
-            textAlign="center"
-            fontSize={{ base: "md", md: "lg" }}
-          >
-            Games
-          </Text>
-        </NextLink>
+      <chakra.div display={{ base: "block", md: "none" }}>
+        <Collapse startingHeight={0} in={dropdown}>
+          <NextLink href="/articles" passHref>
+            <Text
+              fontWeight="normal"
+              pb="1"
+              textAlign="center"
+              fontSize={{ base: "md", md: "lg" }}
+            >
+              Articles
+            </Text>
+          </NextLink>
+          <NextLink href="/games" passHref>
+            <Text
+              fontWeight="normal"
+              pb="1"
+              textAlign="center"
+              fontSize={{ base: "md", md: "lg" }}
+            >
+              Games
+            </Text>
+          </NextLink>
 
-        <NextLink href="/dex" passHref>
-          <Text
-            fontWeight="normal"
-            pb="1"
-            textAlign="center"
-            fontSize={{ base: "md", md: "lg" }}
-          >
-            Dex
-          </Text>
-        </NextLink>
-        <NextLink href="/stake" passHref>
-          <Text
-            fontWeight="normal"
-            pb="1"
-            textAlign="center"
-            fontSize={{ base: "md", md: "lg" }}
-          >
-            Stake
-          </Text>
-        </NextLink>
-        <NextLink href="/mint" passHref>
-          <Text
-            fontWeight="normal"
-            pb="1"
-            textAlign="center"
-            fontSize={{ base: "md", md: "lg" }}
-          >
-            Mint
-          </Text>
-        </NextLink>
-        {!address ? (
-          <ConnectWallet
-            style={{
-              fontSize: "16px",
-              fontWeight: "thin",
-              color: "#ffd17cff",
-              backgroundColor: "transparent",
-              border: "white 2px solid",
-              padding: "10px",
-              borderRadius: "10px",
-              transition: "background-color 0.3s ease",
-            }}
-          />
-        ) : (
-          <VStack gap={3}>
-            <Text fontWeight="600">Your Wallet Details</Text>
-            <ProfileSubMenu />
-          </VStack>
-        )}
-      </Collapse>
+          <NextLink href="/dex" passHref>
+            <Text
+              fontWeight="normal"
+              pb="1"
+              textAlign="center"
+              fontSize={{ base: "md", md: "lg" }}
+            >
+              Dex
+            </Text>
+          </NextLink>
+          <NextLink href="/stake" passHref>
+            <Text
+              fontWeight="normal"
+              pb="1"
+              textAlign="center"
+              fontSize={{ base: "md", md: "lg" }}
+            >
+              Stake
+            </Text>
+          </NextLink>
+          <NextLink href="/mint" passHref>
+            <Text
+              fontWeight="normal"
+              pb="1"
+              textAlign="center"
+              fontSize={{ base: "md", md: "lg" }}
+            >
+              Mint
+            </Text>
+          </NextLink>
+          {!address ? (
+            <ConnectWallet
+              style={{
+                fontSize: "16px",
+                fontWeight: "thin",
+                color: "#ffd17cff",
+                backgroundColor: "transparent",
+                border: "white 2px solid",
+                padding: "10px",
+                borderRadius: "10px",
+                transition: "background-color 0.3s ease",
+              }}
+            />
+          ) : (
+            <VStack gap={3}>
+              <Text fontWeight="600">Your Wallet Details</Text>
+              <ProfileSubMenu />
+            </VStack>
+          )}
+        </Collapse>
+      </chakra.div>
 
       <NetworkNotification isOpen={isOpenSwitch} onClose={onCloseSwitch} />
       <SignInWithLens isOpen={isOpen} onClose={onClose} />
