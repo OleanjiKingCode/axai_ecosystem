@@ -5,13 +5,14 @@ import {
   CardBody,
   VStack,
   chakra,
-  Input,
+  Text,
   Button,
   Flex,
   Image,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import {
   AXIA_TOKEN_ADDRESS,
   AXIA_CONTRACT_ABI,
@@ -40,10 +41,12 @@ const Mint = () => {
     AXIA_CONTRACT_ABI,
     signer
   );
+  const [loading, setLoading] = useState(false);
 
   const [, switchNetwork] = useNetwork();
 
   const getAxiaTokens = async () => {
+    setLoading(true);
     if (!address) {
       toast({
         title: "Wallet Not Connected.",
@@ -51,29 +54,32 @@ const Mint = () => {
         duration: 4000,
         isClosable: true,
       });
+      setLoading(false);
+      return;
     }
     if (address && chainId !== 80001) {
       switchNetwork?.(ChainId.Mumbai);
     }
-    const amount = await contract?.balanceOf(address?.toString());
-    const realVal = Number(ethers.utils.formatEther(amount));
-    if (realVal >= 0) {
-      toast({
-        title: "You have minted before.",
-        status: "warning",
-        duration: 4000,
-        isClosable: true,
-      });
-    }
+    // const amount = await contract?.balanceOf(address?.toString());
+    // const realVal = Number(ethers.utils.formatEther(amount));
+    // if (realVal >= 0) {
+    //   toast({
+    //     title: "You have minted before.",
+    //     status: "warning",
+    //     duration: 4000,
+    //     isClosable: true,
+    //   });
+    // }
     const axiaAmount = ethers.utils.parseEther("200");
     const collectMumbai = await contract?.mint(address?.toString(), axiaAmount);
-    collectMumbai.wait();
+    await collectMumbai.wait();
     toast({
       title: "200 Axia Tokens is on its way",
       status: "success",
       duration: 2000,
       isClosable: true,
     });
+    setLoading(false);
   };
 
   return (
@@ -96,7 +102,7 @@ const Mint = () => {
             <Image src="/axiaLogo.svg" alt="logo" w="40%" />
             <chakra.div w="full">Mint 200 Axia Tokens</chakra.div>
             <Button w="full" color="black" onClick={getAxiaTokens}>
-              Mint
+              {loading ? <Spinner /> : <Text> Mint </Text>}
             </Button>
           </VStack>
         </CardBody>

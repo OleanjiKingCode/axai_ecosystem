@@ -12,6 +12,10 @@ import {
   chakra,
   ComponentWithAs,
   Icon,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   RiLogoutBoxLine,
@@ -32,7 +36,7 @@ import { userData } from "@/components/datatypes";
 import axios from "axios";
 
 type SubMenuItemProps = {
-  label: string;
+  label?: string;
   action?: () => void;
   icon: IconType | ComponentWithAs<"svg">;
 } & FlexProps;
@@ -87,89 +91,116 @@ const ProfileSubMenu = () => {
   }, [address]);
 
   const { hasCopied, onCopy: copyAddress } = useClipboard(address as string);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Popover>
-      <PopoverTrigger>
-        <Button
-          size="md"
-          color="#ffd17cff"
-          fontWeight="500"
-          py="4"
-          variant="outline"
-          _hover={{ bg: "blackAlpha.300", color: "white" }}
-          fontSize="sm"
-          rightIcon={<FaChevronDown />}
-        >
-          {profileImage !== "https://ipfs.io/ipfs/" ? (
-            <img
-              src={profileImage}
-              alt={profileQuery?.data?.defaultProfile?.name || ""}
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-              }}
-            />
-          ) : (
-            <Text
-              bg="#363639"
-              p="2"
-              color="#ffd17cff"
-              rounded="full"
-              fontWeight="semi-bold"
-            >
-              {addressId}
-            </Text>
-          )}
-          <Text pl="3"> {address && shortenAccount(address)}</Text>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        pt="5"
-        pb="6"
-        bg="white"
-        color="black"
-        w="355px"
-        mr={{ md: "13", lg: "16" }}
+    <>
+      <Button
+        size="md"
+        color="#ffd17cff"
+        fontWeight="500"
+        py="4"
+        variant="outline"
+        _hover={{ bg: "blackAlpha.300", color: "white" }}
+        fontSize="sm"
+        onClick={onOpen}
       >
-        <chakra.div mx="6" pb="5">
-          <Text fontWeight="bold">My Wallet</Text>
-          <Flex mt="3" align="center" gap="2.5">
-            <chakra.div pos="relative">
-              <Icon as={RiUserFill} fontSize="30" />
-            </chakra.div>
-            <Flex direction="column" align="space-between">
-              <Text fontWeight="bold" maxW="110px" noOfLines={1}>
-                {profileQuery?.data?.defaultProfile?.handle}
-              </Text>
+        {profileImage !== "https://ipfs.io/ipfs/" ? (
+          <img
+            src={profileImage}
+            alt={profileQuery?.data?.defaultProfile?.name || ""}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+            }}
+          />
+        ) : (
+          <Text
+            bg="#363639"
+            p="2"
+            color="#ffd17cff"
+            rounded="full"
+            fontWeight="semi-bold"
+          >
+            {addressId}
+          </Text>
+        )}
+        <Text pl="3"> {address && shortenAccount(address)}</Text>
+      </Button>
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent
+          pt="5"
+          pb="6"
+          bg="#b1b2b1"
+          color="white"
+          w="355px"
+          mr={{ md: "13", lg: "16" }}
+        >
+          <chakra.div mx="6" pb="5">
+            <Text fontWeight="bold" w="full" textAlign="center">
+              My Wallet
+            </Text>
+            <Flex mt="3" align="center" gap="2.5">
+              <chakra.div pos="relative">
+                {profileImage !== "https://ipfs.io/ipfs/" ? (
+                  <img
+                    src={profileImage}
+                    alt={profileQuery?.data?.defaultProfile?.name || ""}
+                    style={{
+                      width: 36,
+                      height: 36,
+                    }}
+                  />
+                ) : (
+                  <Text
+                    bg="#363639"
+                    p="2"
+                    w="70px"
+                    color="#ffd17cff"
+                    textAlign="center"
+                    rounded="md"
+                    fontWeight="semi-bold"
+                  >
+                    {addressId}
+                  </Text>
+                )}
+              </chakra.div>
+              <Flex direction="row" align="space-between">
+                <Text fontWeight="bold" maxW="110px" noOfLines={1}>
+                  {profileQuery?.data?.defaultProfile
+                    ? profileQuery?.data?.defaultProfile?.handle
+                    : userData
+                    ? userData?.userId
+                    : shortenAccount(address ? address : "User")}
+                </Text>
+
+                <Icon
+                  onClick={copyAddress}
+                  color={hasCopied ? "green" : "white"}
+                  as={hasCopied ? CheckIcon : RiFileCopyLine}
+                  boxSize="4"
+                />
+              </Flex>
             </Flex>
-          </Flex>
-        </chakra.div>
-        <Divider mb="6" />
-        <SubMenuItem
-          label="Copy Address"
-          action={copyAddress}
-          icon={RiFileCopyLine}
-          {...(hasCopied && {
-            color: "green",
-            icon: CheckIcon,
-          })}
-        />
-        <SubMenuItem
-          label="View on PolyScan"
-          action={() =>
-            window.open(`https://polyscan.io/address/${address}`, "_blank")
-          }
-          icon={RiExternalLinkLine}
-        />
-        <SubMenuItem
-          label="Disconnect"
-          action={disconnect}
-          icon={RiLogoutBoxLine}
-        />
-      </PopoverContent>
-    </Popover>
+          </chakra.div>
+
+          <SubMenuItem
+            label="View on PolyScan"
+            action={() =>
+              window.open(`https://polyscan.io/address/${address}`, "_blank")
+            }
+            icon={RiExternalLinkLine}
+          />
+          <SubMenuItem
+            label="Disconnect"
+            action={disconnect}
+            icon={RiLogoutBoxLine}
+          />
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

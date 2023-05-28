@@ -13,7 +13,7 @@ import {
   Spinner,
   Box,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { FcLike } from "react-icons/fc";
 import { FaComments } from "react-icons/fa";
@@ -33,16 +33,18 @@ import {
   usePublicationsQuery,
 } from "../../graphql/generated";
 import { ipfsToWebLink } from "@/lib/helpers";
+import { useAddress } from "@thirdweb-dev/react";
+import axios from "axios";
 
 export const Services = () => {
   const [inputValue, setValue] = useState("");
-
+  const address = useAddress();
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleSearchInputChange = (e: any) => {
     const input = e.target.value;
     setValue(input);
   };
-
+  const [userData, setUserData] = useState(false);
   const { isLoading, error, data } = useExplorePublicationsQuery(
     {
       request: {
@@ -58,6 +60,23 @@ export const Services = () => {
   data?.explorePublications.items.sort(
     (a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/user/${address}`);
+        const data = await response.data;
+
+        setUserData(data.userId ? true : false);
+      } catch (error: any) {
+        setUserData(false);
+        if (error.response && error.response.status === 404) {
+          console.log("User not found");
+        }
+      }
+    };
+    fetchData();
+  }, [address]);
   return (
     <VStack w="full" gap="3" px="5" minH="89vh">
       <Flex
@@ -65,13 +84,13 @@ export const Services = () => {
         alignItems="start"
         direction="column"
         justifyContent="flex-start"
-        px="28"
+        px={{ base: "8", md: "20", lg: "28" }}
         textAlign="center"
       >
         <Heading py="3" color="#ffeeb9" w="full">
           Articles
         </Heading>
-        <Text>
+        <Text w="full">
           The Axia Ecosystem Articles Page offers a wide variety of content
           created by talented individuals from around the world. Users can
           engage with the content, take quizzes, and earn rewards. The filtering
@@ -88,7 +107,13 @@ export const Services = () => {
         borderTopWidth="1px"
         borderColor="whiteAlpha.300"
       >
-        <Flex w="full" alignItems="center" justifyContent="space-between" p="2">
+        <Flex
+          w="full"
+          alignItems="center"
+          justifyContent="space-between"
+          p="2"
+          direction={{ base: "column", md: "row" }}
+        >
           <Flex gap="3" rounded="md" borderWidth="1px" borderColor="#ffffff29">
             <Flex pl={3} alignItems="center" justifyContent="center">
               <Icon as={FiSearch} w={5} h={5} color="gray.300" />
@@ -111,12 +136,31 @@ export const Services = () => {
               fontSize="sm"
             />
           </Flex>
-          <HStack gap="4">
-            <Button bg="gray.700" fontWeight="500" _hover={{ bg: "gray.800" }}>
+          <HStack
+            gap="4"
+            px="2"
+            pt={{ base: "10", md: "0" }}
+            w={{ base: "full" }}
+          >
+            <Button
+              bg="gray.700"
+              fontWeight="500"
+              _hover={{ bg: "gray.800" }}
+              w={{ base: "full" }}
+            >
               <Link href="./articles/new">Create New Article</Link>
             </Button>
-            <Button bg="gray.700" fontWeight="500" _hover={{ bg: "gray.800" }}>
-              <Link href="/quizs/1">Take Random Quiz</Link>
+            <Button
+              bg="gray.700"
+              fontWeight="500"
+              _hover={{ bg: "gray.800" }}
+              w={{ base: "full" }}
+            >
+              {!userData ? (
+                <Text>Take Random Quiz</Text>
+              ) : (
+                <Link href="/quizs/1">Take Random Quiz</Link>
+              )}
             </Button>
           </HStack>
         </Flex>
