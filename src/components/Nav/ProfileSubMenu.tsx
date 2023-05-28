@@ -16,6 +16,7 @@ import {
   ModalContent,
   ModalOverlay,
   useDisclosure,
+  HStack,
 } from "@chakra-ui/react";
 import {
   RiLogoutBoxLine,
@@ -28,10 +29,24 @@ import { FaChevronDown } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import { CheckIcon } from "@chakra-ui/icons";
 import useLensUser from "@/lib/auth/useLensUser";
-import { useAddress, useDisconnect } from "@thirdweb-dev/react";
 import { ipfsToWebLink, omitTypename } from "@/lib/helpers";
 import { abbreviateName } from "@/utils/nameAbbreviator";
 import { config } from "@/Data/config";
+import {
+  AXIA_TOKEN_ADDRESS,
+  AXIA_CONTRACT_ABI,
+  STAKE_REWARDS_AXIA_ABI_TOKENS,
+  STAKE_REWARDS_AXIA_TOKENS,
+  STAKING_CONTRACT,
+  STAKING_CONTRACT_ABI,
+} from "@/const/contracts";
+import {
+  useAddress,
+  useChainId,
+  useDisconnect,
+  useSigner,
+} from "@thirdweb-dev/react";
+import { ethers } from "ethers";
 import { userData } from "@/components/datatypes";
 import axios from "axios";
 
@@ -90,8 +105,59 @@ const ProfileSubMenu = () => {
     fetchData();
   }, [address]);
 
+  const signer = useSigner();
+
   const { hasCopied, onCopy: copyAddress } = useClipboard(address as string);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [loadingClaim, setLoadingClaim] = useState(false);
+  const [stakedBal, setStakedBal] = useState(0);
+  const [walletBal, setWalletBal] = useState(0);
+  const [rewardBal, setRewardBal] = useState(0);
+  const [claimableBal, setClaimabaleBal] = useState("0");
+  const [lockAmount, setLockAmount] = useState("0");
+
+  const ogContract = new ethers.Contract(
+    AXIA_TOKEN_ADDRESS,
+    AXIA_CONTRACT_ABI,
+    signer
+  );
+
+  const stakingContract = new ethers.Contract(
+    STAKING_CONTRACT,
+    STAKING_CONTRACT_ABI,
+    signer
+  );
+
+  const rewardContract = new ethers.Contract(
+    STAKE_REWARDS_AXIA_TOKENS,
+    STAKE_REWARDS_AXIA_ABI_TOKENS,
+    signer
+  );
+
+  const getWalletBal = async () => {
+    const amount = await ogContract?.balanceOf(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount));
+    setWalletBal(realVal);
+  };
+
+  const getStakedBal = async () => {
+    const amount = await stakingContract?.s_balances(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount));
+    setStakedBal(realVal);
+  };
+
+  const getRewardBal = async () => {
+    const amount = await rewardContract?.balanceOf(address?.toString());
+    const realVal = Number(ethers.utils.formatEther(amount));
+    setRewardBal(realVal);
+  };
+
+  useEffect(() => {
+    getWalletBal();
+    getStakedBal();
+    getRewardBal();
+  }, [address]);
 
   return (
     <>
@@ -128,17 +194,16 @@ const ProfileSubMenu = () => {
         )}
         <Text pl="3"> {address && shortenAccount(address)}</Text>
       </Button>
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal onClose={onClose} isOpen={isOpen} isCentered size="lg">
         <ModalOverlay />
         <ModalContent
           pt="5"
           pb="6"
-          bg="#b1b2b1"
+          bg="#dea947"
           color="white"
-          w="355px"
           mr={{ md: "13", lg: "16" }}
         >
-          <chakra.div mx="6" pb="5">
+          <chakra.div mx="6">
             <Text fontWeight="bold" w="full" textAlign="center">
               My Wallet
             </Text>
@@ -155,10 +220,10 @@ const ProfileSubMenu = () => {
                   />
                 ) : (
                   <Text
-                    bg="#363639"
+                    bg="#91620b"
                     p="2"
                     w="70px"
-                    color="#ffd17cff"
+                    color="white"
                     textAlign="center"
                     rounded="md"
                     fontWeight="semi-bold"
@@ -184,20 +249,59 @@ const ProfileSubMenu = () => {
                 />
               </Flex>
             </Flex>
+            <Flex pt="5" justifyContent="space-between">
+              <Flex
+                direction="column"
+                borderColor="white"
+                borderWidth="1px"
+                p="5"
+                textAlign="center"
+                rounded="md"
+              >
+                <Text>Axia Balance</Text>
+                <Text>{walletBal} Tokens</Text>
+              </Flex>
+              <Flex
+                direction="column"
+                borderColor="white"
+                borderWidth="1px"
+                p="5"
+                textAlign="center"
+                rounded="md"
+              >
+                <Text>Stake Balance</Text>
+                <Text>{stakedBal} Tokens</Text>
+              </Flex>
+              <Flex
+                direction="column"
+                borderColor="white"
+                borderWidth="1px"
+                p="5"
+                textAlign="center"
+                rounded="md"
+              >
+                <Text>Saxe Balance</Text>
+                <Text>{rewardBal} Tokens</Text>
+              </Flex>
+            </Flex>
+            <Flex pt="3" justifyContent="space-between">
+              <SubMenuItem
+                label="PolyScan"
+                action={() =>
+                  window.open(
+                    `https://polyscan.io/address/${address}`,
+                    "_blank"
+                  )
+                }
+                icon={RiExternalLinkLine}
+              />
+              <SubMenuItem
+                label="Disconnect"
+                action={disconnect}
+                icon={RiLogoutBoxLine}
+              />
+            </Flex>
           </chakra.div>
-
-          <SubMenuItem
-            label="View on PolyScan"
-            action={() =>
-              window.open(`https://polyscan.io/address/${address}`, "_blank")
-            }
-            icon={RiExternalLinkLine}
-          />
-          <SubMenuItem
-            label="Disconnect"
-            action={disconnect}
-            icon={RiLogoutBoxLine}
-          />
         </ModalContent>
       </Modal>
     </>

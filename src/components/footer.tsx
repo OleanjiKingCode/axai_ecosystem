@@ -26,7 +26,7 @@ const Footer = () => {
             </Text>
           </Box>
           <Button colorScheme="blue" size="sm">
-            Get Started
+            <Link href="/">Get Started</Link>
           </Button>
         </Flex>
         {/* Row 2 */}

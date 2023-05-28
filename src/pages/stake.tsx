@@ -206,11 +206,9 @@ export const Stake = () => {
               <chakra.div w="full">
                 <Input
                   type="number"
-                  // dir="rtl"
                   rounded="lg"
                   value={lockAmount}
                   disabled={!address}
-                  // max={walletBal}
                   onChange={(e) => setLockAmount(e.target.value)}
                 />
                 <chakra.div w="full" textAlign="end">
@@ -267,6 +265,33 @@ export const Stake = () => {
           </CardBody>
         </Card>
       </HStack>
+
+      <Card w="80%" bg="#897537" mt="20" color="white">
+        <CardHeader>
+          <Heading fontSize="lg" textAlign="center">
+            STAKE INFORMATICS
+          </Heading>
+        </CardHeader>
+        <CardBody>
+          <VStack gap="4">
+            <chakra.div w="full" textAlign="start">
+              Enter how many tokens you would like to stake
+            </chakra.div>
+            <chakra.div w="full">
+              <Input
+                type="number"
+                rounded="lg"
+                value={lockAmount}
+                disabled={!address}
+                onChange={(e) => setLockAmount(e.target.value)}
+              />
+              <chakra.div w="full" textAlign="end">
+                Balance: {walletBal}
+              </chakra.div>
+            </chakra.div>
+          </VStack>
+        </CardBody>
+      </Card>
     </Flex>
   );
 };
