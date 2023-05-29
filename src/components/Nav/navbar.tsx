@@ -74,7 +74,7 @@ export const Navbar = () => {
             <Image
               alt="nameLogo"
               src="/logogo.svg"
-              w={{ base: "25%", md: "30%", lg: "12%" }}
+              w={{ base: "15%", md: "13%", lg: "12%" }}
             />
           </Flex>
         </NextLink>
@@ -93,6 +93,11 @@ export const Navbar = () => {
           <NextLink href="/dex" passHref>
             <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
               Dex
+            </Text>
+          </NextLink>
+          <NextLink href="/dex" passHref>
+            <Text fontWeight="normal" fontSize={{ base: "sm", md: "lg" }}>
+              Art
             </Text>
           </NextLink>
           <NextLink href="/stake" passHref>
@@ -164,6 +169,17 @@ export const Navbar = () => {
               fontSize={{ base: "md", md: "lg" }}
             >
               Dex
+            </Text>
+          </NextLink>
+
+          <NextLink href="/dex" passHref>
+            <Text
+              fontWeight="normal"
+              pb="1"
+              textAlign="center"
+              fontSize={{ base: "md", md: "lg" }}
+            >
+              Art
             </Text>
           </NextLink>
           <NextLink href="/stake" passHref>
