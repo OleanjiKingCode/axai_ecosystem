@@ -13,6 +13,10 @@ import {
   Text,
   useToast,
   Spinner,
+  Table,
+  Tbody,
+  Td,
+  Tr,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
@@ -273,23 +277,29 @@ export const Stake = () => {
           </Heading>
         </CardHeader>
         <CardBody>
-          <VStack gap="4">
-            <chakra.div w="full" textAlign="start">
-              Enter how many tokens you would like to stake
-            </chakra.div>
-            <chakra.div w="full">
-              <Input
-                type="number"
-                rounded="lg"
-                value={lockAmount}
-                disabled={!address}
-                onChange={(e) => setLockAmount(e.target.value)}
-              />
-              <chakra.div w="full" textAlign="end">
-                Balance: {walletBal}
-              </chakra.div>
-            </chakra.div>
-          </VStack>
+          <Table variant="striped" colorScheme="gray">
+            <Tbody>
+              <Tr color="black">
+                <Td>Amount to stake</Td>
+                <Td>Quizes</Td>
+                <Td>Games</Td>
+                <Td>Both</Td>
+              </Tr>
+              <Tr textAlign="center" w="full">
+                <Td>200</Td>
+                <Td>&#10003;</Td>
+                <Td>&#10005;</Td>
+                <Td>&#10005;</Td>
+              </Tr>
+              <Tr textAlign="center" w="full" color="black">
+                <Td>500</Td>
+                <Td>&#10003;</Td>
+                <Td>&#10005;</Td>
+                <Td>&#10005;</Td>
+              </Tr>
+              
+            </Tbody>
+          </Table>
         </CardBody>
       </Card>
     </Flex>

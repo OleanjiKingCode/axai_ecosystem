@@ -12,6 +12,7 @@ import {
   HStack,
   Spinner,
   Box,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
@@ -35,10 +36,13 @@ import {
 import { ipfsToWebLink } from "@/lib/helpers";
 import { useAddress } from "@thirdweb-dev/react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export const Services = () => {
   const [inputValue, setValue] = useState("");
+  const router = useRouter();
   const address = useAddress();
+  const toast = useToast();
   // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const handleSearchInputChange = (e: any) => {
     const input = e.target.value;
@@ -77,6 +81,20 @@ export const Services = () => {
     };
     fetchData();
   }, [address]);
+
+  const linkToArticle = () => {
+    if (userData) {
+      router.push("/quizs/0x019ded-0x16");
+    } else {
+      toast({
+        title: "You need to register before taking a quiz",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <VStack w="full" gap="3" px="5" minH="89vh">
       <Flex
@@ -148,19 +166,16 @@ export const Services = () => {
               _hover={{ bg: "gray.800" }}
               w={{ base: "full" }}
             >
-              <Link href="./articles/new">Create New Article</Link>
+              Create New Article
             </Button>
             <Button
               bg="gray.700"
               fontWeight="500"
               _hover={{ bg: "gray.800" }}
               w={{ base: "full" }}
+              onClick={linkToArticle}
             >
-              {!userData ? (
-                <Text>Take Random Quiz</Text>
-              ) : (
-                <Link href="/quizs/1">Take Random Quiz</Link>
-              )}
+              <Text>Take Random Quiz</Text>
             </Button>
           </HStack>
         </Flex>

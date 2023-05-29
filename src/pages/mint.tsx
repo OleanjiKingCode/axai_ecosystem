@@ -93,7 +93,7 @@ const Mint = () => {
       pb="44"
       textAlign="center"
     >
-      <Card w="40%" bg="#a7a9b2" color="white">
+      <Card w="40%" bg="#e6d3a6" color="white">
         <CardHeader>
           <Heading fontSize="lg">MINT TEST AXIA TOKENS</Heading>
         </CardHeader>

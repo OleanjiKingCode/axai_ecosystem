@@ -20,8 +20,9 @@ import {
   PopoverArrow,
   Spinner,
   Link,
+  useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   RiThumbUpLine,
   RiThumbUpFill,
@@ -44,9 +45,13 @@ import { FcLike } from "react-icons/fc";
 import { GrArticle } from "react-icons/gr";
 import axios from "axios";
 import { extractArrayFromText } from "@/utils/extracttext";
+import { useAddress } from "@thirdweb-dev/react";
 
 const Publication = () => {
   const [Message, setMessage] = useState(0);
+  const toast = useToast();
+  const [userData, setUserData] = useState(false);
+  const address = useAddress();
   const [likeLightUp, setLikeLightUp] = useState(false);
   const [markLightUp, setMarkLightUp] = useState(false);
   const router = useRouter();
@@ -83,6 +88,36 @@ const Publication = () => {
       enabled: !!ownerData?.id,
     }
   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/user/${address}`);
+        const data = await response.data;
+
+        setUserData(data.userId ? true : false);
+      } catch (error: any) {
+        setUserData(false);
+        if (error.response && error.response.status === 404) {
+          console.log("User not found");
+        }
+      }
+    };
+    fetchData();
+  }, [address]);
+
+  const linkToArticle = () => {
+    if (userData) {
+      router.push(`/quizs/${id}`);
+    } else {
+      toast({
+        title: "You need to register before taking this quiz",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <VStack w="full">
@@ -205,10 +240,13 @@ const Publication = () => {
               {data?.content}
             </Text>
 
-            <Button bg="gray.600" fontWeight="500" _hover={{ bg: "gray.800" }}>
-              <Link color="white" href={`/quizs/${id}`}>
-                Take Quiz
-              </Link>
+            <Button
+              bg="gray.600"
+              fontWeight="500"
+              _hover={{ bg: "gray.800" }}
+              onClick={linkToArticle}
+            >
+              Take Quiz
             </Button>
           </VStack>
         </GridItem>
