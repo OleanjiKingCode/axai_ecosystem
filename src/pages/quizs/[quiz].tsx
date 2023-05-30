@@ -25,7 +25,6 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
 import { config } from "@/Data/config";
-
 import Loading from "../../Data/Loading.json";
 import Lottie from "lottie-react";
 import { RiInformationFill } from "react-icons/ri";

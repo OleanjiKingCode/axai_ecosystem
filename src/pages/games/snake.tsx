@@ -23,7 +23,6 @@ import {
   RiStarFill,
   RiTrophyFill,
 } from "react-icons/ri";
-
 import { FocusableElement } from "@chakra-ui/utils";
 import styles from "../../styles/Home.module.css";
 

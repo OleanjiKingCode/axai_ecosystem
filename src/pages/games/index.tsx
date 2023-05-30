@@ -2,13 +2,11 @@ import { Button, Flex, Text, VStack, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import snake from "../../Data/143202-snake.json";
-import NextLink from "next/link";
 import axios from "axios";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 
 const Index = () => {
-  const [inputValue, setValue] = useState("");
   const router = useRouter();
   const address = useAddress();
   const toast = useToast();
