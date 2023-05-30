@@ -6,12 +6,14 @@ import NextLink from "next/link";
 import axios from "axios";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
-const index = () => {
+
+const Index = () => {
   const [inputValue, setValue] = useState("");
   const router = useRouter();
   const address = useAddress();
   const toast = useToast();
   const [userData, setUserData] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -87,4 +89,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
