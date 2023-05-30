@@ -95,7 +95,7 @@ const Publication = () => {
         const response = await axios.get(`/api/user/${address}`);
         const data = await response.data;
 
-        setUserData(data.userId ? true : false);
+        setUserData(data.userId !== "" ? true : false);
       } catch (error: any) {
         setUserData(false);
         if (error.response && error.response.status === 404) {
@@ -107,6 +107,7 @@ const Publication = () => {
   }, [address]);
 
   const linkToArticle = () => {
+   
     if (userData) {
       router.push(`/quizs/${id}`);
     } else {

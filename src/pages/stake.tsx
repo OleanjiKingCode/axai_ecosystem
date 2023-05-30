@@ -294,10 +294,9 @@ export const Stake = () => {
               <Tr textAlign="center" w="full" color="black">
                 <Td>500</Td>
                 <Td>&#10003;</Td>
-                <Td>&#10005;</Td>
-                <Td>&#10005;</Td>
+                <Td>&#10003;</Td>
+                <Td>&#10003;</Td>
               </Tr>
-              
             </Tbody>
           </Table>
         </CardBody>

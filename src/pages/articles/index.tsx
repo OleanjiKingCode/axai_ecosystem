@@ -70,8 +70,7 @@ export const Services = () => {
       try {
         const response = await axios.get(`/api/user/${address}`);
         const data = await response.data;
-
-        setUserData(data.userId ? true : false);
+        setUserData(data.userId !== "" ? true : false);
       } catch (error: any) {
         setUserData(false);
         if (error.response && error.response.status === 404) {
@@ -83,6 +82,7 @@ export const Services = () => {
   }, [address]);
 
   const linkToArticle = () => {
+    console.log(userData);
     if (userData) {
       router.push("/quizs/0x019ded-0x16");
     } else {
