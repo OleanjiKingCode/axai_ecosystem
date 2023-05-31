@@ -35,6 +35,14 @@ import { extractArrayFromText } from "@/utils/extracttext";
 import axios from "axios";
 import { usePublicationQuery, usePublicationsQuery } from "@/graphql/generated";
 import { id } from "ethers/lib/utils";
+import {
+  AXIA_TOKEN_ADDRESS,
+  AXIA_CONTRACT_ABI,
+  STAKE_REWARDS_AXIA_ABI_TOKENS,
+  STAKE_REWARDS_AXIA_TOKENS,
+  STAKING_CONTRACT,
+  STAKING_CONTRACT_ABI,
+} from "@/const/contracts";
 
 // rome-ignore lint/suspicious/noExplicitAny: <explanation>
 const QuizPage = () => {
@@ -61,6 +69,12 @@ const QuizPage = () => {
   const [isQuizReady, setQuizReady] = useState<boolean>(false);
   const signer = useSigner();
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+  const stakingContract = new ethers.Contract(
+    STAKING_CONTRACT,
+    STAKING_CONTRACT_ABI,
+    signer
+  );
+
   const chainId = useChainId();
   const initialRender = useRef(true);
   const [, switchNetwork] = useNetwork();
@@ -162,7 +176,6 @@ const QuizPage = () => {
   }, [publicationData, isQuizReady]);
 
   useEffect(() => {
-    
     if (quiz) {
       const dataOne = window.localStorage.getItem("QUESTIONS");
       if (dataOne !== null) {
@@ -365,23 +378,29 @@ const QuizPage = () => {
       });
     }
     if (address && chainId !== 80001) {
-      switchNetwork?.(ChainId.Polygon);
+      switchNetwork?.(ChainId.Mumbai);
     }
-    const amount = await contract?.amountCollected(address?.toString());
-    const realVal = Number(ethers.utils.formatEther(amount));
-    if (realVal >= 2) {
+    const stakedAmount = await stakingContract?.s_balances(address?.toString());
+    const stakedAmountVal = Number(ethers.utils.formatEther(stakedAmount));
+    if (stakedAmountVal < 200) {
       toast({
-        title: "You have collected before.",
+        title:
+          "You are not Qualified to collect Quiz rewards as you have not staked",
         status: "warning",
         duration: 2000,
         isClosable: true,
       });
+      return;
     }
-    const collectMumbai = await contract?.collect();
-    collectMumbai.wait();
+    const valueToCollect = ethers.utils.parseEther(
+      (Number(score) * 50).toString()
+    );
+    const tx = await contract?.mint(address?.toString(), valueToCollect);
+    await tx.wait();
+
     toast({
-      title: " 1 Mumbai token is on its way to you",
-      status: "success",
+      title: "SAXE reward tokens are on the way to you",
+      status: "warning",
       duration: 2000,
       isClosable: true,
     });
@@ -441,10 +460,21 @@ const QuizPage = () => {
                 correctly.
               </Text>
             ) : (
-              <Text fontSize={{ base: "xs", lg: "sm" }}>
-                All questions must be answered. <br />
-                Your answers will automatically be submitted, if time elapses.
-              </Text>
+              <Flex w="full" justifyContent="space-between">
+                <Text fontSize={{ base: "xs", lg: "sm" }}>
+                  All questions must be answered. <br />
+                  Your answers will automatically be submitted, if time elapses.
+                </Text>
+                <Button
+                  bg="orange.500"
+                  color="white"
+                  _hover={{ bg: "orange.200", color: "black" }}
+                  alignSelf="flex-end"
+                  onClick={FinishQuiz}
+                >
+                  Finish Quiz
+                </Button>
+              </Flex>
             )}
           </VStack>
         </Flex>
@@ -528,8 +558,7 @@ const QuizPage = () => {
                 </ListItem>
                 <ListItem py="1">
                   <Text fontSize={{ base: "sm", lg: "md" }} fontWeight="normal">
-                    You can access previous question, within the alloted
-                    timeframe.
+                    You have to have Staked  atleast 200 tokens to benefit from this quiz
                   </Text>
                 </ListItem>
               </OrderedList>

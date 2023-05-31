@@ -34,7 +34,7 @@ const Index = () => {
       router.push("/games/snake");
     } else {
       toast({
-        title: "You need to register before taking a quiz",
+        title: "You need to register before playing a game",
         status: "warning",
         duration: 2000,
         isClosable: true,
