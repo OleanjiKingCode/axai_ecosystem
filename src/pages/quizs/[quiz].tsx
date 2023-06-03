@@ -324,7 +324,7 @@ const QuizPage = () => {
       toast({
         title: "Timer Ended.",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
       nextQuestion();
@@ -373,7 +373,7 @@ const QuizPage = () => {
       toast({
         title: "Wallet Not Connected.",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
     }
@@ -387,7 +387,7 @@ const QuizPage = () => {
         title:
           "You are not Qualified to collect Quiz rewards as you have not staked",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
       return;
@@ -401,7 +401,7 @@ const QuizPage = () => {
     toast({
       title: "SAXE reward tokens are on the way to you",
       status: "warning",
-      duration: 2000,
+      duration: 4000,
       isClosable: true,
     });
     FinishQuiz();
@@ -558,7 +558,8 @@ const QuizPage = () => {
                 </ListItem>
                 <ListItem py="1">
                   <Text fontSize={{ base: "sm", lg: "md" }} fontWeight="normal">
-                    You have to have Staked  atleast 200 tokens to benefit from this quiz
+                    You have to have Staked atleast 200 tokens to benefit from
+                    this quiz
                   </Text>
                 </ListItem>
               </OrderedList>

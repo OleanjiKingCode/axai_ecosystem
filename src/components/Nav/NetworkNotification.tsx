@@ -168,7 +168,7 @@ export const GetArticleReward = ({
       toast({
         title: "Wallet Not Connected.",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
     }
@@ -182,7 +182,7 @@ export const GetArticleReward = ({
       toast({
         title: "You have collected before.",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
       router.push("/articles");
@@ -192,7 +192,7 @@ export const GetArticleReward = ({
     toast({
       title: "1 Mumbai token is on its way to you",
       status: "success",
-      duration: 2000,
+      duration: 4000,
       isClosable: true,
     });
     router.push("/articles");

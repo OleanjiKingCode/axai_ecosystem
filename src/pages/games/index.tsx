@@ -1,4 +1,18 @@
-import { Button, Flex, Text, VStack, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
+  Heading,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Tr,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import snake from "../../Data/143202-snake.json";
@@ -36,7 +50,7 @@ const Index = () => {
       toast({
         title: "You need to register before playing a game",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
     }
@@ -82,6 +96,37 @@ const Index = () => {
             Play Now
           </Button>
         </VStack>
+        <Card w="80%" bg="#897537" mt="20" color="white">
+          <CardHeader>
+            <Heading fontSize="lg" textAlign="center">
+              GAME INFORMATICS
+            </Heading>
+          </CardHeader>
+          <CardBody>
+            <Table variant="striped" colorScheme="gray">
+              <Tbody>
+                <Tr color="black">
+                  <Td>Amount to stake</Td>
+                  <Td>Quizes</Td>
+                  <Td>Games</Td>
+                  <Td>Both</Td>
+                </Tr>
+                <Tr textAlign="center" w="full">
+                  <Td>200</Td>
+                  <Td>&#10003;</Td>
+                  <Td>&#10005;</Td>
+                  <Td>&#10005;</Td>
+                </Tr>
+                <Tr textAlign="center" w="full" color="black">
+                  <Td>500</Td>
+                  <Td>&#10003;</Td>
+                  <Td>&#10003;</Td>
+                  <Td>&#10003;</Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </CardBody>
+        </Card>
       </Flex>
     </VStack>
   );

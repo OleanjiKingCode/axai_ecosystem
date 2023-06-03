@@ -17,6 +17,7 @@ import {
   ModalOverlay,
   useDisclosure,
   HStack,
+  Tag,
 } from "@chakra-ui/react";
 import {
   RiLogoutBoxLine,
@@ -157,7 +158,7 @@ const ProfileSubMenu = () => {
     getWalletBal();
     getStakedBal();
     getRewardBal();
-  }, [address]);
+  }, []);
 
   return (
     <>
@@ -247,6 +248,18 @@ const ProfileSubMenu = () => {
                   as={hasCopied ? CheckIcon : RiFileCopyLine}
                   boxSize="4"
                 />
+              </Flex>
+              <Flex w="full" gap="5">
+                {stakedBal >= 200 && (
+                  <Tag bg="purple" color="white">
+                    Quizzer
+                  </Tag>
+                )}
+                {stakedBal >= 500 && (
+                  <Tag bg="teal" color="white">
+                    Gamer
+                  </Tag>
+                )}
               </Flex>
             </Flex>
             <Flex pt="5" justifyContent="space-between">

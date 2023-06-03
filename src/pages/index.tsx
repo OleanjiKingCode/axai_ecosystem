@@ -68,21 +68,20 @@ export default function Home() {
     try {
       const { name, email } = data;
       const role = selectedValue;
-      if (!name || !email || !role || !address) {
-        toast({
-          title: `Fill in all info`,
-          description: "",
-          status: "error",
-          duration: 4000,
-          isClosable: true,
+      if (name && role && address) {
+        await axios.post("/api/user/signup", {
+          name,
+          email,
+          address,
+          role,
         });
-        return;
       }
-      await axios.post("/api/user/signup", {
-        name,
-        email,
-        address,
-        role,
+      toast({
+        title: `Fill in all info`,
+        description: "",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
       });
     } catch (error: any) {
       toast({

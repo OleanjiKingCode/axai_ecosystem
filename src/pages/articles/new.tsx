@@ -74,7 +74,7 @@ const NewArticle = () => {
         toast({
           title: "Image not attached.",
           status: "warning",
-          duration: 2000,
+          duration: 4000,
           isClosable: true,
         });
         return;

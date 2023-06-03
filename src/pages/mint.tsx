@@ -76,7 +76,7 @@ const Mint = () => {
     toast({
       title: "200 Axia Tokens is on its way",
       status: "success",
-      duration: 2000,
+      duration: 4000,
       isClosable: true,
     });
     setLoading(false);

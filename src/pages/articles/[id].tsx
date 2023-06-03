@@ -107,14 +107,13 @@ const Publication = () => {
   }, [address]);
 
   const linkToArticle = () => {
-   
     if (userData) {
       router.push(`/quizs/${id}`);
     } else {
       toast({
         title: "You need to register before taking this quiz",
         status: "warning",
-        duration: 2000,
+        duration: 4000,
         isClosable: true,
       });
     }
