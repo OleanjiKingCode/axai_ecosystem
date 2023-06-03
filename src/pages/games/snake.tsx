@@ -12,6 +12,7 @@ import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import { Kbd } from "@chakra-ui/react";
 import {
@@ -25,6 +26,22 @@ import {
 } from "react-icons/ri";
 import { FocusableElement } from "@chakra-ui/utils";
 import styles from "../../styles/Home.module.css";
+import { useAddress, useChainId, useSigner } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
+import { ChainId, useNetwork } from "@thirdweb-dev/react";
+import { extractArrayFromText } from "@/utils/extracttext";
+import axios from "axios";
+import { usePublicationQuery, usePublicationsQuery } from "@/graphql/generated";
+import { id } from "ethers/lib/utils";
+import {
+  AXIA_TOKEN_ADDRESS,
+  AXIA_CONTRACT_ABI,
+  STAKE_REWARDS_AXIA_ABI_TOKENS,
+  STAKE_REWARDS_AXIA_TOKENS,
+  STAKING_CONTRACT,
+  STAKING_CONTRACT_ABI,
+} from "@/const/contracts";
+import { contractAddress, contractAbi } from "@/Data/contractDetails";
 
 type Apple = {
   x: number;
@@ -38,6 +55,25 @@ type Velocity = {
 
 export default function SnakeGame() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const address = useAddress();
+  const signer = useSigner();
+  const contract = new ethers.Contract(
+    AXIA_TOKEN_ADDRESS,
+    AXIA_CONTRACT_ABI,
+    signer
+  );
+
+  const stakingContract = new ethers.Contract(
+    STAKING_CONTRACT,
+    STAKING_CONTRACT_ABI,
+    signer
+  );
+
+  const toast = useToast();
+
+  const chainId = useChainId();
+  const initialRender = useRef(true);
+  const [, switchNetwork] = useNetwork();
   const leaderboardData = [
     { name: "John", score: 100 },
     { name: "Jane", score: 95 },
@@ -377,6 +413,44 @@ export default function SnakeGame() {
     };
   }, [previousVelocity]);
 
+  const getReward = async () => {
+    if (!address) {
+      toast({
+        title: "Wallet Not Connected.",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+    if (address && chainId !== 80001) {
+      switchNetwork?.(ChainId.Mumbai);
+    }
+    const stakedAmount = await stakingContract?.s_balances(address?.toString());
+    const stakedAmountVal = Number(ethers.utils.formatEther(stakedAmount));
+    if (stakedAmountVal < 500) {
+      toast({
+        title:
+          "You are not Qualified to collect Game rewards as you have not staked",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+      });
+      return;
+    }
+    const valueToCollect = ethers.utils.parseEther(
+      (Number(score) * 50).toString()
+    );
+    const tx = await contract?.mint(address?.toString(), valueToCollect);
+    await tx.wait();
+
+    toast({
+      title: "SAXE reward tokens are on the way to you",
+      status: "warning",
+      duration: 4000,
+      isClosable: true,
+    });
+  };
+
   return (
     <Flex
       px="10%"
@@ -500,6 +574,7 @@ export default function SnakeGame() {
                       {" "}
                       <span>🎉 New Highscore 🎉</span>{" "}
                       <span> You scored: {score} </span>{" "}
+                      <span> You scored: {score} </span>{" "}
                     </>
                   ) : (
                     `You scored: ${score}`
@@ -522,33 +597,27 @@ export default function SnakeGame() {
                 >
                   {countDown === 4 ? "Restart Game" : countDown}
                 </Button>
+                {score > 0 && (
+                  <Button
+                    w="fit"
+                    py="5"
+                    bg="#ffd17cff"
+                    fontSize="xl"
+                    borderColor="#ffd17cff"
+                    borderWidth="1px"
+                    _hover={{
+                      color: "#ffd17cff",
+                      bg: "transparent",
+                    }}
+                    onClick={getReward}
+                  >
+                    Get Reward
+                  </Button>
+                )}
               </Flex>
             </Box>
           </AlertDialogContent>
         </AlertDialog>
-        // <chakra.div className="game-overlay">
-        //   <p className="large">Game Over</p>
-        //   <p className="final-score">
-        //     {newHighscore ? `🎉 New Highscore 🎉` : `You scored: ${score}`}
-        //   </p>
-        //   {!running && isLost && (
-        //     <Button
-        //       w="fit"
-        //       py="5"
-        //       bg="#ffd17cff"
-        //       fontSize="xl"
-        //       borderColor="#ffd17cff"
-        //       borderWidth="1px"
-        //       _hover={{
-        //         color: "#ffd17cff",
-        //         bg: "transparent",
-        //       }}
-        //       onClick={startGame}
-        //     >
-        //       {countDown === 4 ? "Restart Game" : countDown}
-        //     </Button>
-        //   )}
-        // </chakra.div>
       )}
     </Flex>
   );

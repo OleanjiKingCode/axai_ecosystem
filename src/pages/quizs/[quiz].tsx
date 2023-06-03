@@ -75,6 +75,12 @@ const QuizPage = () => {
     signer
   );
 
+  const RewardContract = new ethers.Contract(
+    AXIA_TOKEN_ADDRESS,
+    AXIA_CONTRACT_ABI,
+    signer
+  );
+
   const chainId = useChainId();
   const initialRender = useRef(true);
   const [, switchNetwork] = useNetwork();
@@ -395,7 +401,7 @@ const QuizPage = () => {
     const valueToCollect = ethers.utils.parseEther(
       (Number(score) * 50).toString()
     );
-    const tx = await contract?.mint(address?.toString(), valueToCollect);
+    const tx = await RewardContract?.mint(address?.toString(), valueToCollect);
     await tx.wait();
 
     toast({

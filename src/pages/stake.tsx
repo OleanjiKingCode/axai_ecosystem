@@ -188,7 +188,7 @@ export const Stake = () => {
         <Text w="55%">
           Get access to all of Axia services by staking a fraction of your
           balance. Staking is more like a subscription in axia and the minimum
-          is 7 days. Learn More.
+          is 7 days. Scroll down to learn more.
         </Text>
       </VStack>
       <HStack
