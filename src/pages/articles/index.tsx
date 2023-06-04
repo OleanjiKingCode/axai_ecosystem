@@ -37,6 +37,7 @@ import { ipfsToWebLink } from "@/lib/helpers";
 import { useAddress } from "@thirdweb-dev/react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import useLensUser from "@/lib/auth/useLensUser";
 
 export const Services = () => {
   const [inputValue, setValue] = useState("");
@@ -48,6 +49,7 @@ export const Services = () => {
     const input = e.target.value;
     setValue(input);
   };
+  const { profileQuery } = useLensUser();
   const [userData, setUserData] = useState(false);
   const { isLoading, error, data } = useExplorePublicationsQuery(
     {
@@ -93,6 +95,19 @@ export const Services = () => {
         isClosable: true,
       });
     }
+  };
+
+  const checkIfPostPossible = () => {
+    if (profileQuery?.data?.defaultProfile == null) {
+      toast({
+        title: "You dont have a lens account",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+      });
+      return;
+    }
+    router.push("/articles/new");
   };
 
   return (
@@ -165,6 +180,7 @@ export const Services = () => {
               fontWeight="500"
               _hover={{ bg: "gray.800" }}
               w={{ base: "full" }}
+              onClick={checkIfPostPossible}
             >
               Create New Article
             </Button>

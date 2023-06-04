@@ -29,10 +29,6 @@ import styles from "../../styles/Home.module.css";
 import { useAddress, useChainId, useSigner } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 import { ChainId, useNetwork } from "@thirdweb-dev/react";
-import { extractArrayFromText } from "@/utils/extracttext";
-import axios from "axios";
-import { usePublicationQuery, usePublicationsQuery } from "@/graphql/generated";
-import { id } from "ethers/lib/utils";
 import {
   AXIA_TOKEN_ADDRESS,
   AXIA_CONTRACT_ABI,
@@ -41,7 +37,6 @@ import {
   STAKING_CONTRACT,
   STAKING_CONTRACT_ABI,
 } from "@/const/contracts";
-import { contractAddress, contractAbi } from "@/Data/contractDetails";
 
 type Apple = {
   x: number;
@@ -58,8 +53,8 @@ export default function SnakeGame() {
   const address = useAddress();
   const signer = useSigner();
   const contract = new ethers.Contract(
-    AXIA_TOKEN_ADDRESS,
-    AXIA_CONTRACT_ABI,
+    STAKE_REWARDS_AXIA_TOKENS,
+    STAKE_REWARDS_AXIA_ABI_TOKENS,
     signer
   );
 
@@ -97,6 +92,7 @@ export default function SnakeGame() {
   const [countDown, setCountDown] = useState<number>(4);
   const [running, setRunning] = useState(false);
   const [isLost, setIsLost] = useState(false);
+  const [getRewards, setGetReward] = useState(false);
   const [highscore, setHighscore] = useState(0);
   const [newHighscore, setNewHighscore] = useState(false);
   const [score, setScore] = useState(0);
@@ -154,6 +150,7 @@ export default function SnakeGame() {
       setNewHighscore(true);
     }
     setIsLost(true);
+    setGetReward(true);
     setRunning(false);
     setVelocity({ dx: 0, dy: 0 });
     setCountDown(4);
@@ -425,6 +422,7 @@ export default function SnakeGame() {
     if (address && chainId !== 80001) {
       switchNetwork?.(ChainId.Mumbai);
     }
+    setGetReward(false);
     const stakedAmount = await stakingContract?.s_balances(address?.toString());
     const stakedAmountVal = Number(ethers.utils.formatEther(stakedAmount));
     if (stakedAmountVal < 500) {
@@ -442,13 +440,13 @@ export default function SnakeGame() {
     );
     const tx = await contract?.mint(address?.toString(), valueToCollect);
     await tx.wait();
-
     toast({
       title: "SAXE reward tokens are on the way to you",
-      status: "warning",
+      status: "success",
       duration: 4000,
       isClosable: true,
     });
+    startGame();
   };
 
   return (
@@ -581,7 +579,14 @@ export default function SnakeGame() {
                   )}{" "}
                 </Text>
               </Flex>
-              <Flex mt="6" w="full" justifyContent="center" alignItems="center">
+              <Flex
+                mt="6"
+                w="full"
+                justifyContent="center"
+                direction="column"
+                alignItems="center"
+                gap="4"
+              >
                 <Button
                   w="fit"
                   py="5"
@@ -597,7 +602,7 @@ export default function SnakeGame() {
                 >
                   {countDown === 4 ? "Restart Game" : countDown}
                 </Button>
-                {score > 0 && (
+                {score > 0 && getRewards && (
                   <Button
                     w="fit"
                     py="5"

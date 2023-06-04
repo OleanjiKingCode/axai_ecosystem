@@ -99,7 +99,6 @@ const ProfileSubMenu = () => {
         if (error.response && error.response.status === 404) {
           // Handle the 404 error
           console.log("User not found");
-          // Perform any additional actions specific to the 404 error
         }
       }
     };

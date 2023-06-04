@@ -12,13 +12,22 @@ import {
   VStack,
   useToast,
   useDisclosure,
+  HStack,
+  Icon,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useCreatePost } from "@/lib/useCreatePost";
 import { GetArticleReward } from "@/components/Nav/NetworkNotification";
 import { useChainId, useNetwork, useAddress } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
+import useLensUser from "@/lib/auth/useLensUser";
+import { usePublicationQuery, usePublicationsQuery } from "@/graphql/generated";
+import { ipfsToWebLink } from "@/lib/helpers";
+import { FaComments } from "react-icons/fa";
+import { FcLike } from "react-icons/fc";
+import { RiLightbulbFlashFill } from "react-icons/ri";
 
 const NewArticle = () => {
   const [viewing, setViewing] = useState<string>("");
@@ -28,7 +37,7 @@ const NewArticle = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const router = useRouter();
+  const { profileQuery } = useLensUser();
   const toast = useToast();
   const { mutateAsync: createPost } = useCreatePost();
   const chainId = useChainId();
@@ -40,6 +49,23 @@ const NewArticle = () => {
     const inputValue = e.target.value;
     setValue(inputValue);
   };
+
+  const {
+    isLoading: isLoadingPublications,
+    data: publicationsData,
+    error: publicationsError,
+  } = usePublicationsQuery(
+    {
+      request: {
+        profileId: profileQuery?.data?.defaultProfile?.id,
+        sources: ["axia-test-app", "axia-eco"],
+      },
+    },
+    {
+      enabled: !!profileQuery?.data?.defaultProfile?.id,
+    }
+  );
+
   const OnFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = e.target.files?.[0];
@@ -69,10 +95,31 @@ const NewArticle = () => {
   const createNew = async () => {
     try {
       setLoading(true);
-      if (!image) {
+
+      if (!image || !title || !description || !content) {
         setLoading(false);
         toast({
-          title: "Image not attached.",
+          title: "Fill all neccessary flelds",
+          status: "warning",
+          duration: 4000,
+          isClosable: true,
+        });
+        return;
+      }
+      if (content.length < 100) {
+        setLoading(false);
+        toast({
+          title: "Main Content should be more than 100 words",
+          status: "warning",
+          duration: 4000,
+          isClosable: true,
+        });
+        return;
+      }
+      if (profileQuery?.data?.defaultProfile == null) {
+        setLoading(false);
+        toast({
+          title: "You dont have a lens account",
           status: "warning",
           duration: 4000,
           isClosable: true,
@@ -229,9 +276,81 @@ const NewArticle = () => {
               justifyContent="center"
               gap="3"
             >
-              <Box w={56} h={56} rounded="xl" bg="gray.300" />
-              <Box w={56} h={56} rounded="xl" bg="gray.300" />
-              <Box w={56} h={56} rounded="xl" bg="gray.300" />
+              {isLoadingPublications ? (
+                <Spinner />
+              ) : (
+                <>
+                  {publicationsData?.publications.items.map((publication) => (
+                    <Box
+                      w="full"
+                      // h={16}
+                      key={publication.id}
+                      fontSize="sm"
+                      color="blue.300"
+                      bg="gray.600"
+                      pt="5"
+                      pb="2"
+                      px="3"
+                      rounded="xl"
+                      my="2"
+                    >
+                      <Image
+                        src={ipfsToWebLink(publication?.metadata.image)}
+                        alt="Your Image"
+                        // w="70%"
+                        rounded="xl"
+                      />
+                      <NextLink href={`./articles/${publication.id}`}>
+                        <Text>{publication.metadata.name}</Text>
+                      </NextLink>
+                      <Text
+                        color="white"
+                        opacity="90%"
+                        fontSize="xs"
+                        letterSpacing="3px"
+                      >
+                        {publication.metadata.description}
+                      </Text>
+                      <HStack
+                        justifyContent="space-between"
+                        w="full"
+                        color="white"
+                        pt="3"
+                      >
+                        <Flex
+                          alignItems="center"
+                          gap="2"
+                          bg="gray.700"
+                          p="2"
+                          rounded="xl"
+                        >
+                          <Icon as={FcLike} />
+                          <Text>3</Text>
+                        </Flex>
+                        <Flex
+                          alignItems="center"
+                          gap="2"
+                          bg="gray.700"
+                          p="2"
+                          rounded="xl"
+                        >
+                          <Icon as={FaComments} />
+                          <Text>0</Text>
+                        </Flex>
+                        <Flex
+                          alignItems="center"
+                          gap="2"
+                          bg="gray.700"
+                          p="2"
+                          rounded="xl"
+                        >
+                          <Icon as={RiLightbulbFlashFill} />
+                        </Flex>
+                      </HStack>
+                    </Box>
+                  ))}
+                </>
+              )}
             </Flex>
           </VStack>
         </GridItem>
