@@ -155,9 +155,10 @@ const QuizPage = () => {
       const data3 = publicationData?.publication?.metadata;
       const input_text = data3?.content.toString();
       if (input_text !== undefined) {
-        const response = await axios.post("/api/getquizs", {
-          input_text,
+        const response = await axios.get("/api/getquizs", {
+          params: { input_text },
         });
+
         const responseData = response.data.toString();
         let trimmedString = responseData.trim();
         const jsonString = trimmedString.replace(/(\w+):/g, '"$1":');
