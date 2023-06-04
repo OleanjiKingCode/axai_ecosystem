@@ -155,7 +155,7 @@ const QuizPage = () => {
 			const data3 = publicationData?.publication?.metadata;
 			const input_text = data3?.content.toString();
 			if (input_text !== undefined) {
-				const response = await axios.post("/api/getquizs", {
+				const response = await axios.put("/api/getquizs", {
 					input_text,
 				});
 				const responseData = response.data.toString();
