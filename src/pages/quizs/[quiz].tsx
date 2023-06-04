@@ -53,6 +53,7 @@ const QuizPage = () => {
   const [timeLeft, setTimeLeft] = useState(600);
   const [score, setScore] = useState(0);
 
+  const [getRewards, setGetReward] = useState(false);
   const address = useAddress();
   const [checked, setChecked] = useState("none");
   const [questionNumber, setQuestionNumber] = useState(1);
@@ -347,6 +348,7 @@ const QuizPage = () => {
         return acc;
       }, 0);
       setScore(count);
+      setGetReward(true);
     }
   }, [timeLeft, questionNumber]);
 
@@ -387,6 +389,7 @@ const QuizPage = () => {
     if (address && chainId !== 80001) {
       switchNetwork?.(ChainId.Mumbai);
     }
+    setGetReward(true);
     const stakedAmount = await stakingContract?.s_balances(address?.toString());
     const stakedAmountVal = Number(ethers.utils.formatEther(stakedAmount));
     if (stakedAmountVal < 200) {
@@ -407,7 +410,7 @@ const QuizPage = () => {
 
     toast({
       title: "SAXE reward tokens are on the way to you",
-      status: "warning",
+      status: "success",
       duration: 4000,
       isClosable: true,
     });
@@ -645,8 +648,8 @@ const QuizPage = () => {
                   <b>{score} </b>
                 </HStack>
                 <HStack w="full" justifyContent="space-between" fontSize="md">
-                  <Text>Mumbai Reward:</Text>
-                  <b>{score > 4 ? 1 : 0}</b>
+                  <Text>SAXE Reward:</Text>
+                  <b>{score > 4 ? score * 50 : 0}</b>
                 </HStack>
                 <HStack w="full" justifyContent="space-between" fontSize="md">
                   <Text>Percentage:</Text>
@@ -659,7 +662,7 @@ const QuizPage = () => {
                   gap="3"
                   justifyContent="center"
                 >
-                  {score > 4 && (
+                  {score > 4 && getReward && (
                     <Button
                       py="2"
                       // cursor={!address ? "no-drop" : "pointer"}
