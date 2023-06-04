@@ -10,39 +10,38 @@ import { Analytics } from "@vercel/analytics/react";
 import { useState, useEffect } from "react";
 
 const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["500"],
-  display: "swap",
+	subsets: ["latin"],
+	weight: ["500"],
+	display: "swap",
 });
 
 const desiredChainId = ChainId.Polygon;
 const queryClient = new QueryClient();
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  
-const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
-  if (!mounted) return <></>;
-  return (
-    <chakra.div className={roboto.className}>
-      <ChakraProvider resetCSS>
-        {/* @ts-ignore */}
-        <ThirdwebProvider desiredChainId={desiredChainId}>
-          <QueryClientProvider client={queryClient}>
-            <chakra.div w="full" minH="100vh" bg="#17171a" color="white">
-              <Navbar />
-              <Component {...pageProps} />
-              <Analytics />
-            </chakra.div>
-          </QueryClientProvider>
-        </ThirdwebProvider>
-        <Footer />
-      </ChakraProvider>
-    </chakra.div>
-  );
+	if (!mounted) return <></>;
+	return (
+		<chakra.div className={roboto.className}>
+			<ChakraProvider resetCSS>
+				{/* @ts-ignore */}
+				<ThirdwebProvider desiredChainId={desiredChainId}>
+					<QueryClientProvider client={queryClient}>
+						<chakra.div w="full" minH="100vh" bg="#17171a" color="white">
+							<Navbar />
+							<Component {...pageProps} />
+							<Analytics />
+						</chakra.div>
+					</QueryClientProvider>
+				</ThirdwebProvider>
+				<Footer />
+			</ChakraProvider>
+		</chakra.div>
+	);
 };
 
 export default MyApp;
