@@ -52,7 +52,7 @@ const QuizPage = () => {
   const toast = useToast();
   const [timeLeft, setTimeLeft] = useState(600);
   const [score, setScore] = useState(0);
-
+  const [getRewardsLoading, setGetRewardLoading] = useState(false);
   const [getRewards, setGetReward] = useState(false);
   const address = useAddress();
   const [checked, setChecked] = useState("none");
@@ -389,7 +389,7 @@ const QuizPage = () => {
     if (address && chainId !== 80001) {
       switchNetwork?.(ChainId.Mumbai);
     }
-    setGetReward(true);
+    setGetRewardLoading(true);
     const stakedAmount = await stakingContract?.s_balances(address?.toString());
     const stakedAmountVal = Number(ethers.utils.formatEther(stakedAmount));
     if (stakedAmountVal < 200) {
@@ -414,6 +414,7 @@ const QuizPage = () => {
       duration: 4000,
       isClosable: true,
     });
+    setGetRewardLoading(false);
     FinishQuiz();
   };
 
@@ -662,7 +663,7 @@ const QuizPage = () => {
                   gap="3"
                   justifyContent="center"
                 >
-                  {score > 4 && getReward && (
+                  {score > 4 && getRewards && (
                     <Button
                       py="2"
                       // cursor={!address ? "no-drop" : "pointer"}
