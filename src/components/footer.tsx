@@ -14,7 +14,7 @@ import React from "react";
 const Footer = () => {
   return (
     <Box bg="gray.800" color="white" pt={8}>
-      <HStack w="full" px="10%" gap="5">
+      <HStack w="full" px="10%" gap="5" alignItems="flex-start">
         <Flex direction="column" justify="space-between" mb={4} gap="3" w="60%">
           <Box>
             <Text fontSize="lg">Axia Ecosystem</Text>
@@ -29,20 +29,20 @@ const Footer = () => {
             <Link href="/">Get Started</Link>
           </Button>
         </Flex>
-        {/* Row 2 */}
+
         <SimpleGrid columns={1} spacing={4} w="20%">
           <VStack>
-            <Text>Links</Text>
+            <Text fontSize={{ base: "18px", md: "20px" }}>Links</Text>
             <Link href="/">Home</Link>
             <Link href="/articles">Articles</Link>
             <Link href="/games">Games</Link>
           </VStack>
         </SimpleGrid>
-        {/* Row 3 */}
+
         <SimpleGrid columns={1} spacing={4} w="20%">
           <VStack>
-            <Text>Follow Us</Text>
-            <Link href="#">Twitter</Link>
+            <Text fontSize={{ base: "18px", md: "20px" }}>Follow Us</Text>
+            <Link href="https://twitter.com/AxiaEcosystem">Twitter</Link>
           </VStack>
         </SimpleGrid>
       </HStack>

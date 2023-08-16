@@ -277,7 +277,14 @@ export const Stake = () => {
             STAKE INFORMATICS
           </Heading>
         </CardHeader>
-        <CardBody>
+        <CardBody
+          overflowX="scroll"
+          sx={{
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
+        >
           <Table variant="striped" colorScheme="gray">
             <Tbody>
               <Tr color="black">

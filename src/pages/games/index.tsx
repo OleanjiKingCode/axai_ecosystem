@@ -68,7 +68,7 @@ const Index = () => {
       >
         <VStack
           bg="#e6d3a6"
-          w="40%"
+          w={{ base: "70%", lg: "40%" }}
           height="500px"
           textAlign="center"
           overflow="hidden"
@@ -102,7 +102,14 @@ const Index = () => {
               GAME INFORMATICS
             </Heading>
           </CardHeader>
-          <CardBody>
+          <CardBody
+            overflowX="scroll"
+            sx={{
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+            }}
+          >
             <Table variant="striped" colorScheme="gray">
               <Tbody>
                 <Tr color="black">
